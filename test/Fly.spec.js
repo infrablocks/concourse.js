@@ -134,7 +134,33 @@ describe('Fly', () => {
       expect.fail(null, null, 'Expected exception but none was thrown.');
     });
 
-    // team override
+    it('throws an exception if the provided team is not a string', async () => {
+      try {
+        await newFly()
+          .login({
+            username: 'some-username',
+            password: 'some-password',
+            team: 25
+          });
+      } catch(e) {
+        expect(e instanceof Error).to.eql(true);
+        expect(e.message)
+          .to.eql('Invalid parameter(s): ["team" must be a string].');
+        return
+      }
+      expect.fail(null, null, 'Expected exception but none was thrown.');
+    });
+
+    it('uses the provided team instead of that provided at construction', async () => {
+      const fly = await newFly({ team: 'initial' })
+        .login({
+          username: 'some-username',
+          password: 'some-password',
+          team: 'overridden'
+        });
+
+      expect(fly.team).to.eql('overridden');
+    });
   });
 
   describe('jobs', () => {
