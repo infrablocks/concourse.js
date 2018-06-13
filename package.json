@@ -1,5 +1,5 @@
 {
-  "name": "fly.js",
+  "name": "concourse.js",
   "version": "0.1.0",
   "description": "A JavaScript SDK for the Concourse CI API.",
   "main": "lib/index.js",
@@ -22,9 +22,9 @@
   "author": "Toby Clemson",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/infrablocks/fly.js/issues"
+    "url": "https://github.com/infrablocks/concourse.js/issues"
   },
-  "homepage": "https://github.com/infrablocks/fly.js#readme",
+  "homepage": "https://github.com/infrablocks/concourse.js#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
   },

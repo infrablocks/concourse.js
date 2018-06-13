@@ -3,7 +3,7 @@ import { basicAuthHeader, bearerAuthHeader } from './http';
 import { allPipelinesUri, authTokenUri, jobsUri, pipelinesUri } from './uris';
 import { boolean, schemaFor, string, uri, validateOptions } from './validation';
 
-export default class Fly {
+export default class Concourse {
   constructor(options) {
     const validatedOptions = validateOptions(
       schemaFor({
@@ -27,7 +27,7 @@ export default class Fly {
         teamName: string()
       }), options);
 
-    return new Fly({
+    return new Concourse({
       uri: this.uri,
       teamName: validatedOptions.teamName || this.teamName,
       username: validatedOptions.username,

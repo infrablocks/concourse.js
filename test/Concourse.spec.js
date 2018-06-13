@@ -5,16 +5,16 @@ import MockAdapter from 'axios-mock-adapter';
 
 import { buildAuthToken, buildJob, buildPipeline } from './builders';
 
-import Fly from '../src/Fly';
+import Concourse from '../src/Concourse';
 
-const newFly = ({
+const newConcourse = ({
   uri = faker.internet.url(),
   teamName = 'main',
   username = 'some-username',
   password = 'some-password',
-} = {}) => new Fly({ uri, teamName, username, password });
+} = {}) => new Concourse({ uri, teamName, username, password });
 
-describe('Fly', () => {
+describe('Concourse', () => {
   const mock = new MockAdapter(axios);
 
   beforeEach(() => {
@@ -28,21 +28,21 @@ describe('Fly', () => {
   describe('construction', () => {
     it('throws an exception if the URI is not provided', () => {
       expect(() => {
-        new Fly({})
+        new Concourse({})
       })
         .to.throw(Error, 'Invalid parameter(s): ["uri" is required].');
     });
 
     it('throws an exception if the URI is not a string', () => {
       expect(() => {
-        new Fly({ uri: 25 })
+        new Concourse({ uri: 25 })
       })
         .to.throw(Error, 'Invalid parameter(s): ["uri" must be a string].');
     });
 
     it('throws an exception if the URI is not a valid URI', () => {
       expect(() => {
-        new Fly({ uri: 'spinach' })
+        new Concourse({ uri: 'spinach' })
       })
         .to.throw(Error, 'Invalid parameter(s): ["uri" must be a valid uri].');
     });
@@ -50,7 +50,7 @@ describe('Fly', () => {
     it('throws an exception if the provided team name is not a string', () => {
       expect(
         () => {
-          new Fly({
+          new Concourse({
             uri: faker.internet.url(),
             teamName: 35
           });
@@ -61,7 +61,7 @@ describe('Fly', () => {
     it('throws an exception if the provided username is not a string', () => {
       expect(
         () => {
-          new Fly({
+          new Concourse({
             uri: faker.internet.url(),
             username: 35
           });
@@ -72,7 +72,7 @@ describe('Fly', () => {
     it('throws an exception if the provided password is not a string', () => {
       expect(
         () => {
-          new Fly({
+          new Concourse({
             uri: faker.internet.url(),
             password: 35
           });
@@ -84,7 +84,7 @@ describe('Fly', () => {
   describe('login', () => {
     it('throws an exception if the username is not provided', async () => {
       try {
-        await newFly()
+        await newConcourse()
           .login({ password: 'some-password' });
       } catch(e) {
         expect(e instanceof Error).to.eql(true);
@@ -97,7 +97,7 @@ describe('Fly', () => {
 
     it('throws an exception if the provided username is not a string', async () => {
       try {
-        await newFly()
+        await newConcourse()
           .login({ username: 25, password: 'some-password' });
       } catch(e) {
         expect(e instanceof Error).to.eql(true);
@@ -110,7 +110,7 @@ describe('Fly', () => {
 
     it('throws an exception if the password is not provided', async () => {
       try {
-        await newFly()
+        await newConcourse()
           .login({ username: 'some-username' });
       } catch(e) {
         expect(e instanceof Error).to.eql(true);
@@ -123,7 +123,7 @@ describe('Fly', () => {
 
     it('throws an exception if the provided password is not a string', async () => {
       try {
-        await newFly()
+        await newConcourse()
           .login({ username: 'some-username', password: 25 });
       } catch(e) {
         expect(e instanceof Error).to.eql(true);
@@ -136,7 +136,7 @@ describe('Fly', () => {
 
     it('throws an exception if the provided team name is not a string', async () => {
       try {
-        await newFly()
+        await newConcourse()
           .login({
             username: 'some-username',
             password: 'some-password',
@@ -152,7 +152,7 @@ describe('Fly', () => {
     });
 
     it('uses the provided team name instead of that provided at construction', async () => {
-      const fly = await newFly({ teamName: 'initial' })
+      const fly = await newConcourse({ teamName: 'initial' })
         .login({
           username: 'some-username',
           password: 'some-password',
@@ -166,7 +166,7 @@ describe('Fly', () => {
   describe('jobs', () => {
     it('throws an exception if no pipeline is provided', async () => {
       try {
-        await newFly().jobs({});
+        await newConcourse().jobs({});
       } catch(e) {
         expect(e instanceof Error).to.eql(true);
         expect(e.message)
@@ -178,7 +178,7 @@ describe('Fly', () => {
 
     it('throws an exception if the provided pipeline is not a string', async () => {
       try {
-        await newFly().jobs({ pipeline: 25 });
+        await newConcourse().jobs({ pipeline: 25 });
       } catch(e) {
         expect(e instanceof Error).to.eql(true);
         expect(e.message)
@@ -220,7 +220,7 @@ describe('Fly', () => {
         })
         .reply(200, [job]);
 
-      const fly = await new Fly({ uri, teamName })
+      const fly = await new Concourse({ uri, teamName })
         .login({ username, password });
 
       const jobs = await fly.jobs({ pipeline });
@@ -232,7 +232,7 @@ describe('Fly', () => {
   describe('pipelines', () => {
     it('throws an exception if the value provided for all is not a boolean', async () => {
       try {
-        await newFly().pipelines({ all: 25 });
+        await newConcourse().pipelines({ all: 25 });
       } catch(e) {
         expect(e instanceof Error).to.eql(true);
         expect(e.message)
@@ -273,7 +273,7 @@ describe('Fly', () => {
         })
         .reply(200, [pipeline]);
 
-      const fly = await new Fly({ uri, teamName })
+      const fly = await new Concourse({ uri, teamName })
         .login({ username, password });
 
       const pipelines = await fly.pipelines();
@@ -312,7 +312,7 @@ describe('Fly', () => {
         })
         .reply(200, [pipeline]);
 
-      const fly = await new Fly({ uri, teamName })
+      const fly = await new Concourse({ uri, teamName })
         .login({ username, password });
 
       const pipelines = await fly.pipelines({ all: true });
@@ -351,7 +351,7 @@ describe('Fly', () => {
         })
         .reply(200, [pipeline]);
 
-      const fly = await new Fly({ uri, teamName })
+      const fly = await new Concourse({ uri, teamName })
         .login({ username, password });
 
       const pipelines = await fly.pipelines({ all: false });
