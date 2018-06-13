@@ -1,6 +1,7 @@
 # concourse.js 
 
-[![Version](https://img.shields.io/npm/v/concourse.js.svg)](https://www.npmjs.com/package/concourse.js)
+[![NPM Version](https://img.shields.io/npm/v/concourse.js.svg)](https://www.npmjs.com/package/concourse.js)
+[![NPM Downloads](https://img.shields.io/npm/dm/concourse.js.svg)](http://npm-stat.com/charts.html?package=concourse.js)
 [![Dependency Status](https://david-dm.org/infrablocks/concourse.js/status.svg)](https://david-dm.org/infrablocks/concourse.js#info=dependencies)
 [![devDependency Status](https://david-dm.org/infrablocks/concourse.js/dev-status.svg)](https://david-dm.org/infrablocks/concourse.js#info=devDependencies)
 
