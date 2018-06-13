@@ -9,15 +9,31 @@ export const buildAuthToken =
     value
   });
 
+export const buildPipeline = ({
+    id = 53,
+    name = 'example-pipeline',
+    url = '/teams/example-team/pipelines/example-pipeline',
+    isPaused = false,
+    isPublic = false,
+    teamName = 'example-team'
+  } = {}) => ({
+    id,
+    name,
+    url,
+    paused: isPaused,
+    'public': isPublic,
+    team_name: teamName
+  });
+
 export const buildBuild =
   ({
     id = 10416,
     name = '81',
     status = 'succeeded',
-    teamName = 'example-team',
+    teamName = 'example-teamName',
     pipelineName = 'example-pipeline',
     jobName = 'example-job',
-    url = '/teams/example-team/pipelines/example-pipeline/jobs/example-job/builds/81',
+    url = '/teams/example-teamName/pipelines/example-pipeline/jobs/example-job/builds/81',
     apiUrl = '/api/v1/builds/10416',
     startTime = 1524830894,
     endTime = 1524831161
@@ -58,7 +74,7 @@ export const buildJob =
   ({
     id = 288,
     name = 'build',
-    url = '/teams/example-team/pipelines/example-pipeline/jobs/build',
+    url = '/teams/example-teamName/pipelines/example-pipeline/jobs/build',
     nextBuild = null,
     finishedBuild = buildBuild(),
     inputs = [buildInput()],

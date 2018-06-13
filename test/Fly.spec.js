@@ -3,16 +3,16 @@ import faker from 'faker';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 
-import { buildAuthToken, buildJob } from './builders';
+import { buildAuthToken, buildJob, buildPipeline } from './builders';
 
 import Fly from '../src/Fly';
 
 const newFly = ({
   uri = faker.internet.url(),
-  team = 'main',
+  teamName = 'main',
   username = 'some-username',
   password = 'some-password',
-} = {}) => new Fly({ uri, team, username, password });
+} = {}) => new Fly({ uri, teamName, username, password });
 
 describe('Fly', () => {
   const mock = new MockAdapter(axios);
@@ -47,15 +47,15 @@ describe('Fly', () => {
         .to.throw(Error, 'Invalid parameter(s): ["uri" must be a valid uri].');
     });
 
-    it('throws an exception if the provided team is not a string', () => {
+    it('throws an exception if the provided team name is not a string', () => {
       expect(
         () => {
           new Fly({
             uri: faker.internet.url(),
-            team: 35
+            teamName: 35
           });
         })
-        .to.throw(Error, 'Invalid parameter(s): ["team" must be a string].')
+        .to.throw(Error, 'Invalid parameter(s): ["teamName" must be a string].')
     });
 
     it('throws an exception if the provided username is not a string', () => {
@@ -134,32 +134,32 @@ describe('Fly', () => {
       expect.fail(null, null, 'Expected exception but none was thrown.');
     });
 
-    it('throws an exception if the provided team is not a string', async () => {
+    it('throws an exception if the provided team name is not a string', async () => {
       try {
         await newFly()
           .login({
             username: 'some-username',
             password: 'some-password',
-            team: 25
+            teamName: 25
           });
       } catch(e) {
         expect(e instanceof Error).to.eql(true);
         expect(e.message)
-          .to.eql('Invalid parameter(s): ["team" must be a string].');
+          .to.eql('Invalid parameter(s): ["teamName" must be a string].');
         return
       }
       expect.fail(null, null, 'Expected exception but none was thrown.');
     });
 
-    it('uses the provided team instead of that provided at construction', async () => {
-      const fly = await newFly({ team: 'initial' })
+    it('uses the provided team name instead of that provided at construction', async () => {
+      const fly = await newFly({ teamName: 'initial' })
         .login({
           username: 'some-username',
           password: 'some-password',
-          team: 'overridden'
+          teamName: 'overridden'
         });
 
-      expect(fly.team).to.eql('overridden');
+      expect(fly.teamName).to.eql('overridden');
     });
   });
 
@@ -188,13 +188,13 @@ describe('Fly', () => {
       expect.fail(null, null, 'Expected exception but none was thrown.');
     });
 
-    it('gets all jobs in the supplied pipeline', async () => {
+    it('gets jobs for the supplied team and pipeline', async () => {
       const uri = 'https://concourse.example.com';
 
       const username = 'some-username';
       const password = 'some-password';
 
-      const team = 'main';
+      const teamName = 'main';
       const pipeline = 'some-pipeline';
 
       const bearerToken = faker.random.alphaNumeric(800);
@@ -203,7 +203,7 @@ describe('Fly', () => {
       const job = buildJob();
 
       mock.onGet(
-        `${uri}/teams/${team}/auth/token`,
+        `${uri}/teams/${teamName}/auth/token`,
         {
           headers: {
             'Authorization': 'Basic c29tZS11c2VybmFtZTpzb21lLXBhc3N3b3Jk'
@@ -212,7 +212,7 @@ describe('Fly', () => {
         .reply(200, authToken);
 
       mock.onGet(
-        `${uri}/teams/${team}/pipelines/${pipeline}/jobs`,
+        `${uri}/teams/${teamName}/pipelines/${pipeline}/jobs`,
         {
           headers: {
             'Authorization': `Bearer ${bearerToken}`
@@ -220,12 +220,143 @@ describe('Fly', () => {
         })
         .reply(200, [job]);
 
-      const fly = await new Fly({ uri, team })
+      const fly = await new Fly({ uri, teamName })
         .login({ username, password });
 
       const jobs = await fly.jobs({ pipeline });
 
       expect(jobs).to.eql([job]);
     });
-  })
+  });
+
+  describe('pipelines', () => {
+    it('throws an exception if the value provided for all is not a boolean', async () => {
+      try {
+        await newFly().pipelines({ all: 25 });
+      } catch(e) {
+        expect(e instanceof Error).to.eql(true);
+        expect(e.message)
+          .to.eql('Invalid parameter(s): ["all" must be a boolean].');
+        return
+      }
+      expect.fail(null, null, 'Expected exception but none was thrown.');
+    });
+
+    it('gets pipelines for the supplied team by default', async () => {
+      const uri = 'https://concourse.example.com';
+
+      const username = 'some-username';
+      const password = 'some-password';
+
+      const teamName = 'main';
+
+      const bearerToken = faker.random.alphaNumeric(800);
+      const authToken = buildAuthToken({ value: bearerToken });
+
+      const pipeline = buildPipeline();
+
+      mock.onGet(
+        `${uri}/teams/${teamName}/auth/token`,
+        {
+          headers: {
+            'Authorization': 'Basic c29tZS11c2VybmFtZTpzb21lLXBhc3N3b3Jk'
+          }
+        })
+        .reply(200, authToken);
+
+      mock.onGet(
+        `${uri}/teams/${teamName}/pipelines`,
+        {
+          headers: {
+            'Authorization': `Bearer ${bearerToken}`
+          }
+        })
+        .reply(200, [pipeline]);
+
+      const fly = await new Fly({ uri, teamName })
+        .login({ username, password });
+
+      const pipelines = await fly.pipelines();
+
+      expect(pipelines).to.eql([pipeline]);
+    });
+
+    it('gets all pipelines if all is true', async () => {
+      const uri = 'https://concourse.example.com';
+
+      const username = 'some-username';
+      const password = 'some-password';
+
+      const teamName = 'main';
+
+      const bearerToken = faker.random.alphaNumeric(800);
+      const authToken = buildAuthToken({ value: bearerToken });
+
+      const pipeline = buildPipeline();
+
+      mock.onGet(
+        `${uri}/teams/${teamName}/auth/token`,
+        {
+          headers: {
+            'Authorization': 'Basic c29tZS11c2VybmFtZTpzb21lLXBhc3N3b3Jk'
+          }
+        })
+        .reply(200, authToken);
+
+      mock.onGet(
+        `${uri}/pipelines`,
+        {
+          headers: {
+            'Authorization': `Bearer ${bearerToken}`
+          }
+        })
+        .reply(200, [pipeline]);
+
+      const fly = await new Fly({ uri, teamName })
+        .login({ username, password });
+
+      const pipelines = await fly.pipelines({ all: true });
+
+      expect(pipelines).to.eql([pipeline]);
+    });
+
+    it('gets pipelines for the supplied team when all is false', async () => {
+      const uri = 'https://concourse.example.com';
+
+      const username = 'some-username';
+      const password = 'some-password';
+
+      const teamName = 'main';
+
+      const bearerToken = faker.random.alphaNumeric(800);
+      const authToken = buildAuthToken({ value: bearerToken });
+
+      const pipeline = buildPipeline();
+
+      mock.onGet(
+        `${uri}/teams/${teamName}/auth/token`,
+        {
+          headers: {
+            'Authorization': 'Basic c29tZS11c2VybmFtZTpzb21lLXBhc3N3b3Jk'
+          }
+        })
+        .reply(200, authToken);
+
+      mock.onGet(
+        `${uri}/teams/${teamName}/pipelines`,
+        {
+          headers: {
+            'Authorization': `Bearer ${bearerToken}`
+          }
+        })
+        .reply(200, [pipeline]);
+
+      const fly = await new Fly({ uri, teamName })
+        .login({ username, password });
+
+      const pipelines = await fly.pipelines({ all: false });
+
+      expect(pipelines).to.eql([pipeline]);
+    });
+  });
 });

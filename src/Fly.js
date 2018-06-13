@@ -1,20 +1,20 @@
 import axios from 'axios';
 import { basicAuthHeader, bearerAuthHeader } from './http';
-import { authTokenUri, jobsUri } from './uris';
-import { schemaFor, string, uri, validateOptions } from './validation';
+import { allPipelinesUri, authTokenUri, jobsUri, pipelinesUri } from './uris';
+import { boolean, schemaFor, string, uri, validateOptions } from './validation';
 
 export default class Fly {
   constructor(options) {
     const validatedOptions = validateOptions(
       schemaFor({
         uri: uri().required(),
-        team: string(),
+        teamName: string(),
         username: string(),
         password: string(),
       }), options);
 
     this.uri = validatedOptions.uri;
-    this.team = validatedOptions.team;
+    this.teamName = validatedOptions.teamName;
     this.username = validatedOptions.username;
     this.password = validatedOptions.password;
   }
@@ -24,12 +24,12 @@ export default class Fly {
       schemaFor({
         username: string().required(),
         password: string().required(),
-        team: string()
+        teamName: string()
       }), options);
 
     return new Fly({
       uri: this.uri,
-      team: validatedOptions.team || this.team,
+      teamName: validatedOptions.teamName || this.teamName,
       username: validatedOptions.username,
       password: validatedOptions.password,
     });
@@ -41,18 +41,39 @@ export default class Fly {
         pipeline: string().required()
       }), options);
 
-    const bearerAuthTokenResponse = await axios
-      .get(authTokenUri(this.uri, this.team), {
+    const { data: bearerAuthToken } = await axios
+      .get(authTokenUri(this.uri, this.teamName), {
         headers: basicAuthHeader(this.username, this.password)
       });
-    const bearerAuthToken = bearerAuthTokenResponse.data;
 
-    const jobsResponse = await axios
-      .get(jobsUri(this.uri, this.team, validatedOptions.pipeline), {
+    const { data: jobs } = await axios
+      .get(jobsUri(this.uri, this.teamName, validatedOptions.pipeline), {
         headers: bearerAuthHeader(bearerAuthToken.value)
       });
-    const jobs = jobsResponse.data;
 
     return jobs;
+  }
+
+  async pipelines(options = {}) {
+    const validatedOptions = validateOptions(
+      schemaFor({
+        all: boolean()
+      }), options);
+
+    const { data: bearerAuthToken }= await axios
+      .get(authTokenUri(this.uri, this.teamName), {
+        headers: basicAuthHeader(this.username, this.password)
+      });
+
+    const uri = validatedOptions.all ?
+      allPipelinesUri(this.uri) :
+      pipelinesUri(this.uri, this.teamName);
+
+    const { data: pipelines } = await axios
+      .get(uri, {
+        headers: bearerAuthHeader(bearerAuthToken.value)
+      });
+
+    return pipelines;
   }
 }
