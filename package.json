@@ -5,10 +5,10 @@
   "main": "lib/index.js",
   "scripts": {
     "lint": "standard --env mocha ",
-    "lintfix": "standard --env mocha --fix",
+    "lintFix": "standard --env mocha --fix",
     "start": "babel -s inline -d lib -w src",
     "build": "babel -s inline -d lib src",
-    "prepublish": "npm run lint && npm test && npm run build",
+    "prepublishOnly": "npm run lint && npm test && npm run build",
     "test": "mocha --require babel-polyfill --require babel-core/register ./test"
   },
   "repository": {
