@@ -1,6 +1,6 @@
 {
-  "name": "concourse.js",
-  "version": "0.1.0",
+  "name": "concourse",
+  "version": "0.2.0",
   "description": "A JavaScript SDK for the Concourse CI API.",
   "main": "lib/index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/infrablocks/fly.js.git"
+    "url": "git+ssh://git@github.com/infrablocks/concourse.js.git"
   },
   "keywords": [
     "concourse",
