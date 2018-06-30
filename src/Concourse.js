@@ -1,4 +1,6 @@
 import axios from 'axios';
+import camelcaseKeysDeep from 'camelcase-keys-deep';
+
 import { basicAuthHeader, bearerAuthHeader } from './http';
 import { allPipelinesUri, authTokenUri, jobsUri, pipelinesUri } from './uris';
 import { boolean, schemaFor, string, uri, validateOptions } from './validation';
@@ -48,7 +50,8 @@ export default class Concourse {
 
     const { data: jobs } = await axios
       .get(jobsUri(this.uri, this.teamName, validatedOptions.pipeline), {
-        headers: bearerAuthHeader(bearerAuthToken.value)
+        headers: bearerAuthHeader(bearerAuthToken.value),
+        transformResponse: [camelcaseKeysDeep],
       });
 
     return jobs;
@@ -71,7 +74,8 @@ export default class Concourse {
 
     const { data: pipelines } = await axios
       .get(uri, {
-        headers: bearerAuthHeader(bearerAuthToken.value)
+        headers: bearerAuthHeader(bearerAuthToken.value),
+        transformResponse: [camelcaseKeysDeep],
       });
 
     return pipelines;
