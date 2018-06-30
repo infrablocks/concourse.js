@@ -4,9 +4,11 @@
   "description": "A JavaScript SDK for the Concourse CI API.",
   "main": "lib/index.js",
   "scripts": {
+    "lint": "standard --env mocha ",
+    "lintfix": "standard --env mocha --fix",
     "start": "babel -s inline -d lib -w src",
     "build": "babel -s inline -d lib src",
-    "prepublish": "npm test && npm run build",
+    "prepublish": "npm run lint && npm test && npm run build",
     "test": "mocha --require babel-polyfill --require babel-core/register ./test"
   },
   "repository": {
@@ -36,7 +38,8 @@
     "babel-preset-env": "^1.7.0",
     "chai": "^4.1.2",
     "faker": "^4.1.0",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "standard": "^11.0.1"
   },
   "dependencies": {
     "axios": "^0.18.0",
