@@ -13,14 +13,12 @@ export const pipeline =
   ({
     id = 53,
     name = 'example-pipeline',
-    url = '/teams/example-team/pipelines/example-pipeline',
     isPaused = false,
     isPublic = false,
     teamName = 'example-team'
   } = {}) => ({
     id,
     name,
-    url,
     paused: isPaused,
     'public': isPublic,
     team_name: teamName
@@ -34,7 +32,6 @@ export const build =
     teamName = 'example-teamName',
     pipelineName = 'example-pipeline',
     jobName = 'example-job',
-    url = '/teams/example-teamName/pipelines/example-pipeline/jobs/example-job/builds/81',
     apiUrl = '/api/v1/builds/10416',
     startTime = 1524830894,
     endTime = 1524831161
@@ -44,7 +41,6 @@ export const build =
     name,
     status,
     job_name: jobName,
-    url,
     api_url: apiUrl,
     pipeline_name: pipelineName,
     start_time: startTime,
@@ -75,16 +71,18 @@ export const job =
   ({
     id = 288,
     name = 'build',
-    url = '/teams/example-teamName/pipelines/example-pipeline/jobs/build',
+    pipelineName = 'example-pipeline',
+    teamName = 'example-team-name',
     nextBuild = null,
     finishedBuild = build(),
     inputs = [input()],
     outputs = [output()],
-    groups = []
+    groups = null
   } = {}) => ({
     id,
     name,
-    url,
+    pipeline_name: pipelineName,
+    team_name: teamName,
     next_build: nextBuild,
     finished_build: finishedBuild,
     inputs,

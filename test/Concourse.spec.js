@@ -10,11 +10,11 @@ import Concourse from '../src/Concourse'
 
 const newConcourse =
   ({
-     uri = faker.internet.url(),
-     teamName = 'main',
-     username = 'some-username',
-     password = 'some-password'
-   } = {}) => new Concourse({
+    uri = faker.internet.url(),
+    teamName = 'main',
+    username = 'some-username',
+    password = 'some-password'
+  } = {}) => new Concourse({
     uri,
     teamName,
     username,
@@ -223,6 +223,8 @@ describe('Concourse', () => {
 
         const jobData = data.randomJob({
           name: jobName,
+          pipelineName,
+          teamName,
           nextBuild: null
         })
 
@@ -479,7 +481,7 @@ describe('Concourse', () => {
           expect(e instanceof Error).to.eql(true)
           expect(e.message)
             .to.eql(
-            'Invalid parameter(s): [' +
+              'Invalid parameter(s): [' +
             '"count" must be larger than or equal to 1].')
           return
         }
@@ -494,7 +496,7 @@ describe('Concourse', () => {
           expect(e instanceof Error).to.eql(true)
           expect(e.message)
             .to.eql(
-            'Invalid parameter(s): [' +
+              'Invalid parameter(s): [' +
             '"job" must be a string].')
           return
         }
@@ -511,7 +513,7 @@ describe('Concourse', () => {
           expect(e instanceof Error).to.eql(true)
           expect(e.message)
             .to.eql(
-            'Invalid parameter(s): [' +
+              'Invalid parameter(s): [' +
             '"job" with value "something-weird" fails to match ' +
             'the required pattern: /^(.*)\\/(.*)$/].')
           return
@@ -532,7 +534,9 @@ describe('Concourse', () => {
 
         const teamName = data.randomTeamName()
 
-        const buildData = data.randomBuild()
+        const buildData = data.randomBuild({
+          teamName
+        })
 
         const buildFromApi = build.api.build(buildData)
         const buildsFromApi = [buildFromApi]
@@ -585,7 +589,9 @@ describe('Concourse', () => {
 
         const count = 10
 
-        const buildData = data.randomBuild()
+        const buildData = data.randomBuild({
+          teamName
+        })
 
         const buildFromApi = build.api.build(buildData)
         const buildsFromApi = [buildFromApi]
@@ -636,7 +642,9 @@ describe('Concourse', () => {
 
         const teamName = data.randomTeamName()
 
-        const buildData = data.randomBuild()
+        const buildData = data.randomBuild({
+          teamName
+        })
 
         const buildFromApi = build.api.build(buildData)
         const buildsFromApi = [buildFromApi]
@@ -687,7 +695,11 @@ describe('Concourse', () => {
         const pipelineName = data.randomPipelineName()
         const jobName = data.randomJobName()
 
-        const buildData = data.randomBuild()
+        const buildData = data.randomBuild({
+          teamName,
+          pipelineName,
+          jobName
+        })
 
         const buildFromApi = build.api.build(buildData)
         const buildsFromApi = [buildFromApi]

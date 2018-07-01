@@ -110,10 +110,10 @@ export default class Concourse {
 
     const pipelineName = validatedOptions.job
       ? jobRegex.exec(validatedOptions.job)[1]
-      : undefined;
+      : undefined
     const jobName = validatedOptions.job
       ? jobRegex.exec(validatedOptions.job)[2]
-      : undefined;
+      : undefined
 
     const uri = validatedOptions.job
       ? jobBuildsUri(this.uri, this.teamName, pipelineName, jobName)
