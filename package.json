@@ -1,6 +1,6 @@
 {
   "name": "@infrablocks/concourse",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "A JavaScript SDK for the Concourse CI API.",
   "main": "lib/index.js",
   "scripts": {
