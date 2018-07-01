@@ -2,8 +2,21 @@ import axios from 'axios'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
 
 import { basicAuthHeader, bearerAuthHeader } from './http'
-import { allPipelinesUri, authTokenUri, jobsUri, pipelinesUri } from './uris'
-import { boolean, schemaFor, string, uri, validateOptions } from './validation'
+import {
+  allBuildsUri,
+  allPipelinesUri,
+  authTokenUri, jobBuildsUri,
+  jobsUri,
+  pipelinesUri
+} from './uris'
+import {
+  boolean,
+  integer,
+  schemaFor,
+  string,
+  uri,
+  validateOptions
+} from './validation'
 
 export default class Concourse {
   constructor (options) {
@@ -79,5 +92,44 @@ export default class Concourse {
       })
 
     return pipelines
+  }
+
+  async builds (options = {}) {
+    const jobRegex = /^(.*)\/(.*)$/
+
+    const validatedOptions = validateOptions(
+      schemaFor({
+        count: integer().min(1).allow(null).default(50),
+        job: string().regex(jobRegex)
+      }), options)
+
+    const { data: bearerAuthToken } = await axios
+      .get(authTokenUri(this.uri, this.teamName), {
+        headers: basicAuthHeader(this.username, this.password)
+      })
+
+    const pipelineName = validatedOptions.job
+      ? jobRegex.exec(validatedOptions.job)[1]
+      : undefined;
+    const jobName = validatedOptions.job
+      ? jobRegex.exec(validatedOptions.job)[2]
+      : undefined;
+
+    const uri = validatedOptions.job
+      ? jobBuildsUri(this.uri, this.teamName, pipelineName, jobName)
+      : allBuildsUri(this.uri)
+    const headers = bearerAuthHeader(bearerAuthToken.value)
+    const params = validatedOptions.count
+      ? { limit: validatedOptions.count }
+      : {}
+
+    const { data: jobs } = await axios
+      .get(uri, {
+        headers,
+        params,
+        transformResponse: [camelcaseKeysDeep]
+      })
+
+    return jobs
   }
 }
