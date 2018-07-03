@@ -488,6 +488,20 @@ describe('Concourse', () => {
         expect.fail(null, null, 'Expected exception but none was thrown.')
       })
 
+    it('throws an exception if the value provided for team is not a boolean',
+      async () => {
+        try {
+          await newConcourse().builds({ team: 'yes' })
+        } catch (e) {
+          expect(e instanceof Error).to.eql(true)
+          expect(e.message)
+            .to.eql(
+            'Invalid parameter(s): ["team" must be a boolean].')
+          return
+        }
+        expect.fail(null, null, 'Expected exception but none was thrown.')
+      })
+
     it('throws an exception if the provided job is not a string',
       async () => {
         try {
@@ -516,6 +530,39 @@ describe('Concourse', () => {
               'Invalid parameter(s): [' +
             '"job" with value "something-weird" fails to match ' +
             'the required pattern: /^(.*)\\/(.*)$/].')
+          return
+        }
+        expect.fail(null, null, 'Expected exception but none was thrown.')
+      })
+
+    it('throws an exception if the provided job is not a string',
+      async () => {
+        try {
+          await newConcourse().builds({ pipeline: 30 })
+        } catch (e) {
+          expect(e instanceof Error).to.eql(true)
+          expect(e.message)
+            .to.eql(
+            'Invalid parameter(s): [' +
+            '"pipeline" must be a string].')
+          return
+        }
+        expect.fail(null, null, 'Expected exception but none was thrown.')
+      })
+
+    it('throws an exception if both pipeline and job are provided',
+      async () => {
+        try {
+          await newConcourse().builds({
+            pipeline: 'some-pipeline',
+            job: 'some-pipeline/some-job'
+          })
+        } catch (e) {
+          expect(e instanceof Error).to.eql(true)
+          expect(e.message)
+            .to.eql(
+            'Invalid parameter(s): [' +
+            '"job" conflict with forbidden peer "pipeline"].')
           return
         }
         expect.fail(null, null, 'Expected exception but none was thrown.')
@@ -735,6 +782,183 @@ describe('Concourse', () => {
 
         const actualBuilds = await fly.builds({
           job: `${pipelineName}/${jobName}`
+        })
+
+        expect(actualBuilds).to.eql(expectedBuilds)
+      })
+
+    it('gets builds for pipeline when provided',
+      async () => {
+        const uri = 'https://concourse.example.com'
+
+        const username = 'some-username'
+        const password = 'some-password'
+        const authentication = 'Basic c29tZS11c2VybmFtZTpzb21lLXBhc3N3b3Jk'
+
+        const bearerToken = data.randomBearerToken()
+        const authToken = build.api.authToken({ value: bearerToken })
+
+        const teamName = data.randomTeamName()
+        const pipelineName = data.randomPipelineName()
+        const jobName = data.randomJobName()
+
+        const buildData = data.randomBuild({
+          teamName,
+          pipelineName,
+          jobName
+        })
+
+        const buildFromApi = build.api.build(buildData)
+        const buildsFromApi = [buildFromApi]
+
+        const convertedBuild = build.client.build(buildData)
+
+        const expectedBuilds = [convertedBuild]
+
+        mock.onGet(
+          `${uri}/teams/${teamName}/auth/token`,
+          {
+            headers: {
+              'Authorization': authentication
+            }
+          })
+          .reply(200, authToken)
+
+        mock.onGet(
+          `${uri}/teams/${teamName}/pipelines/${pipelineName}/builds`,
+          {
+            headers: {
+              'Authorization': `Bearer ${bearerToken}`
+            },
+            params: {
+              limit: 50
+            }
+          })
+          .reply(200, buildsFromApi)
+
+        const fly = await new Concourse({ uri, teamName })
+          .login({ username, password })
+
+        const actualBuilds = await fly.builds({
+          pipeline: pipelineName
+        })
+
+        expect(actualBuilds).to.eql(expectedBuilds)
+      })
+
+    it('gets builds for team when team is true',
+      async () => {
+        const uri = 'https://concourse.example.com'
+
+        const username = 'some-username'
+        const password = 'some-password'
+        const authentication = 'Basic c29tZS11c2VybmFtZTpzb21lLXBhc3N3b3Jk'
+
+        const bearerToken = data.randomBearerToken()
+        const authToken = build.api.authToken({ value: bearerToken })
+
+        const teamName = data.randomTeamName()
+        const pipelineName = data.randomPipelineName()
+        const jobName = data.randomJobName()
+
+        const buildData = data.randomBuild({
+          teamName,
+          pipelineName,
+          jobName
+        })
+
+        const buildFromApi = build.api.build(buildData)
+        const buildsFromApi = [buildFromApi]
+
+        const convertedBuild = build.client.build(buildData)
+
+        const expectedBuilds = [convertedBuild]
+
+        mock.onGet(
+          `${uri}/teams/${teamName}/auth/token`,
+          {
+            headers: {
+              'Authorization': authentication
+            }
+          })
+          .reply(200, authToken)
+
+        mock.onGet(
+          `${uri}/teams/${teamName}/builds`,
+          {
+            headers: {
+              'Authorization': `Bearer ${bearerToken}`
+            },
+            params: {
+              limit: 50
+            }
+          })
+          .reply(200, buildsFromApi)
+
+        const fly = await new Concourse({ uri, teamName })
+          .login({ username, password })
+
+        const actualBuilds = await fly.builds({
+          team: true,
+        })
+
+        expect(actualBuilds).to.eql(expectedBuilds)
+      })
+
+    it('gets all builds when team is false',
+      async () => {
+        const uri = 'https://concourse.example.com'
+
+        const username = 'some-username'
+        const password = 'some-password'
+        const authentication = 'Basic c29tZS11c2VybmFtZTpzb21lLXBhc3N3b3Jk'
+
+        const bearerToken = data.randomBearerToken()
+        const authToken = build.api.authToken({ value: bearerToken })
+
+        const teamName = data.randomTeamName()
+        const pipelineName = data.randomPipelineName()
+        const jobName = data.randomJobName()
+
+        const buildData = data.randomBuild({
+          teamName,
+          pipelineName,
+          jobName
+        })
+
+        const buildFromApi = build.api.build(buildData)
+        const buildsFromApi = [buildFromApi]
+
+        const convertedBuild = build.client.build(buildData)
+
+        const expectedBuilds = [convertedBuild]
+
+        mock.onGet(
+          `${uri}/teams/${teamName}/auth/token`,
+          {
+            headers: {
+              'Authorization': authentication
+            }
+          })
+          .reply(200, authToken)
+
+        mock.onGet(
+          `${uri}/builds`,
+          {
+            headers: {
+              'Authorization': `Bearer ${bearerToken}`
+            },
+            params: {
+              limit: 50
+            }
+          })
+          .reply(200, buildsFromApi)
+
+        const fly = await new Concourse({ uri, teamName })
+          .login({ username, password })
+
+        const actualBuilds = await fly.builds({
+          team: false,
         })
 
         expect(actualBuilds).to.eql(expectedBuilds)

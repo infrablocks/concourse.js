@@ -5,9 +5,12 @@ import { basicAuthHeader, bearerAuthHeader } from './http'
 import {
   allBuildsUri,
   allPipelinesUri,
-  authTokenUri, jobBuildsUri,
+  authTokenUri,
   jobsUri,
-  pipelinesUri
+  jobBuildsUri,
+  pipelinesUri,
+  buildsUri,
+  pipelineBuildsUri
 } from './uris'
 import {
   boolean,
@@ -18,8 +21,20 @@ import {
   validateOptions
 } from './validation'
 
+const buildsUriFor = (uri, teamName, pipelineName, jobName, team) => {
+  if (jobName) {
+    return jobBuildsUri(uri, teamName, pipelineName, jobName)
+  } else if (pipelineName) {
+    return pipelineBuildsUri(uri, teamName, pipelineName)
+  } else if (team) {
+    return buildsUri(uri, teamName)
+  } else {
+    return allBuildsUri(uri)
+  }
+}
+
 export default class Concourse {
-  constructor (options) {
+  constructor(options) {
     const validatedOptions = validateOptions(
       schemaFor({
         uri: uri().required(),
@@ -34,7 +49,7 @@ export default class Concourse {
     this.password = validatedOptions.password
   }
 
-  async login (options) {
+  async login(options) {
     const validatedOptions = validateOptions(
       schemaFor({
         username: string().required(),
@@ -50,7 +65,7 @@ export default class Concourse {
     })
   }
 
-  async jobs (options) {
+  async jobs(options) {
     const validatedOptions = validateOptions(
       schemaFor({
         pipeline: string().required()
@@ -70,7 +85,7 @@ export default class Concourse {
     return jobs
   }
 
-  async pipelines (options = {}) {
+  async pipelines(options = {}) {
     const validatedOptions = validateOptions(
       schemaFor({
         all: boolean()
@@ -94,14 +109,17 @@ export default class Concourse {
     return pipelines
   }
 
-  async builds (options = {}) {
+  async builds(options = {}) {
     const jobRegex = /^(.*)\/(.*)$/
 
     const validatedOptions = validateOptions(
-      schemaFor({
-        count: integer().min(1).allow(null).default(50),
-        job: string().regex(jobRegex)
-      }), options)
+      schemaFor(
+        {
+          count: integer().min(1).allow(null).default(50),
+          pipeline: string(),
+          job: string().regex(jobRegex),
+          team: boolean(),
+        }).without('job', 'pipeline'), options)
 
     const { data: bearerAuthToken } = await axios
       .get(authTokenUri(this.uri, this.teamName), {
@@ -110,14 +128,13 @@ export default class Concourse {
 
     const pipelineName = validatedOptions.job
       ? jobRegex.exec(validatedOptions.job)[1]
-      : undefined
+      : validatedOptions.pipeline
     const jobName = validatedOptions.job
       ? jobRegex.exec(validatedOptions.job)[2]
       : undefined
 
-    const uri = validatedOptions.job
-      ? jobBuildsUri(this.uri, this.teamName, pipelineName, jobName)
-      : allBuildsUri(this.uri)
+    const uri = buildsUriFor(
+      this.uri, this.teamName, pipelineName, jobName, validatedOptions.team)
     const headers = bearerAuthHeader(bearerAuthToken.value)
     const params = validatedOptions.count
       ? { limit: validatedOptions.count }
