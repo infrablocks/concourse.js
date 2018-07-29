@@ -8,7 +8,7 @@
     "lintFix": "standard --env mocha --fix",
     "start": "babel -s inline -d lib -w src",
     "build": "babel -s inline -d lib src",
-    "prepublishOnly": "npm run lint && npm test && npm run build",
+    "prepublishOnly": "npm run lint && npm run test && npm run build",
     "test": "mocha --require babel-polyfill --require babel-core/register ./test"
   },
   "repository": {

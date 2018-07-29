@@ -6,7 +6,7 @@ import MockAdapter from 'axios-mock-adapter'
 import build from './support/builders'
 import data from './support/data'
 
-import Concourse from '../src/Concourse'
+import Fly from '../src/Fly'
 
 const newConcourse =
   ({
@@ -14,14 +14,14 @@ const newConcourse =
     teamName = 'main',
     username = 'some-username',
     password = 'some-password'
-  } = {}) => new Concourse({
+  } = {}) => new Fly({
     uri,
     teamName,
     username,
     password
   })
 
-describe('Concourse', () => {
+describe('Fly', () => {
   const mock = new MockAdapter(axios)
 
   beforeEach(() => {
@@ -35,21 +35,21 @@ describe('Concourse', () => {
   describe('construction', () => {
     it('throws an exception if the URI is not provided', () => {
       expect(() => {
-        new Concourse({}) // eslint-disable-line no-new
+        new Fly({}) // eslint-disable-line no-new
       })
         .to.throw(Error, 'Invalid parameter(s): ["uri" is required].')
     })
 
     it('throws an exception if the URI is not a string', () => {
       expect(() => {
-        new Concourse({ uri: 25 }) // eslint-disable-line no-new
+        new Fly({ uri: 25 }) // eslint-disable-line no-new
       })
         .to.throw(Error, 'Invalid parameter(s): ["uri" must be a string].')
     })
 
     it('throws an exception if the URI is not a valid URI', () => {
       expect(() => {
-        new Concourse({ uri: 'spinach' }) // eslint-disable-line no-new
+        new Fly({ uri: 'spinach' }) // eslint-disable-line no-new
       })
         .to.throw(Error, 'Invalid parameter(s): ["uri" must be a valid uri].')
     })
@@ -58,7 +58,7 @@ describe('Concourse', () => {
       expect(
         () => {
           // eslint-disable-next-line no-new
-          new Concourse({
+          new Fly({
             uri: faker.internet.url(),
             teamName: 35
           })
@@ -70,7 +70,7 @@ describe('Concourse', () => {
       expect(
         () => {
           // eslint-disable-next-line no-new
-          new Concourse({
+          new Fly({
             uri: faker.internet.url(),
             username: 35
           })
@@ -82,7 +82,7 @@ describe('Concourse', () => {
       expect(
         () => {
           // eslint-disable-next-line no-new
-          new Concourse({
+          new Fly({
             uri: faker.internet.url(),
             password: 35
           })
@@ -272,7 +272,7 @@ describe('Concourse', () => {
           })
           .reply(200, jobsFromApi)
 
-        const fly = await new Concourse({ uri, teamName })
+        const fly = await new Fly({ uri, teamName })
           .login({ username, password })
 
         const actualJobs = await fly.jobs({ pipeline: pipelineName })
@@ -337,7 +337,7 @@ describe('Concourse', () => {
           })
           .reply(200, pipelinesFromApi)
 
-        const fly = await new Concourse({ uri, teamName })
+        const fly = await new Fly({ uri, teamName })
           .login({ username, password })
 
         const actualPipelines = await fly.pipelines()
@@ -387,7 +387,7 @@ describe('Concourse', () => {
           })
           .reply(200, pipelinesFromApi)
 
-        const fly = await new Concourse({ uri, teamName })
+        const fly = await new Fly({ uri, teamName })
           .login({ username, password })
 
         const actualPipelines = await fly.pipelines({ all: true })
@@ -437,7 +437,7 @@ describe('Concourse', () => {
           })
           .reply(200, pipelinesFromApi)
 
-        const fly = await new Concourse({ uri, teamName })
+        const fly = await new Fly({ uri, teamName })
           .login({ username, password })
 
         const actualPipelines = await fly.pipelines({ all: false })
@@ -496,7 +496,7 @@ describe('Concourse', () => {
           expect(e instanceof Error).to.eql(true)
           expect(e.message)
             .to.eql(
-            'Invalid parameter(s): ["team" must be a boolean].')
+              'Invalid parameter(s): ["team" must be a boolean].')
           return
         }
         expect.fail(null, null, 'Expected exception but none was thrown.')
@@ -543,7 +543,7 @@ describe('Concourse', () => {
           expect(e instanceof Error).to.eql(true)
           expect(e.message)
             .to.eql(
-            'Invalid parameter(s): [' +
+              'Invalid parameter(s): [' +
             '"pipeline" must be a string].')
           return
         }
@@ -561,7 +561,7 @@ describe('Concourse', () => {
           expect(e instanceof Error).to.eql(true)
           expect(e.message)
             .to.eql(
-            'Invalid parameter(s): [' +
+              'Invalid parameter(s): [' +
             '"job" conflict with forbidden peer "pipeline"].')
           return
         }
@@ -613,7 +613,7 @@ describe('Concourse', () => {
           })
           .reply(200, buildsFromApi)
 
-        const fly = await new Concourse({ uri, teamName })
+        const fly = await new Fly({ uri, teamName })
           .login({ username, password })
 
         const actualBuilds = await fly.builds()
@@ -668,7 +668,7 @@ describe('Concourse', () => {
           })
           .reply(200, buildsFromApi)
 
-        const fly = await new Concourse({ uri, teamName })
+        const fly = await new Fly({ uri, teamName })
           .login({ username, password })
 
         const actualBuilds = await fly.builds({ count })
@@ -719,7 +719,7 @@ describe('Concourse', () => {
           })
           .reply(200, buildsFromApi)
 
-        const fly = await new Concourse({ uri, teamName })
+        const fly = await new Fly({ uri, teamName })
           .login({ username, password })
 
         const actualBuilds = await fly.builds({ count: null })
@@ -777,7 +777,7 @@ describe('Concourse', () => {
           })
           .reply(200, buildsFromApi)
 
-        const fly = await new Concourse({ uri, teamName })
+        const fly = await new Fly({ uri, teamName })
           .login({ username, password })
 
         const actualBuilds = await fly.builds({
@@ -836,7 +836,7 @@ describe('Concourse', () => {
           })
           .reply(200, buildsFromApi)
 
-        const fly = await new Concourse({ uri, teamName })
+        const fly = await new Fly({ uri, teamName })
           .login({ username, password })
 
         const actualBuilds = await fly.builds({
@@ -895,11 +895,11 @@ describe('Concourse', () => {
           })
           .reply(200, buildsFromApi)
 
-        const fly = await new Concourse({ uri, teamName })
+        const fly = await new Fly({ uri, teamName })
           .login({ username, password })
 
         const actualBuilds = await fly.builds({
-          team: true,
+          team: true
         })
 
         expect(actualBuilds).to.eql(expectedBuilds)
@@ -954,11 +954,11 @@ describe('Concourse', () => {
           })
           .reply(200, buildsFromApi)
 
-        const fly = await new Concourse({ uri, teamName })
+        const fly = await new Fly({ uri, teamName })
           .login({ username, password })
 
         const actualBuilds = await fly.builds({
-          team: false,
+          team: false
         })
 
         expect(actualBuilds).to.eql(expectedBuilds)

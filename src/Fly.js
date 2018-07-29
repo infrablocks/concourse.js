@@ -3,15 +3,15 @@ import camelcaseKeysDeep from 'camelcase-keys-deep'
 
 import { basicAuthHeader, bearerAuthHeader } from './http'
 import {
-  allBuildsUri,
-  allPipelinesUri,
-  authTokenUri,
-  jobsUri,
-  jobBuildsUri,
-  pipelinesUri,
-  buildsUri,
-  pipelineBuildsUri
-} from './uris'
+  allBuildsUrl,
+  allPipelinesUrl,
+  teamAuthTokenUrl,
+  teamPipelineJobsUrl,
+  teamPipelineJobBuildsUrl,
+  teamPipelinesUrl,
+  teamBuildsUrl,
+  teamPipelineBuildsUrl
+} from './urls'
 import {
   boolean,
   integer,
@@ -23,18 +23,18 @@ import {
 
 const buildsUriFor = (uri, teamName, pipelineName, jobName, team) => {
   if (jobName) {
-    return jobBuildsUri(uri, teamName, pipelineName, jobName)
+    return teamPipelineJobBuildsUrl(uri, teamName, pipelineName, jobName)
   } else if (pipelineName) {
-    return pipelineBuildsUri(uri, teamName, pipelineName)
+    return teamPipelineBuildsUrl(uri, teamName, pipelineName)
   } else if (team) {
-    return buildsUri(uri, teamName)
+    return teamBuildsUrl(uri, teamName)
   } else {
-    return allBuildsUri(uri)
+    return allBuildsUrl(uri)
   }
 }
 
-export default class Concourse {
-  constructor(options) {
+export default class Fly {
+  constructor (options) {
     const validatedOptions = validateOptions(
       schemaFor({
         uri: uri().required(),
@@ -49,7 +49,7 @@ export default class Concourse {
     this.password = validatedOptions.password
   }
 
-  async login(options) {
+  async login (options) {
     const validatedOptions = validateOptions(
       schemaFor({
         username: string().required(),
@@ -57,7 +57,7 @@ export default class Concourse {
         teamName: string()
       }), options)
 
-    return new Concourse({
+    return new Fly({
       uri: this.uri,
       teamName: validatedOptions.teamName || this.teamName,
       username: validatedOptions.username,
@@ -65,19 +65,19 @@ export default class Concourse {
     })
   }
 
-  async jobs(options) {
+  async jobs (options) {
     const validatedOptions = validateOptions(
       schemaFor({
         pipeline: string().required()
       }), options)
 
     const { data: bearerAuthToken } = await axios
-      .get(authTokenUri(this.uri, this.teamName), {
+      .get(teamAuthTokenUrl(this.uri, this.teamName), {
         headers: basicAuthHeader(this.username, this.password)
       })
 
     const { data: jobs } = await axios
-      .get(jobsUri(this.uri, this.teamName, validatedOptions.pipeline), {
+      .get(teamPipelineJobsUrl(this.uri, this.teamName, validatedOptions.pipeline), {
         headers: bearerAuthHeader(bearerAuthToken.value),
         transformResponse: [camelcaseKeysDeep]
       })
@@ -85,20 +85,20 @@ export default class Concourse {
     return jobs
   }
 
-  async pipelines(options = {}) {
+  async pipelines (options = {}) {
     const validatedOptions = validateOptions(
       schemaFor({
         all: boolean()
       }), options)
 
     const { data: bearerAuthToken } = await axios
-      .get(authTokenUri(this.uri, this.teamName), {
+      .get(teamAuthTokenUrl(this.uri, this.teamName), {
         headers: basicAuthHeader(this.username, this.password)
       })
 
     const uri = validatedOptions.all
-      ? allPipelinesUri(this.uri)
-      : pipelinesUri(this.uri, this.teamName)
+      ? allPipelinesUrl(this.uri)
+      : teamPipelinesUrl(this.uri, this.teamName)
 
     const { data: pipelines } = await axios
       .get(uri, {
@@ -109,7 +109,7 @@ export default class Concourse {
     return pipelines
   }
 
-  async builds(options = {}) {
+  async builds (options = {}) {
     const jobRegex = /^(.*)\/(.*)$/
 
     const validatedOptions = validateOptions(
@@ -118,11 +118,11 @@ export default class Concourse {
           count: integer().min(1).allow(null).default(50),
           pipeline: string(),
           job: string().regex(jobRegex),
-          team: boolean(),
+          team: boolean()
         }).without('job', 'pipeline'), options)
 
     const { data: bearerAuthToken } = await axios
-      .get(authTokenUri(this.uri, this.teamName), {
+      .get(teamAuthTokenUrl(this.uri, this.teamName), {
         headers: basicAuthHeader(this.username, this.password)
       })
 

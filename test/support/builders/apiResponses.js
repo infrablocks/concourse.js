@@ -9,6 +9,15 @@ export const authToken =
     value
   })
 
+export const team =
+  ({
+    id = 1,
+    name = 'example-team'
+  } = {}) => ({
+    id,
+    name
+  })
+
 export const pipeline =
   ({
     id = 53,
@@ -22,6 +31,63 @@ export const pipeline =
     paused: isPaused,
     'public': isPublic,
     team_name: teamName
+  })
+
+export const resource =
+  ({
+    name = 'example-resource',
+    pipelineName = 'example-pipeline',
+    teamName = 'example-team',
+    type = 'git',
+    lastChecked = 1524830894
+  } = {}) => ({
+    name,
+    pipeline_name: pipelineName,
+    team_name: teamName,
+    type,
+    last_checked: lastChecked
+  })
+
+export const resourceType =
+  ({
+    type = 'example-type',
+    image = '/concourse-work-dir/3.14.1/assets/resource-images/example/rootfs',
+    version = 'ffc6f68716afa5ad585e6ec90922ff3233fd077f',
+    privileged = false
+  } = {}) => ({
+    type,
+    image,
+    version,
+    privileged
+  })
+
+export const worker =
+  ({
+    addr = '10.240.3.194:45821',
+    baggageclaimUrl = 'http://10.240.3.194:45995',
+    activeContainers = 3,
+    activeVolumes = 0,
+    resourceTypes = [resourceType()],
+    platform = 'linux',
+    tags = null,
+    team = '',
+    name = '9aa6920cfc41',
+    startTime = 1532162932,
+    state = 'running',
+    version = '2.1'
+  } = {}) => ({
+    addr,
+    baggageclaim_url: baggageclaimUrl,
+    active_containers: activeContainers,
+    active_volumes: activeVolumes,
+    resource_types: resourceTypes,
+    platform,
+    tags,
+    team,
+    name,
+    version,
+    start_time: startTime,
+    state
   })
 
 export const build =

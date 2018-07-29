@@ -1,6 +1,6 @@
 import faker from 'faker'
 
-import { toUnixTime } from './helpers'
+import { toUnixTime, randomLowerHex } from './helpers'
 
 const randomId = () => faker.random.number()
 
@@ -29,6 +29,63 @@ const randomInputTrigger = () => faker.random.boolean()
 const randomOutputName = () => faker.random.word()
 const randomOutputResource = () => faker.random.word()
 
+const randomResourceTypeType = () => faker.random.arrayElement(
+  ['git', 'docker-image', 'slack-notification'])
+const randomResourceTypeImage = () =>
+  `/concourse-work-dir/3.14.1/assets/resource-images/${faker.random.word()}` +
+  `/rootfs`
+const randomResourceTypeVersion = () => randomLowerHex(40)
+const randomResourceTypeIsPrivileged = () => faker.random.boolean()
+
+const randomResourceType = (overrides = {}) => ({
+  type: randomResourceTypeType(),
+  image: randomResourceTypeImage(),
+  version: randomResourceTypeVersion(),
+  privileged: randomResourceTypeIsPrivileged(),
+  ...overrides
+})
+
+const randomResourceName = () => faker.random.word()
+const randomResourceLastCheckedTime = () => toUnixTime(faker.date.past())
+
+const randomPlatform = () => faker.random.arrayElement(
+  ['linux', 'darwin'])
+
+const randomWorkerAddress = () => `${faker.internet.ip()}:45821`
+const randomWorkerBaggageclaimUrl = () => `http://${faker.internet.ip()}:45995`
+const randomWorkerActiveContainersCount = () => faker.random.number()
+const randomWorkerActiveVolumesCount = () => faker.random.number()
+const randomWorkerTags = () => null
+const randomWorkerName = () => randomLowerHex(12)
+const randomWorkerStartTime = () => toUnixTime(faker.date.past())
+const randomWorkerState = () => faker.random.arrayElement(
+  ['running', 'stalled'])
+const randomWorkerVersion = () => '2.1'
+
+const randomResourceTypes = () => [randomResourceType()]
+
+const randomWorker = (overrides = {}) => ({
+  addr: randomWorkerAddress(),
+  baggageclaimUrl: randomWorkerBaggageclaimUrl(),
+  activeContainers: randomWorkerActiveContainersCount(),
+  activeVolumes: randomWorkerActiveVolumesCount(),
+  resourceTypes: randomResourceTypes(),
+  platform: randomPlatform(),
+  tags: randomWorkerTags(),
+  team: randomTeamName(),
+  name: randomWorkerName(),
+  startTime: randomWorkerStartTime(),
+  state: randomWorkerState(),
+  version: randomWorkerVersion(),
+  ...overrides
+})
+
+const randomTeam = (overrides = {}) => ({
+  id: randomId(),
+  name: randomTeamName(),
+  ...overrides
+})
+
 const randomPipeline = (overrides = {}) => ({
   id: randomId(),
   name: randomPipelineName(),
@@ -48,6 +105,15 @@ const randomInput = (overrides = {}) => ({
 const randomOutput = (overrides = {}) => ({
   name: randomOutputName(),
   resource: randomOutputResource(),
+  ...overrides
+})
+
+const randomResource = (overrides = {}) => ({
+  name: randomResourceName(),
+  pipelineName: randomPipelineName(),
+  teamName: randomTeamName(),
+  type: randomResourceTypeType(),
+  lastChecked: randomResourceLastCheckedTime(),
   ...overrides
 })
 
@@ -81,39 +147,25 @@ const randomJob = (overrides = {}) => ({
 })
 
 export default {
-  randomId,
-
   randomBearerToken,
 
-  randomBuildName,
-  randomBuildStatus,
-  randomBuildApiUrl,
-  randomBuildStartTime,
-  randomBuildEndTime,
+  randomTeam,
+  randomTeamName,
 
   randomBuild,
 
-  randomTeamName,
-
   randomPipelineName,
-  randomPipelineIsPaused,
-  randomPipelineIsPublic,
-
   randomPipeline,
 
   randomJobName,
-  randomJobGroups,
-
   randomJob,
 
-  randomInputName,
-  randomInputResource,
-  randomInputTrigger,
-
   randomInput,
+  randomOutput,
 
-  randomOutputName,
-  randomOutputResource,
+  randomResource,
 
-  randomOutput
+  randomResourceType,
+
+  randomWorker
 }

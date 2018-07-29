@@ -3,6 +3,7 @@ import Joi from 'joi'
 export const string = () => Joi.string()
 export const boolean = () => Joi.boolean()
 export const integer = () => Joi.number().integer()
+export const func = () => Joi.func()
 export const uri = () => string().uri()
 
 export const schemaFor = (config) =>
