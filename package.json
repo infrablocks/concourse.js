@@ -30,6 +30,13 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
   },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "camelcase-keys-deep": "^0.1.0",
+    "joi": "^13.4.0",
+    "js-base64": "^2.4.5",
+    "ramda": "^0.25.0"
+  },
   "devDependencies": {
     "axios-mock-adapter": "^1.15.0",
     "babel-cli": "^6.26.0",
@@ -40,11 +47,5 @@
     "faker": "^4.1.0",
     "mocha": "^5.2.0",
     "standard": "^11.0.1"
-  },
-  "dependencies": {
-    "axios": "^0.18.0",
-    "camelcase-keys-deep": "^0.1.0",
-    "joi": "^13.4.0",
-    "js-base64": "^2.4.5"
   }
 }

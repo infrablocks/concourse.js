@@ -87,6 +87,85 @@ describe('Client', () => {
       })
   })
 
+  describe('forTeam', () => {
+    it('returns a client for the team with the supplied ID when the team ' +
+      'exists',
+    async () => {
+      const bearerToken = data.randomBearerToken()
+
+      const apiUrl = 'https://concourse.example.com'
+      const httpClient = axios.create({
+        headers: bearerAuthHeader(bearerToken)
+      })
+      const mock = new MockAdapter(httpClient)
+
+      const teamId = data.randomId()
+
+      const teamData = data.randomTeam({
+        id: teamId
+      })
+
+      const firstTeamFromApi = build.api.team(teamData)
+      const secondTeamFromApi = build.api.team(data.randomTeam())
+      const teamsFromApi = [secondTeamFromApi, firstTeamFromApi]
+
+      const expectedTeam = build.client.team(teamData)
+
+      mock.onGet(
+        `${apiUrl}/teams`,
+        {
+          headers: {
+            ...bearerAuthHeader(bearerToken)
+          }
+        })
+        .reply(200, teamsFromApi)
+
+      const client = new Client({ apiUrl, httpClient })
+
+      const teamClient = await client.forTeam(teamId)
+
+      expect(teamClient.apiUrl).to.equal(apiUrl)
+      expect(teamClient.httpClient).to.equal(httpClient)
+      expect(teamClient.team).to.eql(expectedTeam)
+    })
+
+    it('throws an exception if no team exists for the supplied ID',
+      async () => {
+        const bearerToken = data.randomBearerToken()
+
+        const apiUrl = 'https://concourse.example.com'
+        const httpClient = axios.create({
+          headers: bearerAuthHeader(bearerToken)
+        })
+        const mock = new MockAdapter(httpClient)
+
+        const teamId = data.randomId()
+
+        const firstTeamFromApi = build.api.team(data.randomTeam())
+        const secondTeamFromApi = build.api.team(data.randomTeam())
+        const teamsFromApi = [secondTeamFromApi, firstTeamFromApi]
+
+        mock.onGet(
+          `${apiUrl}/teams`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .reply(200, teamsFromApi)
+
+        const client = new Client({ apiUrl, httpClient })
+
+        try {
+          await client.forTeam(teamId)
+          expect.fail('Expected exception but none was thrown.')
+        } catch (e) {
+          expect(e).to.be.an.instanceof(Error)
+          expect(e.message).to.eql(`No team for ID: ${teamId}`)
+        }
+      })
+  })
+
   describe('listWorkers', () => {
     it('gets all workers',
       async () => {
@@ -523,6 +602,50 @@ describe('Client', () => {
           return
         }
         expect.fail(null, null, 'Expected exception but none was thrown.')
+      })
+  })
+
+  describe('getBuild', () => {
+    it('gets the build with the provided ID',
+      async () => {
+        const bearerToken = data.randomBearerToken()
+
+        const apiUrl = 'https://concourse.example.com'
+        const httpClient = axios.create({
+          headers: bearerAuthHeader(bearerToken)
+        })
+        const mock = new MockAdapter(httpClient)
+
+        const buildId = data.randomId()
+
+        const teamName = data.randomTeamName()
+        const pipelineName = data.randomPipelineName()
+        const jobName = data.randomJobName()
+
+        const buildData = data.randomBuild({
+          id: buildId,
+          teamName,
+          pipelineName,
+          jobName
+        })
+
+        const buildFromApi = build.api.build(buildData)
+        const expectedBuild = build.client.build(buildData)
+
+        mock.onGet(
+          `${apiUrl}/builds/${buildId}`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .reply(200, buildFromApi)
+
+        const client = new Client({ apiUrl, httpClient })
+
+        const actualBuild = await client.getBuild(buildId)
+
+        expect(actualBuild).to.eql(expectedBuild)
       })
   })
 

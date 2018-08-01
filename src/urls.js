@@ -11,18 +11,22 @@ export const allBuildsUrl = (url) =>
 export const allResourcesUrl = (url) =>
   `${url}/resources`
 
-export const teamAuthTokenUrl = (url, team) =>
-  `${url}/teams/${team}/auth/token`
+export const buildUrl = (url, buildId) =>
+  `${url}/builds/${buildId}`
 
-export const teamPipelinesUrl = (url, team) =>
-  `${url}/teams/${team}/pipelines`
-export const teamBuildsUrl = (url, team) =>
-  `${url}/teams/${team}/builds`
+export const teamAuthTokenUrl = (url, teamName) =>
+  `${url}/teams/${teamName}/auth/token`
 
-export const teamPipelineBuildsUrl = (url, team, pipeline) =>
-  `${url}/teams/${team}/pipelines/${pipeline}/builds`
+export const teamPipelinesUrl = (url, teamName) =>
+  `${url}/teams/${teamName}/pipelines`
+export const teamBuildsUrl = (url, teamName) =>
+  `${url}/teams/${teamName}/builds`
 
-export const teamPipelineJobsUrl = (url, team, pipeline) =>
-  `${url}/teams/${team}/pipelines/${pipeline}/jobs`
-export const teamPipelineJobBuildsUrl = (url, team, pipeline, job) =>
-  `${url}/teams/${team}/pipelines/${pipeline}/jobs/${job}/builds`
+export const teamPipelineBuildsUrl = (url, teamName, pipelineName) =>
+  `${url}/teams/${teamName}/pipelines/${pipelineName}/builds`
+
+export const teamPipelineJobsUrl = (url, teamName, pipelineName) =>
+  `${url}/teams/${teamName}/pipelines/${pipelineName}/jobs`
+export const teamPipelineJobBuildsUrl =
+  (url, teamName, pipelineName, jobName) =>
+    `${url}/teams/${teamName}/pipelines/${pipelineName}/jobs/${jobName}/builds`

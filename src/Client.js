@@ -1,13 +1,23 @@
 import axios from 'axios'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
+import { find, propEq } from 'ramda'
 
-import { func, integer, schemaFor, uri, validateOptions } from './validation'
+import TeamClient from './TeamClient'
+import {
+  func,
+  integer,
+  uri,
+  schemaFor,
+  validateOptions
+} from './validation'
 import {
   allBuildsUrl,
   allJobsUrl,
   allPipelinesUrl,
   allResourcesUrl,
-  allTeamsUrl, allWorkersUrl
+  allTeamsUrl,
+  allWorkersUrl,
+  buildUrl
 } from './urls'
 
 export default class Client {
@@ -29,6 +39,21 @@ export default class Client {
       })
 
     return teams
+  }
+
+  async forTeam (teamId) {
+    const teams = await this.listTeams()
+    const team = find(propEq('id', teamId), teams)
+
+    if (!team) {
+      throw new Error(`No team for ID: ${teamId}`)
+    }
+
+    return new TeamClient({
+      apiUrl: this.apiUrl,
+      httpClient: this.httpClient,
+      team
+    })
   }
 
   async listWorkers () {
@@ -79,6 +104,15 @@ export default class Client {
       })
 
     return builds
+  }
+
+  async getBuild (buildId) {
+    const { data: build } = await this.httpClient
+      .get(buildUrl(this.apiUrl, buildId), {
+        transformResponse: [camelcaseKeysDeep]
+      })
+
+    return build
   }
 
   async listResources () {

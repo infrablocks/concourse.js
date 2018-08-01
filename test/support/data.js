@@ -147,6 +147,8 @@ const randomJob = (overrides = {}) => ({
 })
 
 export default {
+  randomId,
+
   randomBearerToken,
 
   randomTeam,
