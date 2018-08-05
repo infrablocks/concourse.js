@@ -13,10 +13,10 @@ describe('TeamClient', () => {
   describe('construction', () => {
     it('throws an exception if the API URI is not provided', () => {
       expect(() => {
-        new TeamClient({ teamId: 1 }) // eslint-disable-line no-new
+        new TeamClient({teamId: 1}) // eslint-disable-line no-new
       })
         .to.throw(
-          Error, 'Invalid parameter(s): ["apiUrl" is required].')
+        Error, 'Invalid parameter(s): ["apiUrl" is required].')
     })
 
     it('throws an exception if the API URI is not a string', () => {
@@ -27,7 +27,7 @@ describe('TeamClient', () => {
         })
       })
         .to.throw(
-          Error, 'Invalid parameter(s): ["apiUrl" must be a string].')
+        Error, 'Invalid parameter(s): ["apiUrl" must be a string].')
     })
 
     it('throws an exception if the API URI is not a valid URI', () => {
@@ -38,7 +38,7 @@ describe('TeamClient', () => {
         })
       })
         .to.throw(
-          Error, 'Invalid parameter(s): ["apiUrl" must be a valid uri].')
+        Error, 'Invalid parameter(s): ["apiUrl" must be a valid uri].')
     })
 
     it('throws an exception if the provided HTTP client is not an object',
@@ -53,7 +53,7 @@ describe('TeamClient', () => {
             })
           })
           .to.throw(
-            Error, 'Invalid parameter(s): ["httpClient" must be a Function].')
+          Error, 'Invalid parameter(s): ["httpClient" must be a Function].')
       })
 
     it('throws an exception if the team is not provided', () => {
@@ -63,7 +63,7 @@ describe('TeamClient', () => {
         })
       })
         .to.throw(
-          Error, 'Invalid parameter(s): ["team" is required].')
+        Error, 'Invalid parameter(s): ["team" is required].')
     })
 
     it('throws an exception if the team is not an object', () => {
@@ -74,7 +74,7 @@ describe('TeamClient', () => {
         })
       })
         .to.throw(
-          Error, 'Invalid parameter(s): ["team" must be an object].')
+        Error, 'Invalid parameter(s): ["team" must be an object].')
     })
   })
 
@@ -116,11 +116,56 @@ describe('TeamClient', () => {
           })
           .reply(200, pipelinesFromApi)
 
-        const client = new TeamClient({ apiUrl, httpClient, team })
+        const client = new TeamClient({apiUrl, httpClient, team})
 
         const actualPipelines = await client.listPipelines()
 
         expect(actualPipelines).to.eql(expectedPipelines)
+      })
+  })
+
+  describe('getPipeline', () => {
+    it('gets the pipeline with the specified name',
+      async () => {
+        const bearerToken = data.randomBearerToken()
+
+        const apiUrl = 'https://concourse.example.com'
+        const httpClient = axios.create({
+          headers: bearerAuthHeader(bearerToken)
+        })
+        const mock = new MockAdapter(httpClient)
+
+        const teamId = data.randomId()
+        const teamName = data.randomTeamName()
+        const team = build.client.team(data.randomTeam({
+          id: teamId,
+          name: teamName
+        }))
+
+        const pipelineName = data.randomPipelineName()
+        const pipelineData = data.randomPipeline({
+          teamName,
+          name: pipelineName
+        })
+
+        const pipelineFromApi = build.api.pipeline(pipelineData)
+
+        const expectedPipeline = build.client.pipeline(pipelineData)
+
+        mock.onGet(
+          `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .reply(200, pipelineFromApi)
+
+        const client = new TeamClient({apiUrl, httpClient, team})
+
+        const actualPipeline = await client.getPipeline(pipelineName)
+
+        expect(actualPipeline).to.eql(expectedPipeline)
       })
   })
 })

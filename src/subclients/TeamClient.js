@@ -2,7 +2,7 @@ import axios from 'axios'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
 
 import { func, object, schemaFor, uri, validateOptions } from '../support/validation'
-import { teamPipelinesUrl } from '../support/urls'
+import { teamPipelinesUrl, teamPipelineUrl } from '../support/urls'
 
 export default class TeamClient {
   constructor (options) {
@@ -25,5 +25,14 @@ export default class TeamClient {
       })
 
     return pipelines
+  }
+
+  async getPipeline (pipelineName) {
+    const { data: pipeline } = await this.httpClient
+      .get(teamPipelineUrl(this.apiUrl, this.team.name, pipelineName), {
+        transformResponse: [camelcaseKeysDeep]
+      })
+
+    return pipeline
   }
 }
