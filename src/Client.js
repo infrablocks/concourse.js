@@ -2,14 +2,14 @@ import axios from 'axios'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
 import { find, propEq } from 'ramda'
 
-import TeamClient from './TeamClient'
+import TeamClient from './subclients/TeamClient'
 import {
   func,
   integer,
   uri,
   schemaFor,
   validateOptions
-} from './validation'
+} from './support/validation'
 import {
   allBuildsUrl,
   allJobsUrl,
@@ -18,7 +18,7 @@ import {
   allTeamsUrl,
   allWorkersUrl,
   buildUrl
-} from './urls'
+} from './support/urls'
 
 export default class Client {
   constructor (options) {

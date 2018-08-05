@@ -7,7 +7,7 @@ import build from './support/builders'
 import data from './support/data'
 
 import Client from '../src/Client'
-import { bearerAuthHeader } from '../src/http'
+import { bearerAuthHeader } from '../src/support/http'
 
 describe('Client', () => {
   describe('construction', () => {

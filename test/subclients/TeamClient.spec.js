@@ -3,11 +3,11 @@ import faker from 'faker'
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 
-import build from './support/builders'
-import data from './support/data'
+import build from '../support/builders'
+import data from '../support/data'
 
-import TeamClient from '../src/TeamClient'
-import { bearerAuthHeader } from '../src/http'
+import TeamClient from '../../src/subclients/TeamClient'
+import { bearerAuthHeader } from '../../src/support/http'
 
 describe('TeamClient', () => {
   describe('construction', () => {

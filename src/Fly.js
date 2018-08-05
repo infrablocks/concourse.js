@@ -1,7 +1,7 @@
 import axios from 'axios'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
 
-import { basicAuthHeader, bearerAuthHeader } from './http'
+import { basicAuthHeader, bearerAuthHeader } from './support/http'
 import {
   allBuildsUrl,
   allPipelinesUrl,
@@ -11,7 +11,7 @@ import {
   teamPipelinesUrl,
   teamBuildsUrl,
   teamPipelineBuildsUrl
-} from './urls'
+} from './support/urls'
 import {
   boolean,
   integer,
@@ -19,7 +19,7 @@ import {
   string,
   uri,
   validateOptions
-} from './validation'
+} from './support/validation'
 
 const buildsUriFor = (uri, teamName, pipelineName, jobName, team) => {
   if (jobName) {

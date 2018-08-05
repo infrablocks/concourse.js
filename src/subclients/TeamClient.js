@@ -1,8 +1,8 @@
 import axios from 'axios'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
 
-import { func, object, schemaFor, uri, validateOptions } from './validation'
-import { teamPipelinesUrl } from './urls'
+import { func, object, schemaFor, uri, validateOptions } from '../support/validation'
+import { teamPipelinesUrl } from '../support/urls'
 
 export default class TeamClient {
   constructor (options) {
