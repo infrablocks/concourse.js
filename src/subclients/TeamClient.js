@@ -1,7 +1,14 @@
 import axios from 'axios'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
 
-import { func, object, schemaFor, uri, validateOptions } from '../support/validation'
+import {
+  func,
+  object,
+  schemaFor,
+  string,
+  uri,
+  validateOptions
+} from '../support/validation'
 import { teamPipelinesUrl, teamPipelineUrl } from '../support/urls'
 
 export default class TeamClient {
@@ -19,7 +26,7 @@ export default class TeamClient {
   }
 
   async listPipelines () {
-    const { data: pipelines } = await this.httpClient
+    const {data: pipelines} = await this.httpClient
       .get(teamPipelinesUrl(this.apiUrl, this.team.name), {
         transformResponse: [camelcaseKeysDeep]
       })
@@ -28,8 +35,14 @@ export default class TeamClient {
   }
 
   async getPipeline (pipelineName) {
-    const { data: pipeline } = await this.httpClient
-      .get(teamPipelineUrl(this.apiUrl, this.team.name, pipelineName), {
+    const validatedOptions = validateOptions(
+      schemaFor({
+        pipelineName: string().required()
+      }), {pipelineName})
+
+    const {data: pipeline} = await this.httpClient
+      .get(teamPipelineUrl(
+        this.apiUrl, this.team.name, validatedOptions.pipelineName), {
         transformResponse: [camelcaseKeysDeep]
       })
 

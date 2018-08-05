@@ -125,6 +125,52 @@ describe('TeamClient', () => {
   })
 
   describe('getPipeline', () => {
+    it('throws an exception if the pipeline name is not provided',
+      async () => {
+        const bearerToken = data.randomBearerToken()
+
+        const apiUrl = 'https://concourse.example.com'
+        const httpClient = axios.create({
+          headers: bearerAuthHeader(bearerToken)
+        })
+
+        const team = build.client.team(data.randomTeam())
+
+        const client = new TeamClient({apiUrl, httpClient, team})
+
+        try {
+          await client.getPipeline()
+          expect.fail('Expected exception but none was thrown.')
+        } catch (e) {
+          expect(e).to.be.an.instanceof(Error)
+          expect(e.message)
+            .to.eql('Invalid parameter(s): ["pipelineName" is required].')
+        }
+      })
+
+    it('throws an exception if the pipeline name is not a string',
+      async () => {
+        const bearerToken = data.randomBearerToken()
+
+        const apiUrl = 'https://concourse.example.com'
+        const httpClient = axios.create({
+          headers: bearerAuthHeader(bearerToken)
+        })
+
+        const team = build.client.team(data.randomTeam())
+
+        const client = new TeamClient({apiUrl, httpClient, team})
+
+        try {
+          await client.getPipeline(12345)
+          expect.fail('Expected exception but none was thrown.')
+        } catch (e) {
+          expect(e).to.be.an.instanceof(Error)
+          expect(e.message)
+            .to.eql('Invalid parameter(s): ["pipelineName" must be a string].')
+        }
+      })
+
     it('gets the pipeline with the specified name',
       async () => {
         const bearerToken = data.randomBearerToken()
