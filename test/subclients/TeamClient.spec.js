@@ -214,4 +214,138 @@ describe('TeamClient', () => {
         expect(actualPipeline).to.eql(expectedPipeline)
       })
   })
+
+  describe('deletePipeline', () => {
+    it('throws an exception if the pipeline name is not provided',
+      async () => {
+        const bearerToken = data.randomBearerToken()
+
+        const apiUrl = 'https://concourse.example.com'
+        const httpClient = axios.create({
+          headers: bearerAuthHeader(bearerToken)
+        })
+
+        const team = build.client.team(data.randomTeam())
+
+        const client = new TeamClient({apiUrl, httpClient, team})
+
+        try {
+          await client.deletePipeline()
+          expect.fail('Expected exception but none was thrown.')
+        } catch (e) {
+          expect(e).to.be.an.instanceof(Error)
+          expect(e.message)
+            .to.eql('Invalid parameter(s): ["pipelineName" is required].')
+        }
+      })
+
+    it('throws an exception if the pipeline name is not a string',
+      async () => {
+        const bearerToken = data.randomBearerToken()
+
+        const apiUrl = 'https://concourse.example.com'
+        const httpClient = axios.create({
+          headers: bearerAuthHeader(bearerToken)
+        })
+
+        const team = build.client.team(data.randomTeam())
+
+        const client = new TeamClient({apiUrl, httpClient, team})
+
+        try {
+          await client.deletePipeline(12345)
+          expect.fail('Expected exception but none was thrown.')
+        } catch (e) {
+          expect(e).to.be.an.instanceof(Error)
+          expect(e.message)
+            .to.eql('Invalid parameter(s): ["pipelineName" must be a string].')
+        }
+      })
+
+    it('deletes the pipeline with the specified name',
+      async () => {
+        const bearerToken = data.randomBearerToken()
+
+        const apiUrl = 'https://concourse.example.com'
+        const httpClient = axios.create({
+          headers: bearerAuthHeader(bearerToken)
+        })
+        const mock = new MockAdapter(httpClient)
+
+        const teamId = data.randomId()
+        const teamName = data.randomTeamName()
+        const team = build.client.team(data.randomTeam({
+          id: teamId,
+          name: teamName
+        }))
+
+        const pipelineName = data.randomPipelineName()
+        const pipelineData = data.randomPipeline({
+          teamName,
+          name: pipelineName
+        })
+
+        const pipelineFromApi = build.api.pipeline(pipelineData)
+
+        const expectedPipeline = build.client.pipeline(pipelineData)
+
+        mock.onDelete(
+          `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .reply(204, pipelineFromApi)
+
+        const client = new TeamClient({apiUrl, httpClient, team})
+
+        await client.deletePipeline(pipelineName)
+        expect(mock.history.delete).to.have.length(1)
+
+        const call = mock.history.delete[0]
+        expect(call.url)
+          .to.eql(`${apiUrl}/teams/${teamName}/pipelines/${pipelineName}`)
+        expect(call.headers)
+          .to.include(bearerAuthHeader(bearerToken))
+      })
+
+    it('throws the underlying http client exception on failure',
+      async () => {
+        const bearerToken = data.randomBearerToken()
+
+        const apiUrl = 'https://concourse.example.com'
+        const httpClient = axios.create({
+          headers: bearerAuthHeader(bearerToken)
+        })
+        const mock = new MockAdapter(httpClient)
+
+        const teamId = data.randomId()
+        const teamName = data.randomTeamName()
+        const team = build.client.team(data.randomTeam({
+          id: teamId,
+          name: teamName
+        }))
+
+        const pipelineName = data.randomPipelineName()
+
+        mock.onDelete(
+          `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .networkError()
+
+        const client = new TeamClient({apiUrl, httpClient, team})
+
+        try {
+          await client.deletePipeline(pipelineName)
+        } catch (e) {
+          expect(e).to.be.instanceOf(Error)
+          expect(e.message).to.eql('Network Error')
+        }
+      })
+  })
 })

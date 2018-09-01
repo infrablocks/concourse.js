@@ -48,4 +48,16 @@ export default class TeamClient {
 
     return pipeline
   }
+
+  async deletePipeline (pipelineName) {
+    const validatedOptions = validateOptions(schemaFor({
+      pipelineName: string().required()
+    }), {pipelineName})
+
+    await this.httpClient.delete(
+      teamPipelineUrl(
+        this.apiUrl,
+        this.team.name,
+        validatedOptions.pipelineName))
+  }
 }
