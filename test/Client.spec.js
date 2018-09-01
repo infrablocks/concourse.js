@@ -5,48 +5,49 @@ import MockAdapter from 'axios-mock-adapter'
 
 import build from './support/builders'
 import data from './support/data'
+import { onConstructionOf } from './support/dsls/construction'
+import { forInstance } from './support/dsls/methods'
 
 import Client from '../src/Client'
 import { bearerAuthHeader } from '../src/support/http'
 
+const buildValidClient = () => {
+  const bearerToken = data.randomBearerToken()
+
+  const apiUrl = 'https://concourse.example.com'
+  const httpClient = axios.create({
+    headers: bearerAuthHeader(bearerToken)
+  })
+
+  return new Client({apiUrl, httpClient})
+}
+
 describe('Client', () => {
   describe('construction', () => {
     it('throws an exception if the API URI is not provided', () => {
-      expect(() => {
-        new Client({}) // eslint-disable-line no-new
-      })
-        .to.throw(
-          Error, 'Invalid parameter(s): ["apiUrl" is required].')
+      onConstructionOf(Client)
+        .withEmptyOptions()
+        .throwsError('Invalid parameter(s): ["apiUrl" is required].')
     })
 
     it('throws an exception if the API URI is not a string', () => {
-      expect(() => {
-        new Client({ apiUrl: 25 }) // eslint-disable-line no-new
-      })
-        .to.throw(
-          Error, 'Invalid parameter(s): ["apiUrl" must be a string].')
+      onConstructionOf(Client)
+        .withOptions({apiUrl: 25})
+        .throwsError('Invalid parameter(s): ["apiUrl" must be a string].')
     })
 
     it('throws an exception if the API URI is not a valid URI', () => {
-      expect(() => {
-        new Client({ apiUrl: 'spinach' }) // eslint-disable-line no-new
-      })
-        .to.throw(
-          Error, 'Invalid parameter(s): ["apiUrl" must be a valid uri].')
+      onConstructionOf(Client)
+        .withOptions({apiUrl: 'spinach'})
+        .throwsError('Invalid parameter(s): ["apiUrl" must be a valid uri].')
     })
 
     it('throws an exception if the provided HTTP client is not an object',
       () => {
-        expect(
-          () => {
-            // eslint-disable-next-line no-new
-            new Client({
-              apiUrl: faker.internet.url(),
-              httpClient: 35
-            })
-          })
-          .to.throw(
-            Error, 'Invalid parameter(s): ["httpClient" must be a Function].')
+        onConstructionOf(Client)
+          .withOptions({apiUrl: faker.internet.url(), httpClient: 35})
+          .throwsError(
+            'Invalid parameter(s): ["httpClient" must be a Function].')
       })
   })
 
@@ -79,7 +80,7 @@ describe('Client', () => {
           })
           .reply(200, teamsFromApi)
 
-        const client = new Client({ apiUrl, httpClient })
+        const client = new Client({apiUrl, httpClient})
 
         const actualTeams = await client.listTeams()
 
@@ -90,44 +91,44 @@ describe('Client', () => {
   describe('forTeam', () => {
     it('returns a client for the team with the supplied ID when the team ' +
       'exists',
-    async () => {
-      const bearerToken = data.randomBearerToken()
+      async () => {
+        const bearerToken = data.randomBearerToken()
 
-      const apiUrl = 'https://concourse.example.com'
-      const httpClient = axios.create({
-        headers: bearerAuthHeader(bearerToken)
-      })
-      const mock = new MockAdapter(httpClient)
-
-      const teamId = data.randomId()
-
-      const teamData = data.randomTeam({
-        id: teamId
-      })
-
-      const firstTeamFromApi = build.api.team(teamData)
-      const secondTeamFromApi = build.api.team(data.randomTeam())
-      const teamsFromApi = [secondTeamFromApi, firstTeamFromApi]
-
-      const expectedTeam = build.client.team(teamData)
-
-      mock.onGet(
-        `${apiUrl}/teams`,
-        {
-          headers: {
-            ...bearerAuthHeader(bearerToken)
-          }
+        const apiUrl = 'https://concourse.example.com'
+        const httpClient = axios.create({
+          headers: bearerAuthHeader(bearerToken)
         })
-        .reply(200, teamsFromApi)
+        const mock = new MockAdapter(httpClient)
 
-      const client = new Client({ apiUrl, httpClient })
+        const teamId = data.randomId()
 
-      const teamClient = await client.forTeam(teamId)
+        const teamData = data.randomTeam({
+          id: teamId
+        })
 
-      expect(teamClient.apiUrl).to.equal(apiUrl)
-      expect(teamClient.httpClient).to.equal(httpClient)
-      expect(teamClient.team).to.eql(expectedTeam)
-    })
+        const firstTeamFromApi = build.api.team(teamData)
+        const secondTeamFromApi = build.api.team(data.randomTeam())
+        const teamsFromApi = [secondTeamFromApi, firstTeamFromApi]
+
+        const expectedTeam = build.client.team(teamData)
+
+        mock.onGet(
+          `${apiUrl}/teams`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .reply(200, teamsFromApi)
+
+        const client = new Client({apiUrl, httpClient})
+
+        const teamClient = await client.forTeam(teamId)
+
+        expect(teamClient.apiUrl).to.equal(apiUrl)
+        expect(teamClient.httpClient).to.equal(httpClient)
+        expect(teamClient.team).to.eql(expectedTeam)
+      })
 
     it('throws an exception if no team exists for the supplied ID',
       async () => {
@@ -154,7 +155,7 @@ describe('Client', () => {
           })
           .reply(200, teamsFromApi)
 
-        const client = new Client({ apiUrl, httpClient })
+        const client = new Client({apiUrl, httpClient})
 
         try {
           await client.forTeam(teamId)
@@ -203,7 +204,7 @@ describe('Client', () => {
           })
           .reply(200, workersFromApi)
 
-        const client = new Client({ apiUrl, httpClient })
+        const client = new Client({apiUrl, httpClient})
 
         const actualWorkers = await client.listWorkers()
 
@@ -240,7 +241,7 @@ describe('Client', () => {
           })
           .reply(200, pipelinesFromApi)
 
-        const client = new Client({ apiUrl, httpClient })
+        const client = new Client({apiUrl, httpClient})
 
         const actualPipelines = await client.listPipelines()
 
@@ -305,7 +306,7 @@ describe('Client', () => {
           })
           .reply(200, jobsFromApi)
 
-        const client = new Client({ apiUrl, httpClient })
+        const client = new Client({apiUrl, httpClient})
 
         const actualJobs = await client.listJobs()
 
@@ -350,7 +351,7 @@ describe('Client', () => {
           })
           .reply(200, buildsFromApi)
 
-        const client = new Client({ apiUrl, httpClient })
+        const client = new Client({apiUrl, httpClient})
 
         const actualBuilds = await client.listBuilds()
 
@@ -398,7 +399,7 @@ describe('Client', () => {
           })
           .reply(200, buildsFromApi)
 
-        const client = new Client({ apiUrl, httpClient })
+        const client = new Client({apiUrl, httpClient})
 
         const actualBuilds = await client.listBuilds({
           limit: 20,
@@ -411,197 +412,80 @@ describe('Client', () => {
 
     it('throws an exception if the value provided for limit is not a number',
       async () => {
-        try {
-          const bearerToken = data.randomBearerToken()
-
-          const apiUrl = 'https://concourse.example.com'
-          const httpClient = axios.create({
-            headers: bearerAuthHeader(bearerToken)
-          })
-
-          await new Client({ apiUrl, httpClient })
-            .listBuilds({ limit: 'badger' })
-        } catch (e) {
-          expect(e instanceof Error).to.eql(true)
-          expect(e.message)
-            .to.eql('Invalid parameter(s): ["limit" must be a number].')
-          return
-        }
-        expect.fail(null, null, 'Expected exception but none was thrown.')
+        await forInstance(buildValidClient())
+          .onCallOf('listBuilds')
+          .withArguments({limit: 'badger'})
+          .throwsError('Invalid parameter(s): ["limit" must be a number].')
       })
 
     it('throws an exception if the value provided for limit is not an integer',
       async () => {
-        try {
-          const bearerToken = data.randomBearerToken()
-
-          const apiUrl = 'https://concourse.example.com'
-          const httpClient = axios.create({
-            headers: bearerAuthHeader(bearerToken)
-          })
-
-          await new Client({ apiUrl, httpClient })
-            .listBuilds({ limit: 32.654 })
-        } catch (e) {
-          expect(e instanceof Error).to.eql(true)
-          expect(e.message)
-            .to.eql('Invalid parameter(s): ["limit" must be an integer].')
-          return
-        }
-        expect.fail(null, null, 'Expected exception but none was thrown.')
+        await forInstance(buildValidClient())
+          .onCallOf('listBuilds')
+          .withArguments({limit: 32.654})
+          .throwsError('Invalid parameter(s): ["limit" must be an integer].')
       })
 
     it('throws an exception if the value provided for limit is less than 1',
       async () => {
-        try {
-          const bearerToken = data.randomBearerToken()
-
-          const apiUrl = 'https://concourse.example.com'
-          const httpClient = axios.create({
-            headers: bearerAuthHeader(bearerToken)
-          })
-
-          await new Client({ apiUrl, httpClient })
-            .listBuilds({ limit: -20 })
-        } catch (e) {
-          expect(e instanceof Error).to.eql(true)
-          expect(e.message)
-            .to.eql(
-              'Invalid parameter(s): [' +
+        await forInstance(buildValidClient())
+          .onCallOf('listBuilds')
+          .withArguments({limit: -20})
+          .throwsError(
+            'Invalid parameter(s): [' +
             '"limit" must be larger than or equal to 1].')
-          return
-        }
-        expect.fail(null, null, 'Expected exception but none was thrown.')
       })
 
     it('throws an exception if the value provided for since is not a number',
       async () => {
-        try {
-          const bearerToken = data.randomBearerToken()
-
-          const apiUrl = 'https://concourse.example.com'
-          const httpClient = axios.create({
-            headers: bearerAuthHeader(bearerToken)
-          })
-
-          await new Client({ apiUrl, httpClient })
-            .listBuilds({ since: 'badger' })
-        } catch (e) {
-          expect(e instanceof Error).to.eql(true)
-          expect(e.message)
-            .to.eql('Invalid parameter(s): ["since" must be a number].')
-          return
-        }
-        expect.fail(null, null, 'Expected exception but none was thrown.')
+        await forInstance(buildValidClient())
+          .onCallOf('listBuilds')
+          .withArguments({since: 'badger'})
+          .throwsError('Invalid parameter(s): ["since" must be a number].')
       })
 
     it('throws an exception if the value provided for since is not an integer',
       async () => {
-        try {
-          const bearerToken = data.randomBearerToken()
-
-          const apiUrl = 'https://concourse.example.com'
-          const httpClient = axios.create({
-            headers: bearerAuthHeader(bearerToken)
-          })
-
-          await new Client({ apiUrl, httpClient })
-            .listBuilds({ since: 32.654 })
-        } catch (e) {
-          expect(e instanceof Error).to.eql(true)
-          expect(e.message)
-            .to.eql('Invalid parameter(s): ["since" must be an integer].')
-          return
-        }
-        expect.fail(null, null, 'Expected exception but none was thrown.')
+        await forInstance(buildValidClient())
+          .onCallOf('listBuilds')
+          .withArguments({since: 32.654})
+          .throwsError('Invalid parameter(s): ["since" must be an integer].')
       })
 
     it('throws an exception if the value provided for since is less than 1',
       async () => {
-        try {
-          const bearerToken = data.randomBearerToken()
-
-          const apiUrl = 'https://concourse.example.com'
-          const httpClient = axios.create({
-            headers: bearerAuthHeader(bearerToken)
-          })
-
-          await new Client({ apiUrl, httpClient })
-            .listBuilds({ since: -20 })
-        } catch (e) {
-          expect(e instanceof Error).to.eql(true)
-          expect(e.message)
-            .to.eql(
-              'Invalid parameter(s): [' +
+        await forInstance(buildValidClient())
+          .onCallOf('listBuilds')
+          .withArguments({since: -20})
+          .throwsError(
+            'Invalid parameter(s): [' +
             '"since" must be larger than or equal to 1].')
-          return
-        }
-        expect.fail(null, null, 'Expected exception but none was thrown.')
       })
 
     it('throws an exception if the value provided for until is not a number',
       async () => {
-        try {
-          const bearerToken = data.randomBearerToken()
-
-          const apiUrl = 'https://concourse.example.com'
-          const httpClient = axios.create({
-            headers: bearerAuthHeader(bearerToken)
-          })
-
-          await new Client({ apiUrl, httpClient })
-            .listBuilds({ until: 'badger' })
-        } catch (e) {
-          expect(e instanceof Error).to.eql(true)
-          expect(e.message)
-            .to.eql('Invalid parameter(s): ["until" must be a number].')
-          return
-        }
-        expect.fail(null, null, 'Expected exception but none was thrown.')
+        await forInstance(buildValidClient())
+          .onCallOf('listBuilds')
+          .withArguments({until: 'badger'})
+          .throwsError('Invalid parameter(s): ["until" must be a number].')
       })
 
     it('throws an exception if the value provided for until is not an integer',
       async () => {
-        try {
-          const bearerToken = data.randomBearerToken()
-
-          const apiUrl = 'https://concourse.example.com'
-          const httpClient = axios.create({
-            headers: bearerAuthHeader(bearerToken)
-          })
-
-          await new Client({ apiUrl, httpClient })
-            .listBuilds({ until: 32.654 })
-        } catch (e) {
-          expect(e instanceof Error).to.eql(true)
-          expect(e.message)
-            .to.eql('Invalid parameter(s): ["until" must be an integer].')
-          return
-        }
-        expect.fail(null, null, 'Expected exception but none was thrown.')
+        await forInstance(buildValidClient())
+          .onCallOf('listBuilds')
+          .withArguments({until: 32.654})
+          .throwsError('Invalid parameter(s): ["until" must be an integer].')
       })
 
     it('throws an exception if the value provided for until is less than 1',
       async () => {
-        try {
-          const bearerToken = data.randomBearerToken()
-
-          const apiUrl = 'https://concourse.example.com'
-          const httpClient = axios.create({
-            headers: bearerAuthHeader(bearerToken)
-          })
-
-          await new Client({ apiUrl, httpClient })
-            .listBuilds({ until: -20 })
-        } catch (e) {
-          expect(e instanceof Error).to.eql(true)
-          expect(e.message)
-            .to.eql(
-              'Invalid parameter(s): [' +
+        await forInstance(buildValidClient())
+          .onCallOf('listBuilds')
+          .withArguments({until: -20})
+          .throwsError(
+            'Invalid parameter(s): [' +
             '"until" must be larger than or equal to 1].')
-          return
-        }
-        expect.fail(null, null, 'Expected exception but none was thrown.')
       })
   })
 
@@ -641,7 +525,7 @@ describe('Client', () => {
           })
           .reply(200, buildFromApi)
 
-        const client = new Client({ apiUrl, httpClient })
+        const client = new Client({apiUrl, httpClient})
 
         const actualBuild = await client.getBuild(buildId)
 
@@ -684,7 +568,7 @@ describe('Client', () => {
           })
           .reply(200, resourcesFromApi)
 
-        const client = new Client({ apiUrl, httpClient })
+        const client = new Client({apiUrl, httpClient})
 
         const actualResources = await client.listResources()
 
