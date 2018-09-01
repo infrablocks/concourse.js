@@ -12,14 +12,22 @@ import Client from '../src/Client'
 import { bearerAuthHeader } from '../src/support/http'
 
 const buildValidClient = () => {
+  const apiUrl = 'https://concourse.example.com'
   const bearerToken = data.randomBearerToken()
 
-  const apiUrl = 'https://concourse.example.com'
   const httpClient = axios.create({
     headers: bearerAuthHeader(bearerToken)
   })
+  const mock = new MockAdapter(httpClient)
 
-  return new Client({apiUrl, httpClient})
+  const client = new Client({apiUrl, httpClient})
+
+  return {
+    client,
+    apiUrl,
+    bearerToken,
+    mock
+  }
 }
 
 describe('Client', () => {
@@ -54,13 +62,7 @@ describe('Client', () => {
   describe('listTeams', () => {
     it('gets all teams',
       async () => {
-        const bearerToken = data.randomBearerToken()
-
-        const apiUrl = 'https://concourse.example.com'
-        const httpClient = axios.create({
-          headers: bearerAuthHeader(bearerToken)
-        })
-        const mock = new MockAdapter(httpClient)
+        const {client, mock, apiUrl, bearerToken} = buildValidClient()
 
         const teamData = data.randomTeam()
 
@@ -80,8 +82,6 @@ describe('Client', () => {
           })
           .reply(200, teamsFromApi)
 
-        const client = new Client({apiUrl, httpClient})
-
         const actualTeams = await client.listTeams()
 
         expect(actualTeams).to.eql(expectedTeams)
@@ -92,13 +92,7 @@ describe('Client', () => {
     it('returns a client for the team with the supplied ID when the team ' +
       'exists',
       async () => {
-        const bearerToken = data.randomBearerToken()
-
-        const apiUrl = 'https://concourse.example.com'
-        const httpClient = axios.create({
-          headers: bearerAuthHeader(bearerToken)
-        })
-        const mock = new MockAdapter(httpClient)
+        const {client, mock, apiUrl, bearerToken} = buildValidClient()
 
         const teamId = data.randomId()
 
@@ -121,8 +115,6 @@ describe('Client', () => {
           })
           .reply(200, teamsFromApi)
 
-        const client = new Client({apiUrl, httpClient})
-
         const teamClient = await client.forTeam(teamId)
 
         expect(teamClient.apiUrl).to.equal(apiUrl)
@@ -132,13 +124,7 @@ describe('Client', () => {
 
     it('throws an exception if no team exists for the supplied ID',
       async () => {
-        const bearerToken = data.randomBearerToken()
-
-        const apiUrl = 'https://concourse.example.com'
-        const httpClient = axios.create({
-          headers: bearerAuthHeader(bearerToken)
-        })
-        const mock = new MockAdapter(httpClient)
+        const {client, mock, apiUrl, bearerToken} = buildValidClient()
 
         const teamId = data.randomId()
 
@@ -155,8 +141,6 @@ describe('Client', () => {
           })
           .reply(200, teamsFromApi)
 
-        const client = new Client({apiUrl, httpClient})
-
         try {
           await client.forTeam(teamId)
           expect.fail('Expected exception but none was thrown.')
@@ -170,13 +154,7 @@ describe('Client', () => {
   describe('listWorkers', () => {
     it('gets all workers',
       async () => {
-        const bearerToken = data.randomBearerToken()
-
-        const apiUrl = 'https://concourse.example.com'
-        const httpClient = axios.create({
-          headers: bearerAuthHeader(bearerToken)
-        })
-        const mock = new MockAdapter(httpClient)
+        const {client, mock, apiUrl, bearerToken} = buildValidClient()
 
         const workerData = data.randomWorker()
 
@@ -204,8 +182,6 @@ describe('Client', () => {
           })
           .reply(200, workersFromApi)
 
-        const client = new Client({apiUrl, httpClient})
-
         const actualWorkers = await client.listWorkers()
 
         expect(actualWorkers).to.eql(expectedWorkers)
@@ -215,13 +191,7 @@ describe('Client', () => {
   describe('listPipelines', () => {
     it('gets all pipelines',
       async () => {
-        const bearerToken = data.randomBearerToken()
-
-        const apiUrl = 'https://concourse.example.com'
-        const httpClient = axios.create({
-          headers: bearerAuthHeader(bearerToken)
-        })
-        const mock = new MockAdapter(httpClient)
+        const {client, mock, apiUrl, bearerToken} = buildValidClient()
 
         const pipelineData = data.randomPipeline()
 
@@ -241,8 +211,6 @@ describe('Client', () => {
           })
           .reply(200, pipelinesFromApi)
 
-        const client = new Client({apiUrl, httpClient})
-
         const actualPipelines = await client.listPipelines()
 
         expect(actualPipelines).to.eql(expectedPipelines)
@@ -252,13 +220,7 @@ describe('Client', () => {
   describe('listJobs', () => {
     it('gets all jobs',
       async () => {
-        const bearerToken = data.randomBearerToken()
-
-        const apiUrl = 'https://concourse.example.com'
-        const httpClient = axios.create({
-          headers: bearerAuthHeader(bearerToken)
-        })
-        const mock = new MockAdapter(httpClient)
+        const {client, mock, apiUrl, bearerToken} = buildValidClient()
 
         const jobName = data.randomJobName()
         const teamName = data.randomTeamName()
@@ -306,8 +268,6 @@ describe('Client', () => {
           })
           .reply(200, jobsFromApi)
 
-        const client = new Client({apiUrl, httpClient})
-
         const actualJobs = await client.listJobs()
 
         expect(actualJobs).to.eql(expectedJobs)
@@ -317,13 +277,7 @@ describe('Client', () => {
   describe('listBuilds', () => {
     it('gets all builds',
       async () => {
-        const bearerToken = data.randomBearerToken()
-
-        const apiUrl = 'https://concourse.example.com'
-        const httpClient = axios.create({
-          headers: bearerAuthHeader(bearerToken)
-        })
-        const mock = new MockAdapter(httpClient)
+        const {client, mock, apiUrl, bearerToken} = buildValidClient()
 
         const teamName = data.randomTeamName()
         const pipelineName = data.randomPipelineName()
@@ -351,8 +305,6 @@ describe('Client', () => {
           })
           .reply(200, buildsFromApi)
 
-        const client = new Client({apiUrl, httpClient})
-
         const actualBuilds = await client.listBuilds()
 
         expect(actualBuilds).to.eql(expectedBuilds)
@@ -360,13 +312,7 @@ describe('Client', () => {
 
     it('uses provided page options when supplied',
       async () => {
-        const bearerToken = data.randomBearerToken()
-
-        const apiUrl = 'https://concourse.example.com'
-        const httpClient = axios.create({
-          headers: bearerAuthHeader(bearerToken)
-        })
-        const mock = new MockAdapter(httpClient)
+        const {client, mock, apiUrl, bearerToken} = buildValidClient()
 
         const teamName = data.randomTeamName()
         const pipelineName = data.randomPipelineName()
@@ -399,8 +345,6 @@ describe('Client', () => {
           })
           .reply(200, buildsFromApi)
 
-        const client = new Client({apiUrl, httpClient})
-
         const actualBuilds = await client.listBuilds({
           limit: 20,
           since: 123,
@@ -412,25 +356,28 @@ describe('Client', () => {
 
     it('throws an exception if the value provided for limit is not a number',
       async () => {
-        await forInstance(buildValidClient())
+        const {client} = buildValidClient()
+        await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({limit: 'badger'})
+          .withOptions({limit: 'badger'})
           .throwsError('Invalid parameter(s): ["limit" must be a number].')
       })
 
     it('throws an exception if the value provided for limit is not an integer',
       async () => {
-        await forInstance(buildValidClient())
+        const {client} = buildValidClient()
+        await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({limit: 32.654})
+          .withOptions({limit: 32.654})
           .throwsError('Invalid parameter(s): ["limit" must be an integer].')
       })
 
     it('throws an exception if the value provided for limit is less than 1',
       async () => {
-        await forInstance(buildValidClient())
+        const {client} = buildValidClient()
+        await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({limit: -20})
+          .withOptions({limit: -20})
           .throwsError(
             'Invalid parameter(s): [' +
             '"limit" must be larger than or equal to 1].')
@@ -438,25 +385,28 @@ describe('Client', () => {
 
     it('throws an exception if the value provided for since is not a number',
       async () => {
-        await forInstance(buildValidClient())
+        const {client} = buildValidClient()
+        await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({since: 'badger'})
+          .withOptions({since: 'badger'})
           .throwsError('Invalid parameter(s): ["since" must be a number].')
       })
 
     it('throws an exception if the value provided for since is not an integer',
       async () => {
-        await forInstance(buildValidClient())
+        const {client} = buildValidClient()
+        await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({since: 32.654})
+          .withOptions({since: 32.654})
           .throwsError('Invalid parameter(s): ["since" must be an integer].')
       })
 
     it('throws an exception if the value provided for since is less than 1',
       async () => {
-        await forInstance(buildValidClient())
+        const {client} = buildValidClient()
+        await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({since: -20})
+          .withOptions({since: -20})
           .throwsError(
             'Invalid parameter(s): [' +
             '"since" must be larger than or equal to 1].')
@@ -464,25 +414,28 @@ describe('Client', () => {
 
     it('throws an exception if the value provided for until is not a number',
       async () => {
-        await forInstance(buildValidClient())
+        const {client} = buildValidClient()
+        await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({until: 'badger'})
+          .withOptions({until: 'badger'})
           .throwsError('Invalid parameter(s): ["until" must be a number].')
       })
 
     it('throws an exception if the value provided for until is not an integer',
       async () => {
-        await forInstance(buildValidClient())
+        const {client} = buildValidClient()
+        await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({until: 32.654})
+          .withOptions({until: 32.654})
           .throwsError('Invalid parameter(s): ["until" must be an integer].')
       })
 
     it('throws an exception if the value provided for until is less than 1',
       async () => {
-        await forInstance(buildValidClient())
+        const {client} = buildValidClient()
+        await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({until: -20})
+          .withOptions({until: -20})
           .throwsError(
             'Invalid parameter(s): [' +
             '"until" must be larger than or equal to 1].')
@@ -492,13 +445,7 @@ describe('Client', () => {
   describe('getBuild', () => {
     it('gets the build with the provided ID',
       async () => {
-        const bearerToken = data.randomBearerToken()
-
-        const apiUrl = 'https://concourse.example.com'
-        const httpClient = axios.create({
-          headers: bearerAuthHeader(bearerToken)
-        })
-        const mock = new MockAdapter(httpClient)
+        const {client, mock, apiUrl, bearerToken} = buildValidClient()
 
         const buildId = data.randomId()
 
@@ -525,8 +472,6 @@ describe('Client', () => {
           })
           .reply(200, buildFromApi)
 
-        const client = new Client({apiUrl, httpClient})
-
         const actualBuild = await client.getBuild(buildId)
 
         expect(actualBuild).to.eql(expectedBuild)
@@ -536,13 +481,7 @@ describe('Client', () => {
   describe('listResources', () => {
     it('gets all resources',
       async () => {
-        const bearerToken = data.randomBearerToken()
-
-        const apiUrl = 'https://concourse.example.com'
-        const httpClient = axios.create({
-          headers: bearerAuthHeader(bearerToken)
-        })
-        const mock = new MockAdapter(httpClient)
+        const {client, mock, apiUrl, bearerToken} = buildValidClient()
 
         const teamName = data.randomTeamName()
         const pipelineName = data.randomPipelineName()
@@ -567,8 +506,6 @@ describe('Client', () => {
             }
           })
           .reply(200, resourcesFromApi)
-
-        const client = new Client({apiUrl, httpClient})
 
         const actualResources = await client.listResources()
 

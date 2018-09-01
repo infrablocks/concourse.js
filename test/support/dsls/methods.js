@@ -12,12 +12,12 @@ const throwsError = (instance, method, args) => async (message) => {
   expect.fail(null, null, 'Expected exception but none was thrown.')
 }
 
-const withArguments = (instance, method) => (args) => {
-  return {throwsError: throwsError(instance, method, args)}
+const withOptions = (instance, method) => (options) => {
+  return {throwsError: throwsError(instance, method, options)}
 }
 
 const onCallOf = (instance) => (method) => {
-  return {withArguments: withArguments(instance, method)}
+  return {withOptions: withOptions(instance, method)}
 }
 
 export const forInstance = (instance) => {
