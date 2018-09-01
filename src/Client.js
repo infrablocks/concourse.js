@@ -1,6 +1,6 @@
 import axios from 'axios'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
-import { find, propEq } from 'ramda'
+import { find, propEq, reject, isNil } from 'ramda'
 
 import TeamClient from './subclients/TeamClient'
 import {
@@ -91,11 +91,11 @@ export default class Client {
         until: integer().min(1)
       }), options)
 
-    const params = {
+    const params = reject(isNil, {
       limit: validatedOptions.limit,
       since: validatedOptions.since,
       until: validatedOptions.until
-    }
+    })
 
     const { data: builds } = await this.httpClient
       .get(allBuildsUrl(this.apiUrl), {

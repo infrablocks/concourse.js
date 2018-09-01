@@ -13,6 +13,17 @@ const randomBuildApiUrl = () => faker.internet.url()
 const randomBuildStartTime = () => toUnixTime(faker.date.past())
 const randomBuildEndTime = () => toUnixTime(faker.date.recent())
 
+const randomContainerId = () =>
+  `${randomLowerHex(8)}-${randomLowerHex(4)}-${randomLowerHex(4)}-` +
+  `${randomLowerHex(4)}-${randomLowerHex(12)}`
+const randomContainerType = () => faker.random.arrayElement(
+  ['check', 'put', 'get'])
+
+const randomStepName = () => faker.random.word()
+
+const randomWorkingDirectory = () =>
+  `/tmp/${randomStepName()}/${randomContainerType()}`
+
 const randomTeamName = () => faker.random.word()
 
 const randomPipelineName = () => faker.random.word()
@@ -146,6 +157,21 @@ const randomJob = (overrides = {}) => ({
   ...overrides
 })
 
+const randomContainer = (overrides = {}) => ({
+  id: randomContainerId(),
+  workerName: randomWorkerName(),
+  type: randomContainerType(),
+  stepName: randomStepName(),
+  pipelineId: randomId(),
+  jobId: randomId(),
+  buildId: randomId(),
+  pipelineName: randomPipelineName(),
+  jobName: randomJobName(),
+  buildName: randomBuildName(),
+  workingDirectory: randomWorkingDirectory(),
+  ...overrides
+})
+
 export default {
   randomId,
 
@@ -166,8 +192,10 @@ export default {
   randomOutput,
 
   randomResource,
-
   randomResourceType,
+  randomResourceName,
 
-  randomWorker
+  randomWorker,
+
+  randomContainer
 }

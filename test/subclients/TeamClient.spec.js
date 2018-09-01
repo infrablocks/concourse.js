@@ -238,6 +238,202 @@ describe('TeamClient', () => {
       })
   })
 
+  describe('listContainers', () => {
+    it('gets all containers for team',
+      async () => {
+        const {client, mock, apiUrl, bearerToken, team} =
+          buildValidTeamClient()
+
+        const type = 'get'
+        const teamName = team.name
+        const pipelineName = data.randomPipelineName()
+        const resourceName = data.randomResourceName()
+
+        const containerData = data.randomContainer({
+          teamName,
+          pipelineName
+        })
+
+        const containerFromApi = build.api.container(containerData)
+        const containersFromApi = [containerFromApi]
+
+        const convertedContainer = build.client.container(containerData)
+        const expectedContainers = [convertedContainer]
+
+        mock.onGet(
+          `${apiUrl}/teams/${teamName}/containers`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            },
+            params: {
+              type,
+              pipeline_name: pipelineName,
+              resource_name: resourceName
+            }
+          })
+          .reply(200, containersFromApi)
+
+        const actualContainers = await client.listContainers({
+          type,
+          pipelineName,
+          resourceName
+        })
+
+        expect(actualContainers).to.eql(expectedContainers)
+      })
+
+    it('throws an exception if the value provided for type is not a string',
+      async () => {
+        const {client} = buildValidTeamClient()
+        await forInstance(client)
+          .onCallOf('listContainers')
+          .withArguments({type: 123})
+          .throwsError(
+            'Invalid parameter(s): ["type" must be a string].')
+      })
+
+    it('throws an exception if the value provided for pipeline name is ' +
+      'not a string', async () => {
+      const {client} = buildValidTeamClient()
+      await forInstance(client)
+        .onCallOf('listContainers')
+        .withArguments({pipelineName: 123})
+        .throwsError(
+          'Invalid parameter(s): ["pipelineName" must be a string].')
+    })
+
+    it('throws an exception if the value provided for pipeline ID is ' +
+      'not a number', async () => {
+      const {client} = buildValidTeamClient()
+      await forInstance(client)
+        .onCallOf('listContainers')
+        .withArguments({pipelineId: 'spinach'})
+        .throwsError(
+          'Invalid parameter(s): ["pipelineId" must be a number].')
+    })
+
+    it('throws an exception if the value provided for pipeline ID is ' +
+      'not a integer', async () => {
+      const {client} = buildValidTeamClient()
+      await forInstance(client)
+        .onCallOf('listContainers')
+        .withArguments({pipelineId: 23.6})
+        .throwsError(
+          'Invalid parameter(s): ["pipelineId" must be an integer].')
+    })
+
+    it('throws an exception if the value provided for job ID is ' +
+      'not a number', async () => {
+      const {client} = buildValidTeamClient()
+      await forInstance(client)
+        .onCallOf('listContainers')
+        .withArguments({jobId: 'spinach'})
+        .throwsError(
+          'Invalid parameter(s): ["jobId" must be a number].')
+    })
+
+    it('throws an exception if the value provided for job ID is ' +
+      'not a integer', async () => {
+      const {client} = buildValidTeamClient()
+      await forInstance(client)
+        .onCallOf('listContainers')
+        .withArguments({jobId: 23.6})
+        .throwsError(
+          'Invalid parameter(s): ["jobId" must be an integer].')
+    })
+
+    it('throws an exception if the value provided for job name is ' +
+      'not a string', async () => {
+      const {client} = buildValidTeamClient()
+      await forInstance(client)
+        .onCallOf('listContainers')
+        .withArguments({jobName: 123})
+        .throwsError(
+          'Invalid parameter(s): ["jobName" must be a string].')
+    })
+
+    it('throws an exception if the value provided for step name is ' +
+      'not a string', async () => {
+      const {client} = buildValidTeamClient()
+      await forInstance(client)
+        .onCallOf('listContainers')
+        .withArguments({stepName: 123})
+        .throwsError(
+          'Invalid parameter(s): ["stepName" must be a string].')
+    })
+
+    it('throws an exception if the value provided for resource name is ' +
+      'not a string', async () => {
+      const {client} = buildValidTeamClient()
+      await forInstance(client)
+        .onCallOf('listContainers')
+        .withArguments({resourceName: 123})
+        .throwsError(
+          'Invalid parameter(s): ["resourceName" must be a string].')
+    })
+
+    it('throws an exception if the value provided for attempt is ' +
+      'not a string', async () => {
+      const {client} = buildValidTeamClient()
+      await forInstance(client)
+        .onCallOf('listContainers')
+        .withArguments({attempt: 123})
+        .throwsError(
+          'Invalid parameter(s): ["attempt" must be a string].')
+    })
+
+    it('throws an exception if the value provided for build ID is ' +
+      'not a number', async () => {
+      const {client} = buildValidTeamClient()
+      await forInstance(client)
+        .onCallOf('listContainers')
+        .withArguments({buildId: 'spinach'})
+        .throwsError(
+          'Invalid parameter(s): ["buildId" must be a number].')
+    })
+
+    it('throws an exception if the value provided for build ID is ' +
+      'not a integer', async () => {
+      const {client} = buildValidTeamClient()
+      await forInstance(client)
+        .onCallOf('listContainers')
+        .withArguments({buildId: 23.6})
+        .throwsError(
+          'Invalid parameter(s): ["buildId" must be an integer].')
+    })
+
+    it('throws an exception if the value provided for build name is ' +
+      'not a string', async () => {
+      const {client} = buildValidTeamClient()
+      await forInstance(client)
+        .onCallOf('listContainers')
+        .withArguments({buildName: 123})
+        .throwsError(
+          'Invalid parameter(s): ["buildName" must be a string].')
+    })
+
+    it('throws an exception if type is check and pipeline name is ' +
+      'not provided', async () => {
+      const {client} = buildValidTeamClient()
+      await forInstance(client)
+        .onCallOf('listContainers')
+        .withArguments({type: 'check', resourceName: 'resource'})
+        .throwsError(
+          'Invalid parameter(s): ["pipelineName" is required].')
+    })
+
+    it('throws an exception if type is check and resource name is ' +
+      'not provided', async () => {
+      const {client} = buildValidTeamClient()
+      await forInstance(client)
+        .onCallOf('listContainers')
+        .withArguments({type: 'check', pipelineName: 'pipeline'})
+        .throwsError(
+          'Invalid parameter(s): ["resourceName" is required].')
+    })
+  })
+
   describe('listPipelines', () => {
     it('gets all pipelines for team',
       async () => {

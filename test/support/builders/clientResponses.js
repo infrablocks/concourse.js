@@ -50,6 +50,33 @@ export const resourceType =
     privileged
   })
 
+export const container =
+  ({
+     id = '663c9baf-f6e8-4abd-7fcd-fabf51d3b7de',
+     workerName = '7f3b5c6591bc',
+     type = 'get',
+     stepName = 'notify',
+     pipelineId = 47,
+     jobId = 347,
+     buildId = 18331,
+     pipelineName = 'webapp',
+     jobName = 'publish',
+     buildName = '78',
+     workingDirectory = '/tmp/notify/get',
+   } = {}) => ({
+    id,
+    workerName,
+    type,
+    stepName,
+    pipelineId,
+    jobId,
+    buildId,
+    pipelineName,
+    jobName,
+    buildName,
+    workingDirectory
+  })
+
 export const worker =
   ({
     addr = '10.240.3.194:45821',

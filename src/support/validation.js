@@ -7,6 +7,8 @@ export const func = () => Joi.func()
 export const object = () => Joi.object()
 export const uri = () => string().uri()
 
+export const required = () => Joi.required()
+
 export const schemaFor = (config) =>
   Joi.object().keys(config)
 
