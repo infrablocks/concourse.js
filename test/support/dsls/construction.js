@@ -14,6 +14,6 @@ const withOptions = (type) => (args) => {
 export const onConstructionOf = (type) => {
   return {
     withEmptyOptions: () => withOptions(type)({}),
-    withOptions: withOptions(type)
+    withArguments: withOptions(type)
   }
 }

@@ -24,9 +24,10 @@ const buildValidClient = () => {
 
   return {
     client,
+    mock,
+    httpClient,
     apiUrl,
-    bearerToken,
-    mock
+    bearerToken
   }
 }
 
@@ -40,20 +41,20 @@ describe('Client', () => {
 
     it('throws an exception if the API URI is not a string', () => {
       onConstructionOf(Client)
-        .withOptions({apiUrl: 25})
+        .withArguments({apiUrl: 25})
         .throwsError('Invalid parameter(s): ["apiUrl" must be a string].')
     })
 
     it('throws an exception if the API URI is not a valid URI', () => {
       onConstructionOf(Client)
-        .withOptions({apiUrl: 'spinach'})
+        .withArguments({apiUrl: 'spinach'})
         .throwsError('Invalid parameter(s): ["apiUrl" must be a valid uri].')
     })
 
     it('throws an exception if the provided HTTP client is not an object',
       () => {
         onConstructionOf(Client)
-          .withOptions({apiUrl: faker.internet.url(), httpClient: 35})
+          .withArguments({apiUrl: faker.internet.url(), httpClient: 35})
           .throwsError(
             'Invalid parameter(s): ["httpClient" must be a Function].')
       })
@@ -92,7 +93,8 @@ describe('Client', () => {
     it('returns a client for the team with the supplied ID when the team ' +
       'exists',
       async () => {
-        const {client, mock, apiUrl, bearerToken} = buildValidClient()
+        const {client, mock, apiUrl, bearerToken, httpClient} =
+          buildValidClient()
 
         const teamId = data.randomId()
 
@@ -359,7 +361,7 @@ describe('Client', () => {
         const {client} = buildValidClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withOptions({limit: 'badger'})
+          .withArguments({limit: 'badger'})
           .throwsError('Invalid parameter(s): ["limit" must be a number].')
       })
 
@@ -368,7 +370,7 @@ describe('Client', () => {
         const {client} = buildValidClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withOptions({limit: 32.654})
+          .withArguments({limit: 32.654})
           .throwsError('Invalid parameter(s): ["limit" must be an integer].')
       })
 
@@ -377,7 +379,7 @@ describe('Client', () => {
         const {client} = buildValidClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withOptions({limit: -20})
+          .withArguments({limit: -20})
           .throwsError(
             'Invalid parameter(s): [' +
             '"limit" must be larger than or equal to 1].')
@@ -388,7 +390,7 @@ describe('Client', () => {
         const {client} = buildValidClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withOptions({since: 'badger'})
+          .withArguments({since: 'badger'})
           .throwsError('Invalid parameter(s): ["since" must be a number].')
       })
 
@@ -397,7 +399,7 @@ describe('Client', () => {
         const {client} = buildValidClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withOptions({since: 32.654})
+          .withArguments({since: 32.654})
           .throwsError('Invalid parameter(s): ["since" must be an integer].')
       })
 
@@ -406,7 +408,7 @@ describe('Client', () => {
         const {client} = buildValidClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withOptions({since: -20})
+          .withArguments({since: -20})
           .throwsError(
             'Invalid parameter(s): [' +
             '"since" must be larger than or equal to 1].')
@@ -417,7 +419,7 @@ describe('Client', () => {
         const {client} = buildValidClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withOptions({until: 'badger'})
+          .withArguments({until: 'badger'})
           .throwsError('Invalid parameter(s): ["until" must be a number].')
       })
 
@@ -426,7 +428,7 @@ describe('Client', () => {
         const {client} = buildValidClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withOptions({until: 32.654})
+          .withArguments({until: 32.654})
           .throwsError('Invalid parameter(s): ["until" must be an integer].')
       })
 
@@ -435,7 +437,7 @@ describe('Client', () => {
         const {client} = buildValidClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withOptions({until: -20})
+          .withArguments({until: -20})
           .throwsError(
             'Invalid parameter(s): [' +
             '"until" must be larger than or equal to 1].')
