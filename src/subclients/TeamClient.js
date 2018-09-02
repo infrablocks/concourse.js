@@ -15,6 +15,7 @@ import {
 import {
   teamBuildsUrl,
   teamContainersUrl,
+  teamContainerUrl,
   teamPipelinesUrl,
   teamPipelineUrl
 } from '../support/urls'
@@ -93,6 +94,23 @@ export default class TeamClient {
       })
 
     return containers
+  }
+
+  async getContainer (containerId) {
+    const validatedOptions = validateOptions(
+      schemaFor({
+        containerId: string().required()
+      }), {containerId})
+
+    const {data: container} = await this.httpClient
+      .get(teamContainerUrl(
+        this.apiUrl,
+        this.team.name,
+        validatedOptions.containerId), {
+        transformResponse: [camelcaseKeysDeep]
+      })
+
+    return container
   }
 
   async listPipelines () {

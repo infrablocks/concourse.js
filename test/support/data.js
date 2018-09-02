@@ -197,5 +197,6 @@ export default {
 
   randomWorker,
 
-  randomContainer
+  randomContainer,
+  randomContainerId
 }

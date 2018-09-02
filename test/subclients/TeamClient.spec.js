@@ -434,6 +434,55 @@ describe('TeamClient', () => {
     })
   })
 
+  describe('getContainer', () => {
+    it('gets the container with the specified ID', async () => {
+      const {client, mock, apiUrl, bearerToken, team} =
+        buildValidTeamClient()
+
+      const teamName = team.name
+      const containerId = data.randomContainerId()
+      const containerData = data.randomContainer({
+        id: containerId
+      })
+
+      const containerFromApi = build.api.container(containerData)
+
+      const expectedContainer = build.client.container(containerData)
+
+      mock.onGet(
+        `${apiUrl}/teams/${teamName}/containers/${containerId}`,
+        {
+          headers: {
+            ...bearerAuthHeader(bearerToken)
+          }
+        })
+        .reply(200, containerFromApi)
+
+      const actualContainer = await client.getContainer(containerId)
+
+      expect(actualContainer).to.eql(expectedContainer)
+    });
+
+    it('throws an exception if the container ID is not provided',
+      async () => {
+        const {client} = buildValidTeamClient()
+        await forInstance(client)
+          .onCallOf('getContainer')
+          .withNoArguments()
+          .throwsError('Invalid parameter(s): ["containerId" is required].')
+      })
+
+    it('throws an exception if the container ID is not a string',
+      async () => {
+        const {client} = buildValidTeamClient()
+        await forInstance(client)
+          .onCallOf('getContainer')
+          .withArguments(12345)
+          .throwsError(
+            'Invalid parameter(s): ["containerId" must be a string].')
+      })
+  })
+
   describe('listPipelines', () => {
     it('gets all pipelines for team',
       async () => {
