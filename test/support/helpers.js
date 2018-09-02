@@ -1,7 +1,5 @@
 import faker from 'faker'
 
-export const toUnixTime = date => Math.floor(date / 1000)
-
 export const randomLowerHex = (length) => {
   let count = length
   if (typeof count === 'undefined') {

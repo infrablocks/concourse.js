@@ -1,10 +1,37 @@
 import faker from 'faker'
+import jwt from 'jsonwebtoken'
+import NodeRSA from 'node-rsa'
 
-import { toUnixTime, randomLowerHex } from './helpers'
+import { randomLowerHex } from './helpers'
+
+import { toUnixTime } from '../../src/support/date'
+
+const randomApiUrl = () => faker.internet.url()
+const randomUsername = () => faker.internet.userName(
+  faker.name.firstName(),
+  faker.name.lastName())
+const randomPassword = () => faker.random.alphaNumeric(40)
 
 const randomId = () => faker.random.number()
 
-const randomBearerToken = () => faker.random.alphaNumeric(800)
+const randomCsrfToken = () => randomLowerHex(64)
+const randomBearerToken = (overrides = {}, options = {}) => {
+  const resolvedData = {
+    csrf: randomCsrfToken(),
+    teamName: randomTeamName(),
+    isAdmin: true,
+    ...overrides
+  }
+  const resolvedOptions = {
+    algorithm: 'RS256',
+    expiresIn: '1 day',
+    ...options
+  }
+  const rsaPrivateKey = new NodeRSA({b: 512})
+    .exportKey('pkcs8-private-pem')
+
+  return jwt.sign(resolvedData, rsaPrivateKey, resolvedOptions)
+}
 
 const randomBuildName = () => faker.random.word()
 const randomBuildStatus = () => faker.random.arrayElement(
@@ -173,8 +200,13 @@ const randomContainer = (overrides = {}) => ({
 })
 
 export default {
+  randomApiUrl,
+  randomUsername,
+  randomPassword,
+
   randomId,
 
+  randomCsrfToken,
   randomBearerToken,
 
   randomTeam,

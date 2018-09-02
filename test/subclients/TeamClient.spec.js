@@ -12,7 +12,7 @@ import TeamClient from '../../src/subclients/TeamClient'
 import { bearerAuthHeader } from '../../src/support/http'
 
 const buildValidTeamClient = () => {
-  const apiUrl = 'https://concourse.example.com'
+  const apiUrl = data.randomApiUrl()
   const bearerToken = data.randomBearerToken()
 
   const httpClient = axios.create({

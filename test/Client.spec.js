@@ -12,7 +12,7 @@ import Client from '../src/Client'
 import { bearerAuthHeader } from '../src/support/http'
 
 const buildValidClient = () => {
-  const apiUrl = 'https://concourse.example.com'
+  const apiUrl = data.randomApiUrl()
   const bearerToken = data.randomBearerToken()
 
   const httpClient = axios.create({

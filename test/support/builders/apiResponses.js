@@ -3,7 +3,19 @@ import faker from 'faker'
 export const authToken =
   ({
     type = 'Bearer',
-    value = faker.random.alphaNumeric(800)
+    value = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjc3JmIjoiOWI2OWE0Y2VhNm' +
+    'FhNTIwNGJkMmFiZGNhMTZmZWU2OWQzYjliYTZkNGE4ODliYTQyOWJjMGJhYWFlMDhkNTYwO' +
+    'SIsImV4cCI6MTUzNTk3NTQ0MSwiaXNBZG1pbiI6dHJ1ZSwidGVhbU5hbWUiOiJtYWluIn0.' +
+    'QFx9M1dq9SVcxVjqjcjFNhKhZLwXfYiY2v-r1G7kPESz5F_Lw0cRawBqihm14MokJwFquzE' +
+    'kdpKitf2Lwj0lwSd5vMwEycCBuan-eLksekFvdu3TNg4beXr4Y27QV-i7FhUNq21-ZLwNcz' +
+    'IHFSJ9IHdnDHOmX8-40Tw_L4P5x8okkdVWlsSWs3tt4b9TE2YN08oekJKifAnEIwg8Kb2mV' +
+    'ubTeOxNxopC3HEhmu0xOMpjRNSTV9vtiyXw0oR6Lk50HHZmX4gD1Z0XKAz-pUK1GutTjDn2' +
+    'WU9RYM4l0Q5MML-_7OwuMFG86nJ7qwITyv0PTLdRFLgOPykuyYAtcSWXEDOTaHwFqTxwoe_' +
+    'uwbZG4BxtDrHEgJ0yPBxjnf5YVHMgkTNe9FdDRlYx9XEzt62-Kaf1BvGhXFC-NEFI-jUOZg' +
+    'gI7XTTWtaTuYUWqTCsFirX5iZqph-m_9A7EOIHfpjZpzWB0nxTkCzp-VsB9jfKErf4wjSH8' +
+    'LzAH4PP88sNe83IGonqgRa4bLmM-P-MW60Tkd2HllpZdHPsLLQkFNmkzZtgl3vGKf_gm19z' +
+    'v9waOSTg-0PjMzrFtU930tHKwJHyRCfY5YDLXQmXHXm96osn0ViircSCFAOFQH8mY0gyoz2' +
+    'iUpLnB7TMUOQvsTuHMPPSXans5LkZTxoBz__P0LQVo0Y'
   } = {}) => ({
     type,
     value
