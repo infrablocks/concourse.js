@@ -23,7 +23,7 @@ const buildValidTeamPipelineClient = () => {
   const team = build.client.team(data.randomTeam())
   const pipeline = build.client.pipeline(data.randomPipeline())
 
-  const client = new TeamPipelineClient({apiUrl, httpClient, team, pipeline})
+  const client = new TeamPipelineClient({ apiUrl, httpClient, team, pipeline })
 
   return {
     client,
@@ -129,12 +129,12 @@ describe('TeamPipelineClient', () => {
   describe('listJobs', () => {
     it('gets all jobs for team pipeline',
       async () => {
-        const {client, mock, apiUrl, bearerToken, team, pipeline} =
+        const { client, mock, apiUrl, bearerToken, team, pipeline } =
           buildValidTeamPipelineClient()
 
         const teamName = team.name
         const pipelineName = pipeline.name
-        const jobData = data.randomJob({teamName, pipelineName})
+        const jobData = data.randomJob({ teamName, pipelineName })
 
         const jobFromApi = build.api.job(jobData)
         const jobsFromApi = [jobFromApi]

@@ -34,7 +34,7 @@ const ensureValidToken = async (token, credentials, httpClient) => {
 }
 
 export const createSessionInterceptor =
-  ({credentials, httpClient = axios.create()}) => {
+  ({ credentials, httpClient = axios.create() }) => {
     let token = credentials.token
     let lock = new AwaitLock()
 

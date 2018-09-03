@@ -28,9 +28,9 @@ export default class Client {
       username: username,
       password: password
     }
-    const httpClient = createHttpClient({credentials})
+    const httpClient = createHttpClient({ credentials })
 
-    return new Client({apiUrl, httpClient})
+    return new Client({ apiUrl, httpClient })
   }
 
   constructor (options) {

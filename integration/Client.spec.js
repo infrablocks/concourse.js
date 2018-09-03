@@ -46,14 +46,14 @@ describe('Client', () => {
   })
 
   it('fetches a page of builds', async () => {
-    const builds = await client.listBuilds({limit: 10})
+    const builds = await client.listBuilds({ limit: 10 })
 
     expect(builds).to.be.an.instanceof(Array)
     expect(builds.length).to.eql(10)
   })
 
   it('fetches a specific build', async () => {
-    const builds = await client.listBuilds({limit: 1})
+    const builds = await client.listBuilds({ limit: 1 })
     const build = await client.getBuild(builds[0].id)
 
     expect(build).to.eql(builds[0])
@@ -83,7 +83,7 @@ describe('Client', () => {
     const team = (await client.listTeams())[0]
     const teamClient = await client.forTeam(team.id)
 
-    const builds = await teamClient.listBuilds({limit: 10})
+    const builds = await teamClient.listBuilds({ limit: 10 })
 
     expect(builds).to.be.an.instanceof(Array)
     expect(builds.length).to.eql(10)

@@ -49,7 +49,7 @@ export default class TeamClient {
       until: validatedOptions.until
     })
 
-    const {data: builds} = await this.httpClient
+    const { data: builds } = await this.httpClient
       .get(teamBuildsUrl(this.apiUrl, this.team.name), {
         params,
         transformResponse: [parseJson, camelcaseKeysDeep]
@@ -88,7 +88,7 @@ export default class TeamClient {
       build_name: validatedOptions.buildName
     })
 
-    const {data: containers} = await this.httpClient
+    const { data: containers } = await this.httpClient
       .get(teamContainersUrl(this.apiUrl, this.team.name), {
         params,
         transformResponse: [parseJson, camelcaseKeysDeep]
@@ -101,9 +101,9 @@ export default class TeamClient {
     const validatedOptions = validateOptions(
       schemaFor({
         containerId: string().required()
-      }), {containerId})
+      }), { containerId })
 
-    const {data: container} = await this.httpClient
+    const { data: container } = await this.httpClient
       .get(teamContainerUrl(
         this.apiUrl,
         this.team.name,
@@ -115,7 +115,7 @@ export default class TeamClient {
   }
 
   async listPipelines () {
-    const {data: pipelines} = await this.httpClient
+    const { data: pipelines } = await this.httpClient
       .get(teamPipelinesUrl(this.apiUrl, this.team.name), {
         transformResponse: [parseJson, camelcaseKeysDeep]
       })
@@ -127,9 +127,9 @@ export default class TeamClient {
     const validatedOptions = validateOptions(
       schemaFor({
         pipelineName: string().required()
-      }), {pipelineName})
+      }), { pipelineName })
 
-    const {data: pipeline} = await this.httpClient
+    const { data: pipeline } = await this.httpClient
       .get(teamPipelineUrl(
         this.apiUrl, this.team.name, validatedOptions.pipelineName), {
         transformResponse: [parseJson, camelcaseKeysDeep]
@@ -141,7 +141,7 @@ export default class TeamClient {
   async deletePipeline (pipelineName) {
     const validatedOptions = validateOptions(schemaFor({
       pipelineName: string().required()
-    }), {pipelineName})
+    }), { pipelineName })
 
     await this.httpClient.delete(
       teamPipelineUrl(

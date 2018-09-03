@@ -34,10 +34,10 @@ describe('session interceptor', () => {
       const httpClient = axios.create()
       const mock = new MockAdapter(httpClient)
 
-      const bearerToken = data.randomBearerToken({csrf: csrfToken})
-      const authToken = build.api.authToken({value: bearerToken})
+      const bearerToken = data.randomBearerToken({ csrf: csrfToken })
+      const authToken = build.api.authToken({ value: bearerToken })
 
-      const interceptor = createSessionInterceptor({credentials, httpClient})
+      const interceptor = createSessionInterceptor({ credentials, httpClient })
 
       mock
         .onGet(credentials.url, {
@@ -69,7 +69,7 @@ describe('session interceptor', () => {
       const apiUrl = data.randomApiUrl()
       const teamName = data.randomTeamName()
       const csrfToken = data.randomCsrfToken()
-      const bearerToken = data.randomBearerToken({csrf: csrfToken})
+      const bearerToken = data.randomBearerToken({ csrf: csrfToken })
 
       const credentials = {
         username: data.randomUsername(),
@@ -79,7 +79,7 @@ describe('session interceptor', () => {
       }
       const httpClient = axios.create()
 
-      const interceptor = createSessionInterceptor({credentials, httpClient})
+      const interceptor = createSessionInterceptor({ credentials, httpClient })
 
       const initialConfig = {
         url: teamPipelinesUrl(apiUrl, teamName),
@@ -113,10 +113,10 @@ describe('session interceptor', () => {
       const httpClient = axios.create()
       const mock = new MockAdapter(httpClient)
 
-      const bearerToken = data.randomBearerToken({csrf: csrfToken})
-      const authToken = build.api.authToken({value: bearerToken})
+      const bearerToken = data.randomBearerToken({ csrf: csrfToken })
+      const authToken = build.api.authToken({ value: bearerToken })
 
-      const interceptor = createSessionInterceptor({credentials, httpClient})
+      const interceptor = createSessionInterceptor({ credentials, httpClient })
 
       mock
         .onGet(credentials.url, {
@@ -163,7 +163,7 @@ describe('session interceptor', () => {
     const apiUrl = data.randomApiUrl()
     const teamName = data.randomTeamName()
     const csrfToken = data.randomCsrfToken()
-    const bearerToken = data.randomBearerToken({csrf: csrfToken})
+    const bearerToken = data.randomBearerToken({ csrf: csrfToken })
 
     const credentials = {
       username: data.randomUsername(),
@@ -173,7 +173,7 @@ describe('session interceptor', () => {
     }
     const httpClient = axios.create()
 
-    const interceptor = createSessionInterceptor({credentials, httpClient})
+    const interceptor = createSessionInterceptor({ credentials, httpClient })
 
     const initialConfig = {
       url: teamPipelinesUrl(apiUrl, teamName),
@@ -216,10 +216,10 @@ describe('session interceptor', () => {
     const mock = new MockAdapter(httpClient)
 
     const newCsrfToken = data.randomCsrfToken()
-    const newBearerToken = data.randomBearerToken({csrf: newCsrfToken})
-    const newAuthToken = build.api.authToken({value: newBearerToken})
+    const newBearerToken = data.randomBearerToken({ csrf: newCsrfToken })
+    const newAuthToken = build.api.authToken({ value: newBearerToken })
 
-    const interceptor = createSessionInterceptor({credentials, httpClient})
+    const interceptor = createSessionInterceptor({ credentials, httpClient })
 
     mock
       .onGet(credentials.url, {
@@ -260,10 +260,10 @@ describe('session interceptor', () => {
     const httpClient = axios.create()
     const mock = new MockAdapter(httpClient)
 
-    const bearerToken = data.randomBearerToken({csrf: csrfToken})
-    const authToken = build.api.authToken({value: bearerToken})
+    const bearerToken = data.randomBearerToken({ csrf: csrfToken })
+    const authToken = build.api.authToken({ value: bearerToken })
 
-    const interceptor = createSessionInterceptor({credentials, httpClient})
+    const interceptor = createSessionInterceptor({ credentials, httpClient })
 
     mock
       .onGet(credentials.url, {

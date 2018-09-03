@@ -13,7 +13,7 @@ const throwsError = (instance, method, args) => async (message) => {
 }
 
 const withArguments = (instance, method) => (options) => {
-  return {throwsError: throwsError(instance, method, options)}
+  return { throwsError: throwsError(instance, method, options) }
 }
 
 const onCallOf = (instance) => (method) => {
@@ -24,5 +24,5 @@ const onCallOf = (instance) => (method) => {
 }
 
 export const forInstance = (instance) => {
-  return {onCallOf: onCallOf(instance)}
+  return { onCallOf: onCallOf(instance) }
 }

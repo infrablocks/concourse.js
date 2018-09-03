@@ -20,7 +20,7 @@ const buildValidClient = () => {
   })
   const mock = new MockAdapter(httpClient)
 
-  const client = new Client({apiUrl, httpClient})
+  const client = new Client({ apiUrl, httpClient })
 
   return {
     client,
@@ -41,20 +41,20 @@ describe('Client', () => {
 
     it('throws an exception if the API URI is not a string', () => {
       onConstructionOf(Client)
-        .withArguments({apiUrl: 25})
+        .withArguments({ apiUrl: 25 })
         .throwsError('Invalid parameter(s): ["apiUrl" must be a string].')
     })
 
     it('throws an exception if the API URI is not a valid URI', () => {
       onConstructionOf(Client)
-        .withArguments({apiUrl: 'spinach'})
+        .withArguments({ apiUrl: 'spinach' })
         .throwsError('Invalid parameter(s): ["apiUrl" must be a valid uri].')
     })
 
     it('throws an exception if the provided HTTP client is not an object',
       () => {
         onConstructionOf(Client)
-          .withArguments({apiUrl: faker.internet.url(), httpClient: 35})
+          .withArguments({ apiUrl: faker.internet.url(), httpClient: 35 })
           .throwsError(
             'Invalid parameter(s): ["httpClient" must be a Function].')
       })
@@ -63,7 +63,7 @@ describe('Client', () => {
   describe('listTeams', () => {
     it('gets all teams',
       async () => {
-        const {client, mock, apiUrl, bearerToken} = buildValidClient()
+        const { client, mock, apiUrl, bearerToken } = buildValidClient()
 
         const teamData = data.randomTeam()
 
@@ -93,7 +93,7 @@ describe('Client', () => {
     it('returns a client for the team with the supplied ID when the team ' +
       'exists',
     async () => {
-      const {client, mock, apiUrl, bearerToken, httpClient} =
+      const { client, mock, apiUrl, bearerToken, httpClient } =
           buildValidClient()
 
       const teamId = data.randomId()
@@ -126,7 +126,7 @@ describe('Client', () => {
 
     it('throws an exception if no team exists for the supplied ID',
       async () => {
-        const {client, mock, apiUrl, bearerToken} = buildValidClient()
+        const { client, mock, apiUrl, bearerToken } = buildValidClient()
 
         const teamId = data.randomId()
 
@@ -156,7 +156,7 @@ describe('Client', () => {
   describe('listWorkers', () => {
     it('gets all workers',
       async () => {
-        const {client, mock, apiUrl, bearerToken} = buildValidClient()
+        const { client, mock, apiUrl, bearerToken } = buildValidClient()
 
         const workerData = data.randomWorker()
 
@@ -193,7 +193,7 @@ describe('Client', () => {
   describe('listPipelines', () => {
     it('gets all pipelines',
       async () => {
-        const {client, mock, apiUrl, bearerToken} = buildValidClient()
+        const { client, mock, apiUrl, bearerToken } = buildValidClient()
 
         const pipelineData = data.randomPipeline()
 
@@ -222,7 +222,7 @@ describe('Client', () => {
   describe('listJobs', () => {
     it('gets all jobs',
       async () => {
-        const {client, mock, apiUrl, bearerToken} = buildValidClient()
+        const { client, mock, apiUrl, bearerToken } = buildValidClient()
 
         const jobName = data.randomJobName()
         const teamName = data.randomTeamName()
@@ -279,7 +279,7 @@ describe('Client', () => {
   describe('listBuilds', () => {
     it('gets all builds',
       async () => {
-        const {client, mock, apiUrl, bearerToken} = buildValidClient()
+        const { client, mock, apiUrl, bearerToken } = buildValidClient()
 
         const teamName = data.randomTeamName()
         const pipelineName = data.randomPipelineName()
@@ -314,7 +314,7 @@ describe('Client', () => {
 
     it('uses provided page options when supplied',
       async () => {
-        const {client, mock, apiUrl, bearerToken} = buildValidClient()
+        const { client, mock, apiUrl, bearerToken } = buildValidClient()
 
         const teamName = data.randomTeamName()
         const pipelineName = data.randomPipelineName()
@@ -358,28 +358,28 @@ describe('Client', () => {
 
     it('throws an exception if the value provided for limit is not a number',
       async () => {
-        const {client} = buildValidClient()
+        const { client } = buildValidClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({limit: 'badger'})
+          .withArguments({ limit: 'badger' })
           .throwsError('Invalid parameter(s): ["limit" must be a number].')
       })
 
     it('throws an exception if the value provided for limit is not an integer',
       async () => {
-        const {client} = buildValidClient()
+        const { client } = buildValidClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({limit: 32.654})
+          .withArguments({ limit: 32.654 })
           .throwsError('Invalid parameter(s): ["limit" must be an integer].')
       })
 
     it('throws an exception if the value provided for limit is less than 1',
       async () => {
-        const {client} = buildValidClient()
+        const { client } = buildValidClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({limit: -20})
+          .withArguments({ limit: -20 })
           .throwsError(
             'Invalid parameter(s): [' +
             '"limit" must be larger than or equal to 1].')
@@ -387,28 +387,28 @@ describe('Client', () => {
 
     it('throws an exception if the value provided for since is not a number',
       async () => {
-        const {client} = buildValidClient()
+        const { client } = buildValidClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({since: 'badger'})
+          .withArguments({ since: 'badger' })
           .throwsError('Invalid parameter(s): ["since" must be a number].')
       })
 
     it('throws an exception if the value provided for since is not an integer',
       async () => {
-        const {client} = buildValidClient()
+        const { client } = buildValidClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({since: 32.654})
+          .withArguments({ since: 32.654 })
           .throwsError('Invalid parameter(s): ["since" must be an integer].')
       })
 
     it('throws an exception if the value provided for since is less than 1',
       async () => {
-        const {client} = buildValidClient()
+        const { client } = buildValidClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({since: -20})
+          .withArguments({ since: -20 })
           .throwsError(
             'Invalid parameter(s): [' +
             '"since" must be larger than or equal to 1].')
@@ -416,28 +416,28 @@ describe('Client', () => {
 
     it('throws an exception if the value provided for until is not a number',
       async () => {
-        const {client} = buildValidClient()
+        const { client } = buildValidClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({until: 'badger'})
+          .withArguments({ until: 'badger' })
           .throwsError('Invalid parameter(s): ["until" must be a number].')
       })
 
     it('throws an exception if the value provided for until is not an integer',
       async () => {
-        const {client} = buildValidClient()
+        const { client } = buildValidClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({until: 32.654})
+          .withArguments({ until: 32.654 })
           .throwsError('Invalid parameter(s): ["until" must be an integer].')
       })
 
     it('throws an exception if the value provided for until is less than 1',
       async () => {
-        const {client} = buildValidClient()
+        const { client } = buildValidClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({until: -20})
+          .withArguments({ until: -20 })
           .throwsError(
             'Invalid parameter(s): [' +
             '"until" must be larger than or equal to 1].')
@@ -447,7 +447,7 @@ describe('Client', () => {
   describe('getBuild', () => {
     it('gets the build with the provided ID',
       async () => {
-        const {client, mock, apiUrl, bearerToken} = buildValidClient()
+        const { client, mock, apiUrl, bearerToken } = buildValidClient()
 
         const buildId = data.randomId()
 
@@ -483,7 +483,7 @@ describe('Client', () => {
   describe('listResources', () => {
     it('gets all resources',
       async () => {
-        const {client, mock, apiUrl, bearerToken} = buildValidClient()
+        const { client, mock, apiUrl, bearerToken } = buildValidClient()
 
         const teamName = data.randomTeamName()
         const pipelineName = data.randomPipelineName()

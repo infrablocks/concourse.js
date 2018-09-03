@@ -26,10 +26,10 @@ class TeamPipelineClient {
   }
 
   async listJobs () {
-    const {data: jobs} = await this.httpClient
+    const { data: jobs } = await this.httpClient
       .get(
         teamPipelineJobsUrl(this.apiUrl, this.team.name, this.pipeline.name),
-        {transformResponse: [parseJson, camelcaseKeysDeep]})
+        { transformResponse: [parseJson, camelcaseKeysDeep] })
 
     return jobs
   }

@@ -22,7 +22,7 @@ const buildValidTeamClient = () => {
 
   const team = build.client.team(data.randomTeam())
 
-  const client = new TeamClient({apiUrl, httpClient, team})
+  const client = new TeamClient({ apiUrl, httpClient, team })
 
   return {
     client,
@@ -91,7 +91,7 @@ describe('TeamClient', () => {
         .withArguments({
           apiUrl: faker.internet.url(),
           httpClient: axios,
-          team: 'wat'})
+          team: 'wat' })
         .throwsError('Invalid parameter(s): ["team" must be an object].')
     })
   })
@@ -99,11 +99,11 @@ describe('TeamClient', () => {
   describe('listBuilds', () => {
     it('gets all builds for team',
       async () => {
-        const {client, mock, apiUrl, bearerToken, team} =
+        const { client, mock, apiUrl, bearerToken, team } =
           buildValidTeamClient()
 
         const teamName = team.name
-        const buildData = data.randomBuild({teamName})
+        const buildData = data.randomBuild({ teamName })
 
         const buildFromApi = build.api.build(buildData)
         const buildsFromApi = [buildFromApi]
@@ -127,12 +127,12 @@ describe('TeamClient', () => {
 
     it('uses provided page options when supplied',
       async () => {
-        const {client, mock, apiUrl, bearerToken, team} =
+        const { client, mock, apiUrl, bearerToken, team } =
           buildValidTeamClient()
 
         const teamName = team.name
 
-        const buildData = data.randomBuild({teamName})
+        const buildData = data.randomBuild({ teamName })
 
         const buildFromApi = build.api.build(buildData)
         const buildsFromApi = [buildFromApi]
@@ -165,28 +165,28 @@ describe('TeamClient', () => {
 
     it('throws an exception if the value provided for limit is not a number',
       async () => {
-        const {client} = buildValidTeamClient()
+        const { client } = buildValidTeamClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({limit: 'badger'})
+          .withArguments({ limit: 'badger' })
           .throwsError('Invalid parameter(s): ["limit" must be a number].')
       })
 
     it('throws an exception if the value provided for limit is not an integer',
       async () => {
-        const {client} = buildValidTeamClient()
+        const { client } = buildValidTeamClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({limit: 32.654})
+          .withArguments({ limit: 32.654 })
           .throwsError('Invalid parameter(s): ["limit" must be an integer].')
       })
 
     it('throws an exception if the value provided for limit is less than 1',
       async () => {
-        const {client} = buildValidTeamClient()
+        const { client } = buildValidTeamClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({limit: -20})
+          .withArguments({ limit: -20 })
           .throwsError(
             'Invalid parameter(s): [' +
             '"limit" must be larger than or equal to 1].')
@@ -194,28 +194,28 @@ describe('TeamClient', () => {
 
     it('throws an exception if the value provided for since is not a number',
       async () => {
-        const {client} = buildValidTeamClient()
+        const { client } = buildValidTeamClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({since: 'badger'})
+          .withArguments({ since: 'badger' })
           .throwsError('Invalid parameter(s): ["since" must be a number].')
       })
 
     it('throws an exception if the value provided for since is not an integer',
       async () => {
-        const {client} = buildValidTeamClient()
+        const { client } = buildValidTeamClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({since: 32.654})
+          .withArguments({ since: 32.654 })
           .throwsError('Invalid parameter(s): ["since" must be an integer].')
       })
 
     it('throws an exception if the value provided for since is less than 1',
       async () => {
-        const {client} = buildValidTeamClient()
+        const { client } = buildValidTeamClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({since: -20})
+          .withArguments({ since: -20 })
           .throwsError(
             'Invalid parameter(s): [' +
             '"since" must be larger than or equal to 1].')
@@ -223,28 +223,28 @@ describe('TeamClient', () => {
 
     it('throws an exception if the value provided for until is not a number',
       async () => {
-        const {client} = buildValidTeamClient()
+        const { client } = buildValidTeamClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({until: 'badger'})
+          .withArguments({ until: 'badger' })
           .throwsError('Invalid parameter(s): ["until" must be a number].')
       })
 
     it('throws an exception if the value provided for until is not an integer',
       async () => {
-        const {client} = buildValidTeamClient()
+        const { client } = buildValidTeamClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({until: 32.654})
+          .withArguments({ until: 32.654 })
           .throwsError('Invalid parameter(s): ["until" must be an integer].')
       })
 
     it('throws an exception if the value provided for until is less than 1',
       async () => {
-        const {client} = buildValidTeamClient()
+        const { client } = buildValidTeamClient()
         await forInstance(client)
           .onCallOf('listBuilds')
-          .withArguments({until: -20})
+          .withArguments({ until: -20 })
           .throwsError(
             'Invalid parameter(s): [' +
             '"until" must be larger than or equal to 1].')
@@ -254,7 +254,7 @@ describe('TeamClient', () => {
   describe('listContainers', () => {
     it('gets all containers for team',
       async () => {
-        const {client, mock, apiUrl, bearerToken, team} =
+        const { client, mock, apiUrl, bearerToken, team } =
           buildValidTeamClient()
 
         const type = 'get'
@@ -298,150 +298,150 @@ describe('TeamClient', () => {
 
     it('throws an exception if the value provided for type is not a string',
       async () => {
-        const {client} = buildValidTeamClient()
+        const { client } = buildValidTeamClient()
         await forInstance(client)
           .onCallOf('listContainers')
-          .withArguments({type: 123})
+          .withArguments({ type: 123 })
           .throwsError(
             'Invalid parameter(s): ["type" must be a string].')
       })
 
     it('throws an exception if the value provided for pipeline name is ' +
       'not a string', async () => {
-      const {client} = buildValidTeamClient()
+      const { client } = buildValidTeamClient()
       await forInstance(client)
         .onCallOf('listContainers')
-        .withArguments({pipelineName: 123})
+        .withArguments({ pipelineName: 123 })
         .throwsError(
           'Invalid parameter(s): ["pipelineName" must be a string].')
     })
 
     it('throws an exception if the value provided for pipeline ID is ' +
       'not a number', async () => {
-      const {client} = buildValidTeamClient()
+      const { client } = buildValidTeamClient()
       await forInstance(client)
         .onCallOf('listContainers')
-        .withArguments({pipelineId: 'spinach'})
+        .withArguments({ pipelineId: 'spinach' })
         .throwsError(
           'Invalid parameter(s): ["pipelineId" must be a number].')
     })
 
     it('throws an exception if the value provided for pipeline ID is ' +
       'not a integer', async () => {
-      const {client} = buildValidTeamClient()
+      const { client } = buildValidTeamClient()
       await forInstance(client)
         .onCallOf('listContainers')
-        .withArguments({pipelineId: 23.6})
+        .withArguments({ pipelineId: 23.6 })
         .throwsError(
           'Invalid parameter(s): ["pipelineId" must be an integer].')
     })
 
     it('throws an exception if the value provided for job ID is ' +
       'not a number', async () => {
-      const {client} = buildValidTeamClient()
+      const { client } = buildValidTeamClient()
       await forInstance(client)
         .onCallOf('listContainers')
-        .withArguments({jobId: 'spinach'})
+        .withArguments({ jobId: 'spinach' })
         .throwsError(
           'Invalid parameter(s): ["jobId" must be a number].')
     })
 
     it('throws an exception if the value provided for job ID is ' +
       'not a integer', async () => {
-      const {client} = buildValidTeamClient()
+      const { client } = buildValidTeamClient()
       await forInstance(client)
         .onCallOf('listContainers')
-        .withArguments({jobId: 23.6})
+        .withArguments({ jobId: 23.6 })
         .throwsError(
           'Invalid parameter(s): ["jobId" must be an integer].')
     })
 
     it('throws an exception if the value provided for job name is ' +
       'not a string', async () => {
-      const {client} = buildValidTeamClient()
+      const { client } = buildValidTeamClient()
       await forInstance(client)
         .onCallOf('listContainers')
-        .withArguments({jobName: 123})
+        .withArguments({ jobName: 123 })
         .throwsError(
           'Invalid parameter(s): ["jobName" must be a string].')
     })
 
     it('throws an exception if the value provided for step name is ' +
       'not a string', async () => {
-      const {client} = buildValidTeamClient()
+      const { client } = buildValidTeamClient()
       await forInstance(client)
         .onCallOf('listContainers')
-        .withArguments({stepName: 123})
+        .withArguments({ stepName: 123 })
         .throwsError(
           'Invalid parameter(s): ["stepName" must be a string].')
     })
 
     it('throws an exception if the value provided for resource name is ' +
       'not a string', async () => {
-      const {client} = buildValidTeamClient()
+      const { client } = buildValidTeamClient()
       await forInstance(client)
         .onCallOf('listContainers')
-        .withArguments({resourceName: 123})
+        .withArguments({ resourceName: 123 })
         .throwsError(
           'Invalid parameter(s): ["resourceName" must be a string].')
     })
 
     it('throws an exception if the value provided for attempt is ' +
       'not a string', async () => {
-      const {client} = buildValidTeamClient()
+      const { client } = buildValidTeamClient()
       await forInstance(client)
         .onCallOf('listContainers')
-        .withArguments({attempt: 123})
+        .withArguments({ attempt: 123 })
         .throwsError(
           'Invalid parameter(s): ["attempt" must be a string].')
     })
 
     it('throws an exception if the value provided for build ID is ' +
       'not a number', async () => {
-      const {client} = buildValidTeamClient()
+      const { client } = buildValidTeamClient()
       await forInstance(client)
         .onCallOf('listContainers')
-        .withArguments({buildId: 'spinach'})
+        .withArguments({ buildId: 'spinach' })
         .throwsError(
           'Invalid parameter(s): ["buildId" must be a number].')
     })
 
     it('throws an exception if the value provided for build ID is ' +
       'not a integer', async () => {
-      const {client} = buildValidTeamClient()
+      const { client } = buildValidTeamClient()
       await forInstance(client)
         .onCallOf('listContainers')
-        .withArguments({buildId: 23.6})
+        .withArguments({ buildId: 23.6 })
         .throwsError(
           'Invalid parameter(s): ["buildId" must be an integer].')
     })
 
     it('throws an exception if the value provided for build name is ' +
       'not a string', async () => {
-      const {client} = buildValidTeamClient()
+      const { client } = buildValidTeamClient()
       await forInstance(client)
         .onCallOf('listContainers')
-        .withArguments({buildName: 123})
+        .withArguments({ buildName: 123 })
         .throwsError(
           'Invalid parameter(s): ["buildName" must be a string].')
     })
 
     it('throws an exception if type is check and pipeline name is ' +
       'not provided', async () => {
-      const {client} = buildValidTeamClient()
+      const { client } = buildValidTeamClient()
       await forInstance(client)
         .onCallOf('listContainers')
-        .withArguments({type: 'check', resourceName: 'resource'})
+        .withArguments({ type: 'check', resourceName: 'resource' })
         .throwsError(
           'Invalid parameter(s): ["pipelineName" is required].')
     })
 
     it('throws an exception if type is check and resource name is ' +
       'not provided', async () => {
-      const {client} = buildValidTeamClient()
+      const { client } = buildValidTeamClient()
       await forInstance(client)
         .onCallOf('listContainers')
-        .withArguments({type: 'check', pipelineName: 'pipeline'})
+        .withArguments({ type: 'check', pipelineName: 'pipeline' })
         .throwsError(
           'Invalid parameter(s): ["resourceName" is required].')
     })
@@ -449,7 +449,7 @@ describe('TeamClient', () => {
 
   describe('getContainer', () => {
     it('gets the container with the specified ID', async () => {
-      const {client, mock, apiUrl, bearerToken, team} =
+      const { client, mock, apiUrl, bearerToken, team } =
         buildValidTeamClient()
 
       const teamName = team.name
@@ -478,7 +478,7 @@ describe('TeamClient', () => {
 
     it('throws an exception if the container ID is not provided',
       async () => {
-        const {client} = buildValidTeamClient()
+        const { client } = buildValidTeamClient()
         await forInstance(client)
           .onCallOf('getContainer')
           .withNoArguments()
@@ -487,7 +487,7 @@ describe('TeamClient', () => {
 
     it('throws an exception if the container ID is not a string',
       async () => {
-        const {client} = buildValidTeamClient()
+        const { client } = buildValidTeamClient()
         await forInstance(client)
           .onCallOf('getContainer')
           .withArguments(12345)
@@ -499,11 +499,11 @@ describe('TeamClient', () => {
   describe('listPipelines', () => {
     it('gets all pipelines for team',
       async () => {
-        const {client, mock, apiUrl, bearerToken, team} =
+        const { client, mock, apiUrl, bearerToken, team } =
           buildValidTeamClient()
 
         const teamName = team.name
-        const pipelineData = data.randomPipeline({teamName})
+        const pipelineData = data.randomPipeline({ teamName })
 
         const pipelineFromApi = build.api.pipeline(pipelineData)
         const pipelinesFromApi = [pipelineFromApi]
@@ -529,7 +529,7 @@ describe('TeamClient', () => {
   describe('getPipeline', () => {
     it('throws an exception if the pipeline name is not provided',
       async () => {
-        const {client} = buildValidTeamClient()
+        const { client } = buildValidTeamClient()
         await forInstance(client)
           .onCallOf('getPipeline')
           .withNoArguments()
@@ -538,7 +538,7 @@ describe('TeamClient', () => {
 
     it('throws an exception if the pipeline name is not a string',
       async () => {
-        const {client} = buildValidTeamClient()
+        const { client } = buildValidTeamClient()
         await forInstance(client)
           .onCallOf('getPipeline')
           .withArguments(12345)
@@ -548,7 +548,7 @@ describe('TeamClient', () => {
 
     it('gets the pipeline with the specified name',
       async () => {
-        const {client, mock, apiUrl, bearerToken, team} =
+        const { client, mock, apiUrl, bearerToken, team } =
           buildValidTeamClient()
 
         const teamName = team.name
@@ -580,7 +580,7 @@ describe('TeamClient', () => {
   describe('deletePipeline', () => {
     it('throws an exception if the pipeline name is not provided',
       async () => {
-        const {client} = buildValidTeamClient()
+        const { client } = buildValidTeamClient()
         await forInstance(client)
           .onCallOf('deletePipeline')
           .withNoArguments()
@@ -590,7 +590,7 @@ describe('TeamClient', () => {
 
     it('throws an exception if the pipeline name is not a string',
       async () => {
-        const {client} = buildValidTeamClient()
+        const { client } = buildValidTeamClient()
         await forInstance(client)
           .onCallOf('deletePipeline')
           .withArguments(12345)
@@ -600,7 +600,7 @@ describe('TeamClient', () => {
 
     it('deletes the pipeline with the specified name',
       async () => {
-        const {client, mock, apiUrl, bearerToken, team} =
+        const { client, mock, apiUrl, bearerToken, team } =
           buildValidTeamClient()
 
         const teamName = team.name
@@ -627,7 +627,7 @@ describe('TeamClient', () => {
 
     it('throws the underlying http client exception on failure',
       async () => {
-        const {client, mock, apiUrl, bearerToken, team} =
+        const { client, mock, apiUrl, bearerToken, team } =
           buildValidTeamClient()
 
         const teamName = team.name
@@ -655,7 +655,7 @@ describe('TeamClient', () => {
     it('returns a client for the team pipeline with the supplied name when ' +
       'the pipeline exists for that team',
     async () => {
-      const {client, httpClient, mock, apiUrl, bearerToken, team} =
+      const { client, httpClient, mock, apiUrl, bearerToken, team } =
           buildValidTeamClient()
 
       const pipelineName = data.randomPipelineName()
@@ -685,7 +685,7 @@ describe('TeamClient', () => {
 
     it('throws an exception if no pipeline exists for the supplied name',
       async () => {
-        const {client, mock, apiUrl, bearerToken, team} =
+        const { client, mock, apiUrl, bearerToken, team } =
           buildValidTeamClient()
 
         const pipelineName = data.randomPipelineName()
