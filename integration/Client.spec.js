@@ -58,4 +58,54 @@ describe('Client', () => {
 
     expect(build).to.eql(builds[0])
   });
+
+  it('fetches team pipelines', async () => {
+    const team = (await client.listTeams())[0]
+    const teamClient = await client.forTeam(team.id)
+
+    const pipelines = await teamClient.listPipelines()
+
+    expect(pipelines).to.be.an.instanceof(Array)
+    expect(pipelines.length).to.be.greaterThan(0)
+  });
+
+  it('fetches a specific team pipeline', async () => {
+    const team = (await client.listTeams())[0]
+    const teamClient = await client.forTeam(team.id)
+    const pipelines = await teamClient.listPipelines()
+
+    const pipeline = await teamClient.getPipeline(pipelines[0].name)
+
+    expect(pipeline).to.eql(pipelines[0])
+  });
+
+  it('fetches a page of team builds', async () => {
+    const team = (await client.listTeams())[0]
+    const teamClient = await client.forTeam(team.id)
+
+    const builds = await teamClient.listBuilds({limit: 10})
+
+    expect(builds).to.be.an.instanceof(Array)
+    expect(builds.length).to.eql(10)
+  });
+
+  it('fetches team containers', async () => {
+    const team = (await client.listTeams())[0]
+    const teamClient = await client.forTeam(team.id)
+
+    const containers = await teamClient.listContainers()
+
+    expect(containers).to.be.an.instanceof(Array)
+    expect(containers.length).to.be.greaterThan(0)
+  });
+
+  it('fetches a specific team container', async () => {
+    const team = (await client.listTeams())[0]
+    const teamClient = await client.forTeam(team.id)
+    const containers = await teamClient.listContainers()
+
+    const container = await teamClient.getContainer(containers[0].id)
+
+    expect(container).to.eql(containers[0])
+  });
 })

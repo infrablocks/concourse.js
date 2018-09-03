@@ -10,7 +10,7 @@
     "build": "babel -s inline -d lib src",
     "prepublishOnly": "npm run lint && npm run test && npm run build",
     "test": "mocha --require babel-polyfill --require babel-core/register --recursive ./test",
-    "integration": "mocha --require babel-polyfill --require babel-core/register --recursive ./integration"
+    "integration": "mocha --require babel-polyfill --require babel-core/register --recursive --timeout 5000 ./integration"
   },
   "repository": {
     "type": "git",
