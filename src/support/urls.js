@@ -38,3 +38,7 @@ export const teamPipelineJobUrl = (url, teamName, pipelineName, jobName) =>
 export const teamPipelineJobBuildsUrl =
   (url, teamName, pipelineName, jobName) =>
     `${url}/teams/${teamName}/pipelines/${pipelineName}/jobs/${jobName}/builds`
+export const teamPipelineJobBuildUrl =
+  (url, teamName, pipelineName, jobName, buildName) =>
+    `${url}/teams/${teamName}/pipelines/${pipelineName}/jobs/${jobName}` +
+    `/builds/${buildName}`

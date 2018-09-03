@@ -212,6 +212,7 @@ export default {
   randomTeam,
   randomTeamName,
 
+  randomBuildName,
   randomBuild,
 
   randomPipelineName,

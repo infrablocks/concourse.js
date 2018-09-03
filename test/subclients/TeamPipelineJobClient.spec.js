@@ -3,6 +3,40 @@ import TeamPipelineJobClient from '../../src/subclients/TeamPipelineJobClient'
 import data from '../testsupport/data'
 import axios from 'axios'
 import faker from 'faker'
+import build from '../testsupport/builders'
+import { bearerAuthHeader } from '../../src/support/http/headers'
+import { expect } from 'chai'
+import MockAdapter from 'axios-mock-adapter'
+import { forInstance } from '../testsupport/dsls/methods'
+
+const buildValidTeamPipelineJobClient = () => {
+  const apiUrl = data.randomApiUrl()
+  const bearerToken = data.randomBearerToken()
+
+  const httpClient = axios.create({
+    headers: bearerAuthHeader(bearerToken)
+  })
+  const mock = new MockAdapter(httpClient)
+
+  const team = build.client.team(data.randomTeam())
+  const pipeline = build.client.pipeline(data.randomPipeline())
+  const job = build.client.job(data.randomJob())
+
+  const client = new TeamPipelineJobClient({
+    apiUrl, httpClient, team, pipeline, job
+  })
+
+  return {
+    client,
+    httpClient,
+    mock,
+    apiUrl,
+    bearerToken,
+    team,
+    pipeline,
+    job
+  }
+}
 
 describe('TeamPipelineJobClient', () => {
   describe('construction', () => {
@@ -123,5 +157,95 @@ describe('TeamPipelineJobClient', () => {
         })
         .throwsError('Invalid parameter(s): ["job" must be an object].')
     })
+  })
+
+  describe('listBuilds', () => {
+    it('gets all builds for team pipeline job',
+      async () => {
+        const { client, mock, apiUrl, bearerToken, team, pipeline, job } =
+          buildValidTeamPipelineJobClient()
+
+        const teamName = team.name
+        const pipelineName = pipeline.name
+        const jobName = job.name
+        const buildData = data.randomBuild({ teamName, pipelineName, jobName })
+
+        const buildFromApi = build.api.build(buildData)
+        const buildsFromApi = [buildFromApi]
+
+        const convertedBuild = build.client.build(buildData)
+        const expectedBuilds = [convertedBuild]
+
+        mock.onGet(
+          `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}` +
+          `/jobs/${jobName}/builds`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .reply(200, buildsFromApi)
+
+        const actualBuilds = await client.listBuilds()
+
+        expect(actualBuilds).to.eql(expectedBuilds)
+      })
+  })
+
+  describe('getBuild', () => {
+    it('throws an exception if the build name is not provided',
+      async () => {
+        const { client } = buildValidTeamPipelineJobClient()
+        await forInstance(client)
+          .onCallOf('getBuild')
+          .withNoArguments()
+          .throwsError('Invalid parameter(s): ["buildName" is required].')
+      })
+
+    it('throws an exception if the build name is not a string',
+      async () => {
+        const { client } = buildValidTeamPipelineJobClient()
+        await forInstance(client)
+          .onCallOf('getBuild')
+          .withArguments(12345)
+          .throwsError(
+            'Invalid parameter(s): ["buildName" must be a string].')
+      })
+
+    it('gets the build with the specified name',
+      async () => {
+        const { client, mock, apiUrl, bearerToken, team, pipeline, job } =
+          buildValidTeamPipelineJobClient()
+
+        const teamName = team.name
+        const pipelineName = pipeline.name
+        const jobName = job.name
+
+        const buildName = data.randomBuildName()
+        const buildData = data.randomBuild({
+          teamName,
+          pipelineName,
+          jobName,
+          name: buildName
+        })
+
+        const buildFromApi = build.api.build(buildData)
+
+        const expectedBuild = build.client.build(buildData)
+
+        mock.onGet(
+          `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}` +
+          `/jobs/${jobName}/builds/${buildName}`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .reply(200, buildFromApi)
+
+        const actualBuild = await client.getBuild(buildName)
+
+        expect(actualBuild).to.eql(expectedBuild)
+      })
   })
 })

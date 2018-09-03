@@ -98,7 +98,12 @@ detailed below.
   methods supported on `TeamPipelineJobClient`.
 
 ### `TeamPipelineJobClient` Methods
-  
+
+* `TeamPipelineJobClient#listBuilds()` - Returns an array of team pipeline job 
+  builds.
+* `TeamPipelineJobClient#getBuild(buildName)` - Returns the team pipeline job 
+  build specified by `buildName`.
+
 ## Example
 
 ```javascript
