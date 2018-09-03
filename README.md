@@ -88,7 +88,7 @@ detailed below.
 * `TeamClient#getContainer(containerId)` - Returns the container specified by 
   `containerId`.
 
-### TeamPipelineClient
+### `TeamPipelineClient` Methods
 
 * `TeamPipelineClient#listJobs()` - Returns an array of team pipeline jobs.
   
