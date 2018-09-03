@@ -38,7 +38,7 @@
 | SaveConfig                    | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/config                                                           | Later    |
 | ExposePipeline                | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/expose                                                           | Later    |
 | HidePipeline                  | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/hide                                                             | Later    |
-| ListJobs                      | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/jobs                                                             | Now      |
+| ListJobs                      | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/jobs                                                             | Done     |
 | GetJob                        | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name                                                   | Now      |
 | JobBadge                      | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/badge                                             | Later    |
 | ListJobBuilds                 | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/builds                                            | Now      |

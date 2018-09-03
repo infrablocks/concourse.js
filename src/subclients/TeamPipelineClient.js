@@ -2,10 +2,11 @@ import {
   func,
   object,
   schemaFor,
+  string,
   uri,
   validateOptions
 } from '../support/validation'
-import { teamPipelineJobsUrl } from '../support/urls'
+import { teamPipelineJobsUrl, teamPipelineJobUrl } from '../support/urls'
 import { parseJson } from '../support/http/transformers'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
 
@@ -32,6 +33,24 @@ class TeamPipelineClient {
         { transformResponse: [parseJson, camelcaseKeysDeep] })
 
     return jobs
+  }
+
+  async getJob (jobName) {
+    const validatedOptions = validateOptions(
+      schemaFor({
+        jobName: string().required()
+      }), { jobName })
+
+    const { data: job } = await this.httpClient
+      .get(
+        teamPipelineJobUrl(
+          this.apiUrl,
+          this.team.name,
+          this.pipeline.name,
+          validatedOptions.jobName),
+        { transformResponse: [parseJson, camelcaseKeysDeep] })
+
+    return job
   }
 }
 

@@ -31,6 +31,9 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
   },
+  "standard": {
+    "globals": [ "describe", "it" ]
+  },
   "dependencies": {
     "await-lock": "^1.1.3",
     "axios": "^0.18.0",

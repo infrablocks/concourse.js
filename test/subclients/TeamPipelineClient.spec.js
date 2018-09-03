@@ -10,6 +10,7 @@ import { onConstructionOf } from '../testsupport/dsls/construction'
 import { bearerAuthHeader } from '../../src/support/http/headers'
 import TeamPipelineClient from '../../src/subclients/TeamPipelineClient'
 import { expect } from 'chai'
+import { forInstance } from '../testsupport/dsls/methods'
 
 const buildValidTeamPipelineClient = () => {
   const apiUrl = data.randomApiUrl()
@@ -154,6 +155,61 @@ describe('TeamPipelineClient', () => {
         const actualJobs = await client.listJobs()
 
         expect(actualJobs).to.eql(expectedJobs)
+      })
+  })
+
+  describe('getJob', () => {
+    it('throws an exception if the job name is not provided',
+      async () => {
+        const { client } = buildValidTeamPipelineClient()
+        await forInstance(client)
+          .onCallOf('getJob')
+          .withNoArguments()
+          .throwsError('Invalid parameter(s): ["jobName" is required].')
+      })
+
+    it('throws an exception if the job name is not a string',
+      async () => {
+        const { client } = buildValidTeamPipelineClient()
+        await forInstance(client)
+          .onCallOf('getJob')
+          .withArguments(12345)
+          .throwsError(
+            'Invalid parameter(s): ["jobName" must be a string].')
+      })
+
+    it('gets the job with the specified name',
+      async () => {
+        const { client, mock, apiUrl, bearerToken, team, pipeline } =
+          buildValidTeamPipelineClient()
+
+        const teamName = team.name
+        const pipelineName = pipeline.name
+
+        const jobName = data.randomJobName()
+        const jobData = data.randomJob({
+          teamName,
+          pipelineName,
+          name: jobName
+        })
+
+        const jobFromApi = build.api.job(jobData)
+
+        const expectedJob = build.client.job(jobData)
+
+        mock.onGet(
+          `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}` +
+          `/jobs/${jobName}`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .reply(200, jobFromApi)
+
+        const actualJob = await client.getJob(jobName)
+
+        expect(actualJob).to.eql(expectedJob)
       })
   })
 })
