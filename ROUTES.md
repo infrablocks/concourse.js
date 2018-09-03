@@ -44,7 +44,7 @@
 | ListJobBuilds                 | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/builds                                            | Done     |
 | CreateJobBuild                | POST   | /api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/builds                                            | Now      |
 | GetJobBuild                   | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/builds/:build_name                                | Done     |
-| ListJobInputs                 | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/inputs                                            | Now      |
+| ListJobInputs                 | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/inputs                                            | Done     |
 | PauseJob                      | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/pause                                             | Now      |
 | UnpauseJob                    | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/unpause                                           | Now      |
 | PausePipeline                 | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/pause                                                            | Now      |

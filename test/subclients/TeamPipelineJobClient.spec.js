@@ -248,4 +248,34 @@ describe('TeamPipelineJobClient', () => {
         expect(actualBuild).to.eql(expectedBuild)
       })
   })
+
+  describe('listInputs', () => {
+    it('gets all inputs for team pipeline job',
+      async () => {
+        const { client, mock, apiUrl, bearerToken, team, pipeline, job } =
+          buildValidTeamPipelineJobClient()
+
+        const inputData = data.randomInput()
+
+        const inputFromApi = build.api.input(inputData)
+        const inputsFromApi = [inputFromApi]
+
+        const convertedInput = build.client.input(inputData)
+        const expectedInputs = [convertedInput]
+
+        mock.onGet(
+          `${apiUrl}/teams/${team.name}/pipelines/${pipeline.name}` +
+          `/jobs/${job.name}/inputs`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .reply(200, inputsFromApi)
+
+        const actualInputs = await client.listInputs()
+
+        expect(actualInputs).to.eql(expectedInputs)
+      })
+  })
 })

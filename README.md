@@ -103,6 +103,8 @@ detailed below.
   builds.
 * `TeamPipelineJobClient#getBuild(buildName)` - Returns the team pipeline job 
   build specified by `buildName`.
+* `TeamPipelineJobClient#listInputs()` - Returns an array of team pipeline job 
+  inputs.  
 
 ## Example
 
