@@ -1,6 +1,6 @@
 {
   "name": "@infrablocks/concourse",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "A JavaScript SDK for the Concourse CI API.",
   "main": "lib/index.js",
   "scripts": {
@@ -32,7 +32,10 @@
     "registry": "https://registry.npmjs.org"
   },
   "standard": {
-    "globals": [ "describe", "it" ]
+    "globals": [
+      "describe",
+      "it"
+    ]
   },
   "dependencies": {
     "await-lock": "^1.1.3",
