@@ -19,6 +19,7 @@ import {
   teamPipelinesUrl,
   teamPipelineUrl
 } from '../support/urls'
+import { parseJson } from '../support/http/transformers'
 
 export default class TeamClient {
   constructor (options) {
@@ -51,7 +52,7 @@ export default class TeamClient {
     const {data: builds} = await this.httpClient
       .get(teamBuildsUrl(this.apiUrl, this.team.name), {
         params,
-        transformResponse: [camelcaseKeysDeep]
+        transformResponse: [parseJson, camelcaseKeysDeep]
       })
 
     return builds
@@ -90,7 +91,7 @@ export default class TeamClient {
     const {data: containers} = await this.httpClient
       .get(teamContainersUrl(this.apiUrl, this.team.name), {
         params,
-        transformResponse: [camelcaseKeysDeep]
+        transformResponse: [parseJson, camelcaseKeysDeep]
       })
 
     return containers
@@ -107,7 +108,7 @@ export default class TeamClient {
         this.apiUrl,
         this.team.name,
         validatedOptions.containerId), {
-        transformResponse: [camelcaseKeysDeep]
+        transformResponse: [parseJson, camelcaseKeysDeep]
       })
 
     return container
@@ -116,7 +117,7 @@ export default class TeamClient {
   async listPipelines () {
     const {data: pipelines} = await this.httpClient
       .get(teamPipelinesUrl(this.apiUrl, this.team.name), {
-        transformResponse: [camelcaseKeysDeep]
+        transformResponse: [parseJson, camelcaseKeysDeep]
       })
 
     return pipelines
@@ -131,7 +132,7 @@ export default class TeamClient {
     const {data: pipeline} = await this.httpClient
       .get(teamPipelineUrl(
         this.apiUrl, this.team.name, validatedOptions.pipelineName), {
-        transformResponse: [camelcaseKeysDeep]
+        transformResponse: [parseJson, camelcaseKeysDeep]
       })
 
     return pipeline

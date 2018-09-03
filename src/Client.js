@@ -19,6 +19,7 @@ import {
   buildUrl, teamAuthTokenUrl
 } from './support/urls'
 import { createHttpClient } from './support/http/factory'
+import { parseJson } from './support/http/transformers'
 
 export default class Client {
   static instanceFor (apiUrl, teamName, username, password) {
@@ -46,7 +47,7 @@ export default class Client {
   async listTeams () {
     const { data: teams } = await this.httpClient
       .get(allTeamsUrl(this.apiUrl), {
-        transformResponse: [camelcaseKeysDeep]
+        transformResponse: [parseJson, camelcaseKeysDeep]
       })
 
     return teams
@@ -70,7 +71,7 @@ export default class Client {
   async listWorkers () {
     const { data: workers } = await this.httpClient
       .get(allWorkersUrl(this.apiUrl), {
-        transformResponse: [camelcaseKeysDeep]
+        transformResponse: [parseJson, camelcaseKeysDeep]
       })
 
     return workers
@@ -79,7 +80,7 @@ export default class Client {
   async listPipelines () {
     const { data: pipelines } = await this.httpClient
       .get(allPipelinesUrl(this.apiUrl), {
-        transformResponse: [camelcaseKeysDeep]
+        transformResponse: [parseJson, camelcaseKeysDeep]
       })
 
     return pipelines
@@ -88,7 +89,7 @@ export default class Client {
   async listJobs () {
     const { data: jobs } = await this.httpClient
       .get(allJobsUrl(this.apiUrl), {
-        transformResponse: [camelcaseKeysDeep]
+        transformResponse: [parseJson, camelcaseKeysDeep]
       })
 
     return jobs
@@ -111,7 +112,7 @@ export default class Client {
     const { data: builds } = await this.httpClient
       .get(allBuildsUrl(this.apiUrl), {
         params,
-        transformResponse: [camelcaseKeysDeep]
+        transformResponse: [parseJson, camelcaseKeysDeep]
       })
 
     return builds
@@ -120,7 +121,7 @@ export default class Client {
   async getBuild (buildId) {
     const { data: build } = await this.httpClient
       .get(buildUrl(this.apiUrl, buildId), {
-        transformResponse: [camelcaseKeysDeep]
+        transformResponse: [parseJson, camelcaseKeysDeep]
       })
 
     return build
@@ -129,7 +130,7 @@ export default class Client {
   async listResources () {
     const { data: resources } = await this.httpClient
       .get(allResourcesUrl(this.apiUrl), {
-        transformResponse: [camelcaseKeysDeep]
+        transformResponse: [parseJson, camelcaseKeysDeep]
       })
 
     return resources
