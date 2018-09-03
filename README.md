@@ -59,6 +59,9 @@ detailed below.
   by `pipelineName`.
 * `TeamClient#deletePipeline(pipelineName)` - Deletes the pipeline specified by
   `pipelineName`.
+* `TeamClient#forPipeline(pipelineName)` - Returns a `TeamPipelineClient` for 
+  the pipeline specified by `pipelineName`. See below for more details of the 
+  methods supported on `TeamPipelineClient`.
 * `TeamClient#listBuilds(options = {})`- Returns an array of team builds. The 
   `options` map can contain:
   * `limit` - the number of builds to include in the response (integral, > 1).
@@ -84,6 +87,10 @@ detailed below.
   * `buildName` - the name of the build for which to fetch containers (string).
 * `TeamClient#getContainer(containerId)` - Returns the container specified by 
   `containerId`.
+
+### TeamPipelineClient
+
+* `TeamPipelineClient#listJobs()` - Returns an array of team pipeline jobs.
   
 ## Example
 
