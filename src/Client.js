@@ -17,15 +17,27 @@ import {
   allResourcesUrl,
   allTeamsUrl,
   allWorkersUrl,
-  buildUrl
+  buildUrl, teamAuthTokenUrl
 } from './support/urls'
+import { createHttpClient } from './support/http/factory'
 
 export default class Client {
+  static instanceFor (apiUrl, teamName, username, password) {
+    const credentials = {
+      url: teamAuthTokenUrl(apiUrl, teamName),
+      username: username,
+      password: password
+    }
+    const httpClient = createHttpClient({credentials})
+
+    return new Client({apiUrl, httpClient})
+  }
+
   constructor (options) {
     const validatedOptions = validateOptions(
       schemaFor({
         apiUrl: uri().required(),
-        httpClient: func().default(() => axios, 'Global axios instance.')
+        httpClient: func().required()
       }), options)
 
     this.apiUrl = validatedOptions.apiUrl

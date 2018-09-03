@@ -1,7 +1,7 @@
 import { Base64 } from 'js-base64'
 
 const authorizationHeaderName = 'Authorization'
-const csrfTokrnHeaderName = 'X-Csrf-Token'
+const csrfTokenHeaderName = 'X-Csrf-Token'
 
 const basicAuthToken = (username, password) =>
   Base64.encode(`${username}:${password}`)
@@ -18,5 +18,5 @@ export const bearerAuthHeader = (token) => ({
   [authorizationHeaderName]: bearerAuthHeaderValue(token)
 })
 export const csrfTokenHeader = (token) => ({
-  [csrfTokrnHeaderName]: token,
+  [csrfTokenHeaderName]: token,
 })

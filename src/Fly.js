@@ -1,7 +1,7 @@
 import axios from 'axios'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
 
-import { basicAuthHeader, bearerAuthHeader } from './support/http'
+import { basicAuthHeader, bearerAuthHeader } from './support/http/headers'
 import {
   allBuildsUrl,
   allPipelinesUrl,

@@ -3,13 +3,13 @@ import faker from 'faker'
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 
-import build from '../support/builders'
-import data from '../support/data'
-import { onConstructionOf } from '../support/dsls/construction'
-import { forInstance } from '../support/dsls/methods'
+import build from '../testsupport/builders'
+import data from '../testsupport/data'
+import { onConstructionOf } from '../testsupport/dsls/construction'
+import { forInstance } from '../testsupport/dsls/methods'
 
 import TeamClient from '../../src/subclients/TeamClient'
-import { bearerAuthHeader } from '../../src/support/http'
+import { bearerAuthHeader } from '../../src/support/http/headers'
 
 const buildValidTeamClient = () => {
   const apiUrl = data.randomApiUrl()

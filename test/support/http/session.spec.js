@@ -2,21 +2,21 @@ import { expect } from 'chai'
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 
-import data from '../support/data'
-import build from '../support/builders'
+import data from '../../testsupport/data'
+import build from '../../testsupport/builders'
 
 import { createSessionInterceptor }
-  from '../../src/interceptors/session'
+  from '../../../src/support/http/session'
 import {
   teamAuthTokenUrl,
   teamBuildsUrl,
   teamPipelinesUrl
-} from '../../src/support/urls'
+} from '../../../src/support/urls'
 import {
   basicAuthHeader,
   bearerAuthHeader,
   csrfTokenHeader
-} from '../../src/support/http'
+} from '../../../src/support/http/headers'
 
 describe('session interceptor', () => {
   it('fetches token on first request when none provided',

@@ -3,8 +3,8 @@ import faker from 'faker'
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 
-import build from './support/builders'
-import data from './support/data'
+import build from './testsupport/builders'
+import data from './testsupport/data'
 
 import Fly from '../src/Fly'
 

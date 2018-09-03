@@ -6,11 +6,11 @@ import {
   basicAuthHeader,
   bearerAuthHeader,
   csrfTokenHeader
-} from '../support/http'
+} from './headers'
 
 import {
   currentUnixTime
-} from '../support/date'
+} from '../date'
 
 const isExpired = (token) => {
   const decoded = jwt.decode(token)
