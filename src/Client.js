@@ -1,4 +1,3 @@
-import axios from 'axios'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
 import { find, propEq, reject, isNil } from 'ramda'
 
