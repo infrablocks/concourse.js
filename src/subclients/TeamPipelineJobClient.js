@@ -7,7 +7,7 @@ import {
 } from '../support/validation'
 import {
   teamPipelineJobBuildsUrl,
-  teamPipelineJobBuildUrl,
+  teamPipelineJobBuildUrl
 } from '../support/urls'
 import { parseJson } from '../support/http/transformers'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
