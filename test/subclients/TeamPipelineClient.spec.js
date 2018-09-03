@@ -212,4 +212,71 @@ describe('TeamPipelineClient', () => {
         expect(actualJob).to.eql(expectedJob)
       })
   })
+
+  describe('forJob', () => {
+    it('returns a client for the team pipeline job with the supplied name ' +
+      'when the pipeline exists for that team',
+    async () => {
+      const {
+        client, httpClient, mock, apiUrl, bearerToken, team, pipeline
+      } = buildValidTeamPipelineClient()
+
+      const teamName = team.name
+      const pipelineName = pipeline.name
+
+      const jobName = data.randomJobName()
+      const jobData = data.randomJob({
+        name: jobName,
+        teamName,
+        pipelineName
+      })
+
+      const jobFromApi = build.api.job(jobData)
+      const expectedJob = build.client.job(jobData)
+
+      mock.onGet(
+        `${apiUrl}/teams/${team.name}/pipelines/${pipeline.name}` +
+        `/jobs/${jobName}`,
+        {
+          headers: {
+            ...bearerAuthHeader(bearerToken)
+          }
+        })
+        .reply(200, jobFromApi)
+
+      const teamPipelineJobClient = await client.forJob(jobName)
+
+      expect(teamPipelineJobClient.apiUrl).to.equal(apiUrl)
+      expect(teamPipelineJobClient.httpClient).to.equal(httpClient)
+      expect(teamPipelineJobClient.team).to.eql(team)
+      expect(teamPipelineJobClient.pipeline).to.eql(pipeline)
+      expect(teamPipelineJobClient.job).to.eql(expectedJob)
+    })
+
+    it('throws an exception if no pipeline exists for the supplied name',
+      async () => {
+        const { client, mock, apiUrl, bearerToken, team, pipeline } =
+          buildValidTeamPipelineClient()
+
+        const jobName = data.randomJobName()
+
+        mock.onGet(
+          `${apiUrl}/teams/${team.name}/pipelines/${pipeline.name}` +
+          `/jobs/${jobName}`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .reply(404)
+
+        try {
+          await client.forJob(jobName)
+          expect.fail('Expected exception but none was thrown.')
+        } catch (e) {
+          expect(e).to.be.an.instanceof(Error)
+          expect(e.message).to.eql(`No job for name: ${jobName}`)
+        }
+      })
+  })
 })

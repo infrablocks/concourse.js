@@ -91,6 +91,13 @@ detailed below.
 ### `TeamPipelineClient` Methods
 
 * `TeamPipelineClient#listJobs()` - Returns an array of team pipeline jobs.
+* `TeamPipelineClient#getJob(jobName)` - Returns the team pipeline job 
+  specified by `jobName`.
+* `TeamPipelineClient#forJob(jobName)` - Returns a `TeamPipelineJobClient` for 
+  the job specified by `jobName`. See below for more details of the 
+  methods supported on `TeamPipelineJobClient`.
+
+### `TeamPipelineJobClient` Methods
   
 ## Example
 

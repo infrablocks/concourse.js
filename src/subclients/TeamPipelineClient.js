@@ -9,6 +9,7 @@ import {
 import { teamPipelineJobsUrl, teamPipelineJobUrl } from '../support/urls'
 import { parseJson } from '../support/http/transformers'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
+import TeamPipelineJobClient from './TeamPipelineJobClient'
 
 class TeamPipelineClient {
   constructor (options) {
@@ -51,6 +52,27 @@ class TeamPipelineClient {
         { transformResponse: [parseJson, camelcaseKeysDeep] })
 
     return job
+  }
+
+  async forJob (jobName) {
+    let job
+    try {
+      job = await this.getJob(jobName)
+    } catch (e) {
+      if (e.response && e.response.status === 404) {
+        throw new Error(`No job for name: ${jobName}`)
+      } else {
+        throw e
+      }
+    }
+
+    return new TeamPipelineJobClient({
+      apiUrl: this.apiUrl,
+      httpClient: this.httpClient,
+      team: this.team,
+      pipeline: this.pipeline,
+      job
+    })
   }
 }
 
