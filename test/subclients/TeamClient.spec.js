@@ -20,17 +20,13 @@ const buildValidTeamClient = () => {
   })
   const mock = new MockAdapter(httpClient)
 
-  const teamId = data.randomId()
-  const teamName = data.randomTeamName()
-  const team = build.client.team(data.randomTeam({
-    id: teamId,
-    name: teamName
-  }))
+  const team = build.client.team(data.randomTeam())
 
   const client = new TeamClient({apiUrl, httpClient, team})
 
   return {
     client,
+    httpClient,
     mock,
     apiUrl,
     bearerToken,
@@ -42,19 +38,30 @@ describe('TeamClient', () => {
   describe('construction', () => {
     it('throws an exception if the API URI is not provided', () => {
       onConstructionOf(TeamClient)
-        .withArguments({teamId: 1})
+        .withArguments({
+          team: data.randomTeam(),
+          httpClient: axios
+        })
         .throwsError('Invalid parameter(s): ["apiUrl" is required].')
     })
 
     it('throws an exception if the API URI is not a string', () => {
       onConstructionOf(TeamClient)
-        .withArguments({teamId: 1, apiUrl: 25})
+        .withArguments({
+          apiUrl: 25,
+          team: data.randomTeam(),
+          httpClient: axios
+        })
         .throwsError('Invalid parameter(s): ["apiUrl" must be a string].')
     })
 
     it('throws an exception if the API URI is not a valid URI', () => {
       onConstructionOf(TeamClient)
-        .withArguments({teamId: 1, apiUrl: 'spinach'})
+        .withArguments({
+          apiUrl: 'spinach',
+          team: data.randomTeam(),
+          httpClient: axios
+        })
         .throwsError('Invalid parameter(s): ["apiUrl" must be a valid uri].')
     })
 
@@ -62,7 +69,7 @@ describe('TeamClient', () => {
       () => {
         onConstructionOf(TeamClient)
           .withArguments({
-            teamId: 1,
+            team: data.randomTeam(),
             apiUrl: faker.internet.url(),
             httpClient: 35
           })
@@ -72,13 +79,19 @@ describe('TeamClient', () => {
 
     it('throws an exception if the team is not provided', () => {
       onConstructionOf(TeamClient)
-        .withArguments({apiUrl: faker.internet.url()})
+        .withArguments({
+          apiUrl: faker.internet.url(),
+          httpClient: axios
+        })
         .throwsError('Invalid parameter(s): ["team" is required].')
     })
 
     it('throws an exception if the team is not an object', () => {
       onConstructionOf(TeamClient)
-        .withArguments({apiUrl: faker.internet.url(), team: 'wat'})
+        .withArguments({
+          apiUrl: faker.internet.url(),
+          httpClient: axios,
+          team: 'wat'})
         .throwsError('Invalid parameter(s): ["team" must be an object].')
     })
   })
@@ -634,6 +647,64 @@ describe('TeamClient', () => {
         } catch (e) {
           expect(e).to.be.instanceOf(Error)
           expect(e.message).to.eql('Network Error')
+        }
+      })
+  })
+
+  describe('forPipeline', () => {
+    it('returns a client for the team pipeline with the supplied name when ' +
+      'the pipeline exists for that team',
+      async () => {
+        const {client, httpClient, mock, apiUrl, bearerToken, team} =
+          buildValidTeamClient()
+
+        const pipelineName = data.randomPipelineName()
+        const pipelineData = data.randomPipeline({
+          name: pipelineName
+        })
+
+        const pipelineFromApi = build.api.pipeline(pipelineData)
+        const expectedPipeline = build.client.pipeline(pipelineData)
+
+        mock.onGet(
+          `${apiUrl}/teams/${team.name}/pipelines/${pipelineName}`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .reply(200, pipelineFromApi)
+
+        const teamPipelineClient = await client.forPipeline(pipelineName)
+
+        expect(teamPipelineClient.apiUrl).to.equal(apiUrl)
+        expect(teamPipelineClient.httpClient).to.equal(httpClient)
+        expect(teamPipelineClient.team).to.eql(team)
+        expect(teamPipelineClient.pipeline).to.eql(expectedPipeline)
+      })
+
+    it('throws an exception if no pipeline exists for the supplied name',
+      async () => {
+        const {client, mock, apiUrl, bearerToken, team} =
+          buildValidTeamClient()
+
+        const pipelineName = data.randomPipelineName()
+
+        mock.onGet(
+          `${apiUrl}/teams/${team.name}/pipelines/${pipelineName}`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .reply(404)
+
+        try {
+          await client.forPipeline(pipelineName)
+          expect.fail('Expected exception but none was thrown.')
+        } catch (e) {
+          expect(e).to.be.an.instanceof(Error)
+          expect(e.message).to.eql(`No pipeline for name: ${pipelineName}`)
         }
       })
   })

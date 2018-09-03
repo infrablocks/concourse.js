@@ -24,8 +24,8 @@ const buildValidClient = () => {
 
   return {
     client,
-    mock,
     httpClient,
+    mock,
     apiUrl,
     bearerToken
   }

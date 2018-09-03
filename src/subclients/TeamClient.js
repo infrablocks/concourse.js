@@ -1,5 +1,4 @@
-import axios from 'axios'
-import {reject, isNil} from 'ramda'
+import { reject, isNil, find, propEq } from 'ramda'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
 
 import {
@@ -20,13 +19,14 @@ import {
   teamPipelineUrl
 } from '../support/urls'
 import { parseJson } from '../support/http/transformers'
+import TeamPipelineClient from './TeamPipelineClient'
 
 export default class TeamClient {
   constructor (options) {
     const validatedOptions = validateOptions(
       schemaFor({
         apiUrl: uri().required(),
-        httpClient: func().default(() => axios, 'Global axios instance.'),
+        httpClient: func().required(),
         team: object().required()
       }), options)
 
@@ -148,5 +148,25 @@ export default class TeamClient {
         this.apiUrl,
         this.team.name,
         validatedOptions.pipelineName))
+  }
+
+  async forPipeline (pipelineName) {
+    let pipeline
+    try {
+      pipeline = await this.getPipeline(pipelineName)
+    } catch (e) {
+      if (e.response && e.response.status === 404) {
+        throw new Error(`No pipeline for name: ${pipelineName}`)
+      } else {
+        throw e
+      }
+    }
+
+    return new TeamPipelineClient({
+      apiUrl: this.apiUrl,
+      httpClient: this.httpClient,
+      team: this.team,
+      pipeline
+    })
   }
 }
