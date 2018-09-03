@@ -194,14 +194,14 @@ describe('session interceptor', () => {
     }
 
     expect(updatedConfig).to.eql(expectedConfig)
-  });
+  })
 
   it('re-fetches token after expiry', async () => {
     const apiUrl = data.randomApiUrl()
     const teamName = data.randomTeamName()
     const oldCsrfToken = data.randomCsrfToken()
     const expiredBearerToken = data.randomBearerToken({
-      csrf: oldCsrfToken,
+      csrf: oldCsrfToken
     }, {
       expiresIn: '0 milliseconds'
     })
@@ -244,7 +244,7 @@ describe('session interceptor', () => {
     }
 
     expect(updatedConfig).to.eql(expectedConfig)
-  });
+  })
 
   it('prevents concurrent token fetches', async () => {
     const apiUrl = data.randomApiUrl()
@@ -293,5 +293,5 @@ describe('session interceptor', () => {
     expect(result1).to.eql(expectedConfig)
     expect(result2).to.eql(expectedConfig)
     expect(mock.history.get).to.have.length(1)
-  });
+  })
 })

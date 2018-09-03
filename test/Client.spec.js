@@ -92,37 +92,37 @@ describe('Client', () => {
   describe('forTeam', () => {
     it('returns a client for the team with the supplied ID when the team ' +
       'exists',
-      async () => {
-        const {client, mock, apiUrl, bearerToken, httpClient} =
+    async () => {
+      const {client, mock, apiUrl, bearerToken, httpClient} =
           buildValidClient()
 
-        const teamId = data.randomId()
+      const teamId = data.randomId()
 
-        const teamData = data.randomTeam({
-          id: teamId
-        })
-
-        const firstTeamFromApi = build.api.team(teamData)
-        const secondTeamFromApi = build.api.team(data.randomTeam())
-        const teamsFromApi = [secondTeamFromApi, firstTeamFromApi]
-
-        const expectedTeam = build.client.team(teamData)
-
-        mock.onGet(
-          `${apiUrl}/teams`,
-          {
-            headers: {
-              ...bearerAuthHeader(bearerToken)
-            }
-          })
-          .reply(200, teamsFromApi)
-
-        const teamClient = await client.forTeam(teamId)
-
-        expect(teamClient.apiUrl).to.equal(apiUrl)
-        expect(teamClient.httpClient).to.equal(httpClient)
-        expect(teamClient.team).to.eql(expectedTeam)
+      const teamData = data.randomTeam({
+        id: teamId
       })
+
+      const firstTeamFromApi = build.api.team(teamData)
+      const secondTeamFromApi = build.api.team(data.randomTeam())
+      const teamsFromApi = [secondTeamFromApi, firstTeamFromApi]
+
+      const expectedTeam = build.client.team(teamData)
+
+      mock.onGet(
+        `${apiUrl}/teams`,
+        {
+          headers: {
+            ...bearerAuthHeader(bearerToken)
+          }
+        })
+        .reply(200, teamsFromApi)
+
+      const teamClient = await client.forTeam(teamId)
+
+      expect(teamClient.apiUrl).to.equal(apiUrl)
+      expect(teamClient.httpClient).to.equal(httpClient)
+      expect(teamClient.team).to.eql(expectedTeam)
+    })
 
     it('throws an exception if no team exists for the supplied ID',
       async () => {

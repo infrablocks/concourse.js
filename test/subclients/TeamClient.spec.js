@@ -461,7 +461,7 @@ describe('TeamClient', () => {
       const actualContainer = await client.getContainer(containerId)
 
       expect(actualContainer).to.eql(expectedContainer)
-    });
+    })
 
     it('throws an exception if the container ID is not provided',
       async () => {

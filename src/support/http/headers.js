@@ -18,5 +18,5 @@ export const bearerAuthHeader = (token) => ({
   [authorizationHeaderName]: bearerAuthHeaderValue(token)
 })
 export const csrfTokenHeader = (token) => ({
-  [csrfTokenHeaderName]: token,
+  [csrfTokenHeaderName]: token
 })

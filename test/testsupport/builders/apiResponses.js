@@ -1,5 +1,3 @@
-import faker from 'faker'
-
 export const authToken =
   ({
     type = 'Bearer',
@@ -85,7 +83,7 @@ export const container =
     pipelineName = 'webapp',
     jobName = 'publish',
     buildName = '78',
-    workingDirectory = '/tmp/notify/get',
+    workingDirectory = '/tmp/notify/get'
   } = {}) => ({
     id,
     worker_name: workerName,

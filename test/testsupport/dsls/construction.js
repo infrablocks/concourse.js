@@ -1,19 +1,19 @@
 import { expect } from 'chai'
 
-const throwsError = (type, args) => (message) => {
-  expect(() => {new type(args)}) // eslint-disable-line no-new
+const throwsError = (Type, args) => (message) => {
+  expect(() => { new Type(args) }) // eslint-disable-line no-new
     .to.throw(Error, message)
 }
 
-const withOptions = (type) => (args) => {
+const withOptions = (Type) => (args) => {
   return {
-    throwsError: throwsError(type, args)
+    throwsError: throwsError(Type, args)
   }
 }
 
-export const onConstructionOf = (type) => {
+export const onConstructionOf = (Type) => {
   return {
-    withEmptyOptions: () => withOptions(type)({}),
-    withArguments: withOptions(type)
+    withEmptyOptions: () => withOptions(Type)({}),
+    withArguments: withOptions(Type)
   }
 }
