@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 
-import Client from '../src/Client'
+import { Client } from '../src'
 
 const apiUrl = process.env.CONCOURSE_JS_INTEGRATION_API_URL
 const teamName = process.env.CONCOURSE_JS_INTEGRATION_TEAM_NAME
