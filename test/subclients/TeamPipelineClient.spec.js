@@ -36,7 +36,6 @@ const buildValidTeamPipelineClient = () => {
   }
 }
 
-
 describe('TeamPipelineClient', () => {
   describe('construction', () => {
     it('throws an exception if the API URI is not provided', () => {
@@ -78,7 +77,7 @@ describe('TeamPipelineClient', () => {
             httpClient: 35,
             team: data.randomTeam(),
             pipeline: data.randomPipeline(),
-            apiUrl: faker.internet.url(),
+            apiUrl: faker.internet.url()
           })
           .throwsError(
             'Invalid parameter(s): ["httpClient" must be a Function].')
@@ -89,7 +88,7 @@ describe('TeamPipelineClient', () => {
         .withArguments({
           apiUrl: faker.internet.url(),
           httpClient: axios,
-          pipeline: data.randomPipeline(),
+          pipeline: data.randomPipeline()
         })
         .throwsError('Invalid parameter(s): ["team" is required].')
     })
@@ -100,7 +99,7 @@ describe('TeamPipelineClient', () => {
           team: 'wat',
           apiUrl: faker.internet.url(),
           httpClient: axios,
-          pipeline: data.randomPipeline(),
+          pipeline: data.randomPipeline()
         })
         .throwsError('Invalid parameter(s): ["team" must be an object].')
     })
@@ -110,7 +109,7 @@ describe('TeamPipelineClient', () => {
         .withArguments({
           apiUrl: faker.internet.url(),
           httpClient: axios,
-          team: data.randomTeam(),
+          team: data.randomTeam()
         })
         .throwsError('Invalid parameter(s): ["pipeline" is required].')
     })
@@ -121,7 +120,7 @@ describe('TeamPipelineClient', () => {
           pipeline: 'wat',
           apiUrl: faker.internet.url(),
           httpClient: axios,
-          team: data.randomTeam(),
+          team: data.randomTeam()
         })
         .throwsError('Invalid parameter(s): ["pipeline" must be an object].')
     })

@@ -654,34 +654,34 @@ describe('TeamClient', () => {
   describe('forPipeline', () => {
     it('returns a client for the team pipeline with the supplied name when ' +
       'the pipeline exists for that team',
-      async () => {
-        const {client, httpClient, mock, apiUrl, bearerToken, team} =
+    async () => {
+      const {client, httpClient, mock, apiUrl, bearerToken, team} =
           buildValidTeamClient()
 
-        const pipelineName = data.randomPipelineName()
-        const pipelineData = data.randomPipeline({
-          name: pipelineName
-        })
-
-        const pipelineFromApi = build.api.pipeline(pipelineData)
-        const expectedPipeline = build.client.pipeline(pipelineData)
-
-        mock.onGet(
-          `${apiUrl}/teams/${team.name}/pipelines/${pipelineName}`,
-          {
-            headers: {
-              ...bearerAuthHeader(bearerToken)
-            }
-          })
-          .reply(200, pipelineFromApi)
-
-        const teamPipelineClient = await client.forPipeline(pipelineName)
-
-        expect(teamPipelineClient.apiUrl).to.equal(apiUrl)
-        expect(teamPipelineClient.httpClient).to.equal(httpClient)
-        expect(teamPipelineClient.team).to.eql(team)
-        expect(teamPipelineClient.pipeline).to.eql(expectedPipeline)
+      const pipelineName = data.randomPipelineName()
+      const pipelineData = data.randomPipeline({
+        name: pipelineName
       })
+
+      const pipelineFromApi = build.api.pipeline(pipelineData)
+      const expectedPipeline = build.client.pipeline(pipelineData)
+
+      mock.onGet(
+        `${apiUrl}/teams/${team.name}/pipelines/${pipelineName}`,
+        {
+          headers: {
+            ...bearerAuthHeader(bearerToken)
+          }
+        })
+        .reply(200, pipelineFromApi)
+
+      const teamPipelineClient = await client.forPipeline(pipelineName)
+
+      expect(teamPipelineClient.apiUrl).to.equal(apiUrl)
+      expect(teamPipelineClient.httpClient).to.equal(httpClient)
+      expect(teamPipelineClient.team).to.eql(team)
+      expect(teamPipelineClient.pipeline).to.eql(expectedPipeline)
+    })
 
     it('throws an exception if no pipeline exists for the supplied name',
       async () => {
