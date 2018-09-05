@@ -9,7 +9,7 @@ import {
 import {
   teamPipelineJobsUrl,
   teamPipelineJobUrl,
-  teamPipelineResourcesUrl
+  teamPipelineResourcesUrl, teamPipelineResourceUrl
 } from '../support/urls'
 import { parseJson } from '../support/http/transformers'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
@@ -86,6 +86,24 @@ class TeamPipelineClient {
         { transformResponse: [parseJson, camelcaseKeysDeep] })
 
     return resources
+  }
+
+  async getResource (resourceName) {
+    const validatedOptions = validateOptions(
+      schemaFor({
+        resourceName: string().required()
+      }), { resourceName })
+
+    const { data: resource } = await this.httpClient
+      .get(
+        teamPipelineResourceUrl(
+          this.apiUrl,
+          this.team.name,
+          this.pipeline.name,
+          validatedOptions.resourceName),
+        { transformResponse: [parseJson, camelcaseKeysDeep] })
+
+    return resource
   }
 }
 

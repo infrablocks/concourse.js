@@ -50,7 +50,7 @@
 | PausePipeline                 | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/pause                                                            | Now      |
 | RenamePipeline                | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/rename                                                           | Now      |
 | ListResourceTypes             | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resource-types                                                   | Now      |
-| ListResources                 | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources                                                        | Now      |
+| ListResources                 | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources                                                        | Done     |
 | GetResource                   | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name                                         | Now      |
 | CheckResource                 | POST   | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/check                                   | Later    |
 | CheckResourceWebHook          | POST   | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/check/webhook                           | Later    |

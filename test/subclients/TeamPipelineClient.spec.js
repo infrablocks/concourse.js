@@ -310,4 +310,59 @@ describe('TeamPipelineClient', () => {
         expect(actualResources).to.eql(expectedResources)
       })
   })
+
+  describe('getJob', () => {
+    it('throws an exception if the resource name is not provided',
+      async () => {
+        const { client } = buildValidTeamPipelineClient()
+        await forInstance(client)
+          .onCallOf('getResource')
+          .withNoArguments()
+          .throwsError('Invalid parameter(s): ["resourceName" is required].')
+      })
+
+    it('throws an exception if the resource name is not a string',
+      async () => {
+        const { client } = buildValidTeamPipelineClient()
+        await forInstance(client)
+          .onCallOf('getResource')
+          .withArguments(12345)
+          .throwsError(
+            'Invalid parameter(s): ["resourceName" must be a string].')
+      })
+
+    it('gets the resource with the specified name',
+      async () => {
+        const { client, mock, apiUrl, bearerToken, team, pipeline } =
+          buildValidTeamPipelineClient()
+
+        const teamName = team.name
+        const pipelineName = pipeline.name
+
+        const resourceName = data.randomResourceName()
+        const resourceData = data.randomResource({
+          teamName,
+          pipelineName,
+          name: resourceName
+        })
+
+        const resourceFromApi = build.api.resource(resourceData)
+
+        const expectedResource = build.client.resource(resourceData)
+
+        mock.onGet(
+          `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}` +
+          `/resources/${resourceName}`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .reply(200, resourceFromApi)
+
+        const actualResource = await client.getResource(resourceName)
+
+        expect(actualResource).to.eql(expectedResource)
+      })
+  })
 })
