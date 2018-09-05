@@ -9,7 +9,8 @@ import {
 import {
   teamPipelineJobsUrl,
   teamPipelineJobUrl,
-  teamPipelineResourcesUrl, teamPipelineResourceUrl
+  teamPipelineResourcesUrl,
+  teamPipelineResourceUrl
 } from '../support/urls'
 import { parseJson } from '../support/http/transformers'
 import camelcaseKeysDeep from 'camelcase-keys-deep'

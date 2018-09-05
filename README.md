@@ -96,6 +96,9 @@ detailed below.
 * `TeamPipelineClient#forJob(jobName)` - Returns a `TeamPipelineJobClient` for 
   the job specified by `jobName`. See below for more details of the 
   methods supported on `TeamPipelineJobClient`.
+* `TeamPipelineClient#listResources()` - Returns an array of team pipeline jobs.
+* `TeamPipelineClient#getResource(resourceName)` - Returns the team pipeline 
+  resource specified by `resourceName`.
 
 ### `TeamPipelineJobClient` Methods
 
