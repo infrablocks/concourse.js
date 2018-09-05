@@ -279,4 +279,35 @@ describe('TeamPipelineClient', () => {
         }
       })
   })
+
+  describe('listResources', () => {
+    it('gets all resources for team pipeline',
+      async () => {
+        const { client, mock, apiUrl, bearerToken, team, pipeline } =
+          buildValidTeamPipelineClient()
+
+        const teamName = team.name
+        const pipelineName = pipeline.name
+        const resourceData = data.randomResource({ teamName, pipelineName })
+
+        const resourceFromApi = build.api.resource(resourceData)
+        const resourcesFromApi = [resourceFromApi]
+
+        const convertedResource = build.client.resource(resourceData)
+        const expectedResources = [convertedResource]
+
+        mock.onGet(
+          `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/resources`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .reply(200, resourcesFromApi)
+
+        const actualResources = await client.listResources()
+
+        expect(actualResources).to.eql(expectedResources)
+      })
+  })
 })

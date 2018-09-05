@@ -6,7 +6,11 @@ import {
   uri,
   validateOptions
 } from '../support/validation'
-import { teamPipelineJobsUrl, teamPipelineJobUrl } from '../support/urls'
+import {
+  teamPipelineJobsUrl,
+  teamPipelineJobUrl,
+  teamPipelineResourcesUrl
+} from '../support/urls'
 import { parseJson } from '../support/http/transformers'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
 import TeamPipelineJobClient from './TeamPipelineJobClient'
@@ -73,6 +77,15 @@ class TeamPipelineClient {
       pipeline: this.pipeline,
       job
     })
+  }
+
+  async listResources () {
+    const { data: resources } = await this.httpClient
+      .get(
+        teamPipelineResourcesUrl(this.apiUrl, this.team.name, this.pipeline.name),
+        { transformResponse: [parseJson, camelcaseKeysDeep] })
+
+    return resources
   }
 }
 

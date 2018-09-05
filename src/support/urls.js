@@ -45,3 +45,5 @@ export const teamPipelineJobBuildUrl =
 export const teamPipelineJobInputsUrl =
   (url, teamName, pipelineName, jobName) =>
     `${url}/teams/${teamName}/pipelines/${pipelineName}/jobs/${jobName}/inputs`
+export const teamPipelineResourcesUrl = (url, teamName, pipelineName) =>
+  `${url}/teams/${teamName}/pipelines/${pipelineName}/resources`
