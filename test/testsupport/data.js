@@ -176,6 +176,35 @@ const randomResource = (overrides = {}) => ({
   ...overrides
 })
 
+const randomResourceVersionMetadatumName = () => faker.random.word()
+const randomResourceVersionMetadatumValue = () => faker.random.word()
+
+const randomResourceVersionMetadatum = (overrides = {}) => ({
+  name: randomResourceVersionMetadatumName(),
+  value: randomResourceVersionMetadatumValue(),
+  ...overrides
+})
+
+const randomResourceVersionMetadata = () => [randomResourceVersionMetadatum()]
+
+const randomResourceVersionIsEnabled = () => faker.random.boolean()
+
+const randomResourceVersionVersionRef = () => randomLowerHex(40)
+const randomResourceVersionVersion = (overrides = {}) => ({
+  ref: randomResourceVersionVersionRef(),
+  ...overrides
+})
+
+const randomResourceVersion = (overrides = {}) => ({
+  id: randomId(),
+  type: randomResourceTypeType(),
+  metadata: randomResourceVersionMetadata(),
+  resource: randomResourceName(),
+  enabled: randomResourceVersionIsEnabled(),
+  version: randomResourceVersionVersion(),
+  ...overrides
+})
+
 const randomJobInputs = () => [randomInput()]
 const randomJobOutputs = () => [randomOutput()]
 
@@ -248,6 +277,8 @@ export default {
   randomResource,
   randomResourceType,
   randomResourceName,
+
+  randomResourceVersion,
 
   randomWorker,
 

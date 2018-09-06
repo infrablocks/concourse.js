@@ -4,6 +4,40 @@ import TeamPipelineResourceClient
 import data from '../testsupport/data'
 import axios from 'axios'
 import faker from 'faker'
+import build from '../testsupport/builders'
+import { bearerAuthHeader } from '../../src/support/http/headers'
+import { expect } from 'chai'
+import { forInstance } from '../testsupport/dsls/methods'
+import MockAdapter from 'axios-mock-adapter'
+
+const buildValidTeamPipelineResourceClient = () => {
+  const apiUrl = data.randomApiUrl()
+  const bearerToken = data.randomBearerToken()
+
+  const httpClient = axios.create({
+    headers: bearerAuthHeader(bearerToken)
+  })
+  const mock = new MockAdapter(httpClient)
+
+  const team = build.client.team(data.randomTeam())
+  const pipeline = build.client.pipeline(data.randomPipeline())
+  const resource = build.client.resource(data.randomResource())
+
+  const client = new TeamPipelineResourceClient({
+    apiUrl, httpClient, team, pipeline, resource
+  })
+
+  return {
+    client,
+    httpClient,
+    mock,
+    apiUrl,
+    bearerToken,
+    team,
+    pipeline,
+    resource
+  }
+}
 
 describe('TeamPipelineResourceClient', () => {
   describe('construction', () => {
@@ -124,5 +158,161 @@ describe('TeamPipelineResourceClient', () => {
         })
         .throwsError('Invalid parameter(s): ["resource" must be an object].')
     })
+  })
+
+  describe('listVersions', () => {
+    it('gets all versions for team',
+      async () => {
+        const { client, mock, apiUrl, bearerToken, team, pipeline, resource } =
+          buildValidTeamPipelineResourceClient()
+
+        const versionData = data.randomResourceVersion()
+
+        const versionFromApi = build.api.resourceVersion(versionData)
+        const versionsFromApi = [versionFromApi]
+
+        const convertedVersion = build.client.resourceVersion(versionData)
+        const expectedVersions = [convertedVersion]
+
+        mock.onGet(
+          `${apiUrl}/teams/${team.name}/pipelines/${pipeline.name}` +
+          `/resources/${resource.name}/versions`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .reply(200, versionsFromApi)
+
+        const actualVersions = await client.listVersions()
+
+        expect(actualVersions).to.eql(expectedVersions)
+      })
+
+    it('uses provided page options when supplied',
+      async () => {
+        const { client, mock, apiUrl, bearerToken, team, pipeline, resource } =
+          buildValidTeamPipelineResourceClient()
+
+        const teamName = team.name
+
+        const versionData = data.randomResourceVersion({ teamName })
+
+        const versionFromApi = build.api.resourceVersion(versionData)
+        const versionsFromApi = [versionFromApi]
+
+        const convertedVersion = build.client.resourceVersion(versionData)
+        const expectedVersions = [convertedVersion]
+
+        mock.onGet(
+          `${apiUrl}/teams/${team.name}/pipelines/${pipeline.name}` +
+          `/resources/${resource.name}/versions`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            },
+            params: {
+              limit: 20,
+              since: 123,
+              until: 456
+            }
+          })
+          .reply(200, versionsFromApi)
+
+        const actualVersions = await client.listVersions({
+          limit: 20,
+          since: 123,
+          until: 456
+        })
+
+        expect(actualVersions).to.eql(expectedVersions)
+      })
+
+    it('throws an exception if the value provided for limit is not a number',
+      async () => {
+        const { client } = buildValidTeamPipelineResourceClient()
+        await forInstance(client)
+          .onCallOf('listVersions')
+          .withArguments({ limit: 'badger' })
+          .throwsError('Invalid parameter(s): ["limit" must be a number].')
+      })
+
+    it('throws an exception if the value provided for limit is not an integer',
+      async () => {
+        const { client } = buildValidTeamPipelineResourceClient()
+        await forInstance(client)
+          .onCallOf('listVersions')
+          .withArguments({ limit: 32.654 })
+          .throwsError('Invalid parameter(s): ["limit" must be an integer].')
+      })
+
+    it('throws an exception if the value provided for limit is less than 1',
+      async () => {
+        const { client } = buildValidTeamPipelineResourceClient()
+        await forInstance(client)
+          .onCallOf('listVersions')
+          .withArguments({ limit: -20 })
+          .throwsError(
+            'Invalid parameter(s): [' +
+            '"limit" must be larger than or equal to 1].')
+      })
+
+    it('throws an exception if the value provided for since is not a number',
+      async () => {
+        const { client } = buildValidTeamPipelineResourceClient()
+        await forInstance(client)
+          .onCallOf('listVersions')
+          .withArguments({ since: 'badger' })
+          .throwsError('Invalid parameter(s): ["since" must be a number].')
+      })
+
+    it('throws an exception if the value provided for since is not an integer',
+      async () => {
+        const { client } = buildValidTeamPipelineResourceClient()
+        await forInstance(client)
+          .onCallOf('listVersions')
+          .withArguments({ since: 32.654 })
+          .throwsError('Invalid parameter(s): ["since" must be an integer].')
+      })
+
+    it('throws an exception if the value provided for since is less than 1',
+      async () => {
+        const { client } = buildValidTeamPipelineResourceClient()
+        await forInstance(client)
+          .onCallOf('listVersions')
+          .withArguments({ since: -20 })
+          .throwsError(
+            'Invalid parameter(s): [' +
+            '"since" must be larger than or equal to 1].')
+      })
+
+    it('throws an exception if the value provided for until is not a number',
+      async () => {
+        const { client } = buildValidTeamPipelineResourceClient()
+        await forInstance(client)
+          .onCallOf('listVersions')
+          .withArguments({ until: 'badger' })
+          .throwsError('Invalid parameter(s): ["until" must be a number].')
+      })
+
+    it('throws an exception if the value provided for until is not an integer',
+      async () => {
+        const { client } = buildValidTeamPipelineResourceClient()
+        await forInstance(client)
+          .onCallOf('listVersions')
+          .withArguments({ until: 32.654 })
+          .throwsError('Invalid parameter(s): ["until" must be an integer].')
+      })
+
+    it('throws an exception if the value provided for until is less than 1',
+      async () => {
+        const { client } = buildValidTeamPipelineResourceClient()
+        await forInstance(client)
+          .onCallOf('listVersions')
+          .withArguments({ until: -20 })
+          .throwsError(
+            'Invalid parameter(s): [' +
+            '"until" must be larger than or equal to 1].')
+      })
   })
 })

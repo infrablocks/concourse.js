@@ -118,6 +118,8 @@ detailed below.
   
 ### `TeamPipelineResourceClient` Methods
   
+* `TeamPipelineJobClient#listVersions()` - Returns an array of team pipeline 
+  resource versions.
 
 
 ## Example

@@ -65,6 +65,39 @@ export const resourceType =
     params
   })
 
+export const resourceVersionMetadata =
+  ({
+    name = 'version',
+    value = '1.2.3'
+  } = {}) => ({
+    name,
+    value
+  })
+
+export const resourceVersionVersion =
+  ({
+    ref = 'cbc6ccd3c257fe3ac17d98eb258b1c5b70ee660c'
+  } = {}) => ({
+    ref
+  })
+
+export const resourceVersion =
+  ({
+    id = 29963,
+    type = 'git',
+    metadata = resourceVersionMetadata(),
+    resource = 'example-resource',
+    enabled = true,
+    version = resourceVersionVersion()
+  } = {}) => ({
+    id,
+    type,
+    metadata,
+    resource,
+    enabled,
+    version
+  })
+
 export const container =
   ({
     id = '663c9baf-f6e8-4abd-7fcd-fabf51d3b7de',

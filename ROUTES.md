@@ -56,7 +56,7 @@
 | CheckResourceWebHook          | POST   | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/check/webhook                           | Later    |
 | PauseResource                 | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/pause                                   | Now      |
 | UnpauseResource               | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/unpause                                 | Now      |
-| ListResourceVersions          | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions                                | Now      |
+| ListResourceVersions          | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions                                | Done     |
 | GetResourceVersion            | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_version_id           | Now      |
 | GetResourceCausality          | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_version_id/causality | Later    |
 | DisableResourceVersion        | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_version_id/disable   | Later    |
