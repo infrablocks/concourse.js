@@ -6,7 +6,7 @@ import {
   validateOptions
 } from '../support/validation'
 import {
-  teamPipelineResourceVersionCausalityUrl,
+  teamPipelineResourceVersionCausalityUrl
 } from '../support/urls'
 import { parseJson } from '../support/http/transformers'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
