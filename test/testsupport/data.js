@@ -205,6 +205,12 @@ const randomResourceVersion = (overrides = {}) => ({
   ...overrides
 })
 
+const randomResourceVersionCause = (overrides = {}) => ({
+  versionedResourceId: randomId(),
+  buildId: randomId(),
+  ...overrides
+})
+
 const randomJobInputs = () => [randomInput()]
 const randomJobOutputs = () => [randomOutput()]
 
@@ -279,6 +285,8 @@ export default {
   randomResourceName,
 
   randomResourceVersion,
+
+  randomResourceVersionCause,
 
   randomWorker,
 

@@ -119,6 +119,15 @@ export const resourceVersion =
     version
   })
 
+export const resourceVersionCause =
+  ({
+    versionedResourceId = '123',
+    buildId = '456'
+  } = {}) => ({
+    versioned_resource_id: versionedResourceId,
+    build_id: buildId
+  })
+
 export const container =
   ({
     id = '663c9baf-f6e8-4abd-7fcd-fabf51d3b7de',

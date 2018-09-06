@@ -130,6 +130,9 @@ detailed below.
   
 ### `TeamPipelineResourceVersionClient` Methods
 
+* `TeamPipelineResourceVersionClient#getCausality()` - Returns the team pipeline 
+  resource version's causality.
+
 ## Example
 
 ```javascript

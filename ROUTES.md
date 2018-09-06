@@ -58,7 +58,7 @@
 | UnpauseResource               | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/unpause                                 | Now      |
 | ListResourceVersions          | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions                                | Done     |
 | GetResourceVersion            | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_version_id           | Done     |
-| GetResourceCausality          | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_version_id/causality | Now      |
+| GetResourceCausality          | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_version_id/causality | Done     |
 | DisableResourceVersion        | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_version_id/disable   | Later    |
 | EnableResourceVersion         | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_version_id/enable    | Later    |
 | ListBuildsWithVersionAsInput  | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_version_id/input_to  | Now      |
