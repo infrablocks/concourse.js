@@ -15,6 +15,7 @@ import {
 import { parseJson } from '../support/http/transformers'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
 import TeamPipelineJobClient from './TeamPipelineJobClient'
+import TeamPipelineResourceClient from './TeamPipelineResourceClient'
 
 class TeamPipelineClient {
   constructor (options) {
@@ -105,6 +106,27 @@ class TeamPipelineClient {
         { transformResponse: [parseJson, camelcaseKeysDeep] })
 
     return resource
+  }
+
+  async forResource (resourceName) {
+    let resource
+    try {
+      resource = await this.getResource(resourceName)
+    } catch (e) {
+      if (e.response && e.response.status === 404) {
+        throw new Error(`No resource for name: ${resourceName}`)
+      } else {
+        throw e
+      }
+    }
+
+    return new TeamPipelineResourceClient({
+      apiUrl: this.apiUrl,
+      httpClient: this.httpClient,
+      team: this.team,
+      pipeline: this.pipeline,
+      resource
+    })
   }
 
   async listResourceTypes () {

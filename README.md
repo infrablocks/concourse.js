@@ -100,6 +100,10 @@ detailed below.
    resources.
 * `TeamPipelineClient#getResource(resourceName)` - Returns the team pipeline 
   resource specified by `resourceName`.
+* `TeamPipelineClient#forResource(resourceName)` - Returns a 
+  `TeamPipelineResourceClient` for the resource specified by `resourceName`. 
+  See below for more details of the methods supported on 
+  `TeamPipelineResourceClient`.
 * `TeamPipelineClient#listResourceTypes()` - Returns an array of team pipeline 
   resource types.
 
@@ -110,7 +114,11 @@ detailed below.
 * `TeamPipelineJobClient#getBuild(buildName)` - Returns the team pipeline job 
   build specified by `buildName`.
 * `TeamPipelineJobClient#listInputs()` - Returns an array of team pipeline job 
-  inputs.  
+  inputs.
+  
+### `TeamPipelineResourceClient` Methods
+  
+
 
 ## Example
 

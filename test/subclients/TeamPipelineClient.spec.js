@@ -311,7 +311,7 @@ describe('TeamPipelineClient', () => {
       })
   })
 
-  describe('getJob', () => {
+  describe('getResource', () => {
     it('throws an exception if the resource name is not provided',
       async () => {
         const { client } = buildValidTeamPipelineClient()
@@ -363,6 +363,73 @@ describe('TeamPipelineClient', () => {
         const actualResource = await client.getResource(resourceName)
 
         expect(actualResource).to.eql(expectedResource)
+      })
+  })
+
+  describe('forResource', () => {
+    it('returns a client for the team pipeline resource with the supplied ' +
+      'name when the pipeline exists for that team',
+    async () => {
+      const {
+        client, httpClient, mock, apiUrl, bearerToken, team, pipeline
+      } = buildValidTeamPipelineClient()
+
+      const teamName = team.name
+      const pipelineName = pipeline.name
+
+      const resourceName = data.randomResourceName()
+      const resourceData = data.randomResource({
+        name: resourceName,
+        teamName,
+        pipelineName
+      })
+
+      const resourceFromApi = build.api.resource(resourceData)
+      const expectedResource = build.client.resource(resourceData)
+
+      mock.onGet(
+        `${apiUrl}/teams/${team.name}/pipelines/${pipeline.name}` +
+          `/resources/${resourceName}`,
+        {
+          headers: {
+            ...bearerAuthHeader(bearerToken)
+          }
+        })
+        .reply(200, resourceFromApi)
+
+      const teamPipelineResourceClient = await client.forResource(resourceName)
+
+      expect(teamPipelineResourceClient.apiUrl).to.equal(apiUrl)
+      expect(teamPipelineResourceClient.httpClient).to.equal(httpClient)
+      expect(teamPipelineResourceClient.team).to.eql(team)
+      expect(teamPipelineResourceClient.pipeline).to.eql(pipeline)
+      expect(teamPipelineResourceClient.resource).to.eql(expectedResource)
+    })
+
+    it('throws an exception if no resource exists for the supplied name',
+      async () => {
+        const { client, mock, apiUrl, bearerToken, team, pipeline } =
+          buildValidTeamPipelineClient()
+
+        const resourceName = data.randomResourceName()
+
+        mock.onGet(
+          `${apiUrl}/teams/${team.name}/pipelines/${pipeline.name}` +
+          `/resources/${resourceName}`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .reply(404)
+
+        try {
+          await client.forResource(resourceName)
+          expect.fail('Expected exception but none was thrown.')
+        } catch (e) {
+          expect(e).to.be.an.instanceof(Error)
+          expect(e.message).to.eql(`No resource for name: ${resourceName}`)
+        }
       })
   })
 
