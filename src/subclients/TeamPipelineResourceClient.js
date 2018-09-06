@@ -1,12 +1,15 @@
 import {
   func, integer,
   object,
-  schemaFor,
+  schemaFor, string,
   uri,
   validateOptions
 } from '../support/validation'
 import { isNil, reject } from 'ramda'
-import { teamPipelineResourceVersionsUrl } from '../support/urls'
+import {
+  teamPipelineJobBuildUrl,
+  teamPipelineResourceVersionsUrl, teamPipelineResourceVersionUrl
+} from '../support/urls'
 import { parseJson } from '../support/http/transformers'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
 
@@ -48,6 +51,25 @@ class TeamPipelineResourceClient {
       { params, transformResponse: [parseJson, camelcaseKeysDeep] })
 
     return builds
+  }
+
+  async getVersion (versionId) {
+    const validatedOptions = validateOptions(
+      schemaFor({
+        versionId: integer().min(1).required()
+      }), { versionId })
+
+    const { data: version } = await this.httpClient
+      .get(
+        teamPipelineResourceVersionUrl(
+          this.apiUrl,
+          this.team.name,
+          this.pipeline.name,
+          this.resource.name,
+          validatedOptions.versionId),
+        { transformResponse: [parseJson, camelcaseKeysDeep] })
+
+    return version
   }
 }
 

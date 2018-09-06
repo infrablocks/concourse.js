@@ -118,9 +118,13 @@ detailed below.
   
 ### `TeamPipelineResourceClient` Methods
   
-* `TeamPipelineJobClient#listVersions()` - Returns an array of team pipeline 
-  resource versions.
-
+* `TeamPipelineResourceClient#listVersions(options = {})` - Returns an array of 
+  team pipeline resource versions. The `options` map can contain:
+  * `limit` - the number of versions to include in the response (integral, > 1).
+  * `since` - the ID of a version to fetch from (integral, > 1).
+  * `id` - the ID of a version to fetch up to (integral, > 1).
+* `TeamPipelineResourceClient#getVersion(versionId)` - Returns the team pipeline 
+  resource version specified by `versionId`.
 
 ## Example
 

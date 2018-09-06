@@ -57,12 +57,12 @@
 | PauseResource                 | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/pause                                   | Now      |
 | UnpauseResource               | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/unpause                                 | Now      |
 | ListResourceVersions          | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions                                | Done     |
-| GetResourceVersion            | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_version_id           | Now      |
-| GetResourceCausality          | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_version_id/causality | Later    |
+| GetResourceVersion            | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_version_id           | Done     |
+| GetResourceCausality          | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_version_id/causality | Now      |
 | DisableResourceVersion        | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_version_id/disable   | Later    |
 | EnableResourceVersion         | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_version_id/enable    | Later    |
-| ListBuildsWithVersionAsInput  | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_version_id/input_to  | Later    |
-| ListBuildsWithVersionAsOutput | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_version_id/output_of | Later    |
+| ListBuildsWithVersionAsInput  | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_version_id/input_to  | Now      |
+| ListBuildsWithVersionAsOutput | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_version_id/output_of | Now      |
 | UnpausePipeline               | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/unpause                                                          | Now      |
 | GetVersionsDB                 | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/versions-db                                                      | Later    |
 | OrderPipelines                | PUT    | /api/v1/teams/:team_name/pipelines/ordering                                                                        | Later    |

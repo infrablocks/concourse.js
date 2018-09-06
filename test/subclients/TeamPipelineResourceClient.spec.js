@@ -315,4 +315,69 @@ describe('TeamPipelineResourceClient', () => {
             '"until" must be larger than or equal to 1].')
       })
   })
+
+  describe('getVersion', () => {
+    it('throws an exception if the version ID is not provided',
+      async () => {
+        const { client } = buildValidTeamPipelineResourceClient()
+        await forInstance(client)
+          .onCallOf('getVersion')
+          .withNoArguments()
+          .throwsError('Invalid parameter(s): ["versionId" is required].')
+      })
+
+    it('throws an exception if the version ID is not an integer',
+      async () => {
+        const { client } = buildValidTeamPipelineResourceClient()
+        await forInstance(client)
+          .onCallOf('getVersion')
+          .withArguments('wat')
+          .throwsError(
+            'Invalid parameter(s): ["versionId" must be a number].')
+      })
+
+    it('throws an exception if the version ID is negative',
+      async () => {
+        const { client } = buildValidTeamPipelineResourceClient()
+        await forInstance(client)
+          .onCallOf('getVersion')
+          .withArguments(-21)
+          .throwsError(
+            'Invalid parameter(s): ' +
+            '["versionId" must be larger than or equal to 1].')
+      })
+
+    it('gets the resource version with the specified ID',
+      async () => {
+        const { client, mock, apiUrl, bearerToken, team, pipeline, resource } =
+          buildValidTeamPipelineResourceClient()
+
+        const teamName = team.name
+        const pipelineName = pipeline.name
+        const resourceName = resource.name
+
+        const versionId = data.randomId()
+        const versionData = data.randomResourceVersion({
+          id: versionId
+        })
+
+        const versionFromApi = build.api.resourceVersion(versionData)
+
+        const expectedVersion = build.client.resourceVersion(versionData)
+
+        mock.onGet(
+          `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}` +
+          `/resources/${resourceName}/versions/${versionId}`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .reply(200, versionFromApi)
+
+        const actualVersion = await client.getVersion(versionId)
+
+        expect(actualVersion).to.eql(expectedVersion)
+      })
+  })
 })
