@@ -33,8 +33,8 @@ const client = Client.instanceFor(apiUrl, teamName, username, password)
 ```
 
 The client does not yet have full coverage of all available API endpoints, 
-however that is the eventual goal. The methods currently supported are 
-detailed below.
+(currently at 31% coverage) however that is the eventual goal. The methods 
+currently supported are detailed below.
 
 ### `Client` Methods 
 
