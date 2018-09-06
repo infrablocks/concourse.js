@@ -67,19 +67,29 @@ const randomInputTrigger = () => faker.random.boolean()
 const randomOutputName = () => faker.random.word()
 const randomOutputResource = () => faker.random.word()
 
+const randomResourceTypeName = () => faker.random.word()
 const randomResourceTypeType = () => faker.random.arrayElement(
   ['git', 'docker-image', 'slack-notification'])
-const randomResourceTypeImage = () =>
-  `/concourse-work-dir/3.14.1/assets/resource-images/${faker.random.word()}` +
-  `/rootfs`
-const randomResourceTypeVersion = () => randomLowerHex(40)
+const randomResourceTypeSource = (overrides = {}) => ({
+  repository: `${faker.random.word()}/${faker.random.word()}`,
+  tag: 'latest',
+  ...overrides
+})
+const randomResourceTypeVersion = () => ({
+  digest: `sha256:${randomLowerHex(64)})`
+})
 const randomResourceTypeIsPrivileged = () => faker.random.boolean()
+const randomResourceTypeTags = () => null
+const randomResourceTypeParams = () => null
 
 const randomResourceType = (overrides = {}) => ({
+  name: randomResourceTypeName(),
   type: randomResourceTypeType(),
-  image: randomResourceTypeImage(),
+  source: randomResourceTypeSource(),
   version: randomResourceTypeVersion(),
   privileged: randomResourceTypeIsPrivileged(),
+  tags: randomResourceTypeTags(),
+  params: randomResourceTypeParams(),
   ...overrides
 })
 
@@ -100,14 +110,25 @@ const randomWorkerState = () => faker.random.arrayElement(
   ['running', 'stalled'])
 const randomWorkerVersion = () => '2.1'
 
-const randomResourceTypes = () => [randomResourceType()]
+const randomWorkerResourceTypeImage = () =>
+  `/concourse-work-dir/3.14.1/assets/resource-images/${faker.random.word()}` +
+  `/rootfs`
+const randomWorkerResourceType = (overrides = {}) => ({
+  type: randomResourceTypeType(),
+  image: randomWorkerResourceTypeImage(),
+  version: randomResourceTypeVersion(),
+  privileged: randomResourceTypeIsPrivileged(),
+  ...overrides
+})
+
+const randomWorkerResourceTypes = () => [randomWorkerResourceType()]
 
 const randomWorker = (overrides = {}) => ({
   addr: randomWorkerAddress(),
   baggageclaimUrl: randomWorkerBaggageclaimUrl(),
   activeContainers: randomWorkerActiveContainersCount(),
   activeVolumes: randomWorkerActiveVolumesCount(),
-  resourceTypes: randomResourceTypes(),
+  resourceTypes: randomWorkerResourceTypes(),
   platform: randomPlatform(),
   tags: randomWorkerTags(),
   team: randomTeamName(),

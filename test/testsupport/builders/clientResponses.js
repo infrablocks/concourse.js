@@ -37,17 +37,32 @@ export const resource =
     lastChecked
   })
 
+export const resourceTypeSource =
+  ({
+    repository = 'cfcommunity/slack-notification-resource',
+    tag = 'latest'
+  } = {}) => ({
+    repository,
+    tag
+  })
+
 export const resourceType =
   ({
+    name = 'example-resource-type',
     type = 'example-type',
-    image = '/concourse-work-dir/3.14.1/assets/resource-images/example/rootfs',
+    source = resourceTypeSource(),
     version = 'ffc6f68716afa5ad585e6ec90922ff3233fd077f',
-    privileged = false
+    privileged = false,
+    tags = null,
+    params = null
   } = {}) => ({
+    name,
     type,
-    image,
+    source,
     version,
-    privileged
+    privileged,
+    tags,
+    params
   })
 
 export const container =
@@ -77,13 +92,26 @@ export const container =
     workingDirectory
   })
 
+export const workerResourceType =
+  ({
+    type = 'bosh-deployment',
+    image = '/concourse-work-dir/3.14.1/assets/resource-images/bosh-deployment/rootfs',
+    version = 'ffc6f68716afa5ad585e6ec90922ff3233fd077f',
+    privileged = false
+  } = {}) => ({
+    type,
+    image,
+    version,
+    privileged
+  })
+
 export const worker =
   ({
     addr = '10.240.3.194:45821',
     baggageclaimUrl = 'http://10.240.3.194:45995',
     activeContainers = 3,
     activeVolumes = 0,
-    resourceTypes = [resourceType()],
+    resourceTypes = [workerResourceType()],
     platform = 'linux',
     tags = null,
     team = '',
