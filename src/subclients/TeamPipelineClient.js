@@ -9,7 +9,7 @@ import {
 import {
   teamPipelineJobsUrl,
   teamPipelineJobUrl,
-  teamPipelineResourcesUrl,
+  teamPipelineResourcesUrl, teamPipelineResourceTypesUrl,
   teamPipelineResourceUrl
 } from '../support/urls'
 import { parseJson } from '../support/http/transformers'
@@ -105,6 +105,16 @@ class TeamPipelineClient {
         { transformResponse: [parseJson, camelcaseKeysDeep] })
 
     return resource
+  }
+
+  async listResourceTypes () {
+    const { data: resourceTypes } = await this.httpClient
+      .get(
+        teamPipelineResourceTypesUrl(
+          this.apiUrl, this.team.name, this.pipeline.name),
+        { transformResponse: [parseJson, camelcaseKeysDeep] })
+
+    return resourceTypes
   }
 }
 

@@ -365,4 +365,35 @@ describe('TeamPipelineClient', () => {
         expect(actualResource).to.eql(expectedResource)
       })
   })
+
+  describe('listResourceTypes', () => {
+    it('gets all resource types for team pipeline',
+      async () => {
+        const { client, mock, apiUrl, bearerToken, team, pipeline } =
+          buildValidTeamPipelineClient()
+
+        const teamName = team.name
+        const pipelineName = pipeline.name
+        const resourceTypeData = data.randomResourceType({ teamName, pipelineName })
+
+        const resourceTypeFromApi = build.api.resourceType(resourceTypeData)
+        const resourceTypesFromApi = [resourceTypeFromApi]
+
+        const convertedResourceType = build.client.resourceType(resourceTypeData)
+        const expectedResourceTypes = [convertedResourceType]
+
+        mock.onGet(
+          `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/resource-types`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .reply(200, resourceTypesFromApi)
+
+        const actualResourceTypes = await client.listResourceTypes()
+
+        expect(actualResourceTypes).to.eql(expectedResourceTypes)
+      })
+  })
 })
