@@ -125,6 +125,10 @@ detailed below.
   * `id` - the ID of a version to fetch up to (integral, > 1).
 * `TeamPipelineResourceClient#getVersion(versionId)` - Returns the team pipeline 
   resource version specified by `versionId`.
+* `TeamPipelineClient#forVersion(versionId)` - Returns a 
+  `TeamPipelineResourceVersionClient` for the version specified by `versionId`.
+  
+### `TeamPipelineResourceVersionClient` Methods
 
 ## Example
 

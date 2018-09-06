@@ -380,4 +380,70 @@ describe('TeamPipelineResourceClient', () => {
         expect(actualVersion).to.eql(expectedVersion)
       })
   })
+
+  describe('forVersion', () => {
+    it('returns a client for the team pipeline resource version with the ' +
+      'supplied ID when the version exists',
+    async () => {
+      const {
+        client, httpClient, mock, apiUrl, bearerToken,
+        team, pipeline, resource
+      } = buildValidTeamPipelineResourceClient()
+
+      const versionId = data.randomId()
+      const versionData = data.randomResourceVersion({
+        id: versionId
+      })
+
+      const versionFromApi = build.api.resourceVersion(versionData)
+      const expectedVersion = build.client.resourceVersion(versionData)
+
+      mock.onGet(
+        `${apiUrl}/teams/${team.name}/pipelines/${pipeline.name}` +
+          `/resources/${resource.name}/versions/${versionId}`,
+        {
+          headers: {
+            ...bearerAuthHeader(bearerToken)
+          }
+        })
+        .reply(200, versionFromApi)
+
+      const teamPipelineResourceClient = await client.forVersion(versionId)
+
+      expect(teamPipelineResourceClient.apiUrl).to.equal(apiUrl)
+      expect(teamPipelineResourceClient.httpClient).to.equal(httpClient)
+      expect(teamPipelineResourceClient.team).to.eql(team)
+      expect(teamPipelineResourceClient.pipeline).to.eql(pipeline)
+      expect(teamPipelineResourceClient.resource).to.eql(resource)
+      expect(teamPipelineResourceClient.version).to.eql(expectedVersion)
+    })
+
+    it('throws an exception if no version exists for the supplied ID',
+      async () => {
+        const {
+          client, mock, apiUrl, bearerToken,
+          team, pipeline, resource
+        } = buildValidTeamPipelineResourceClient()
+
+        const versionId = data.randomId()
+
+        mock.onGet(
+          `${apiUrl}/teams/${team.name}/pipelines/${pipeline.name}` +
+          `/resources/${resource.name}/versions/${versionId}`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .reply(404)
+
+        try {
+          await client.forVersion(versionId)
+          expect.fail('Expected exception but none was thrown.')
+        } catch (e) {
+          expect(e).to.be.an.instanceof(Error)
+          expect(e.message).to.eql(`No version for ID: ${versionId}`)
+        }
+      })
+  })
 })

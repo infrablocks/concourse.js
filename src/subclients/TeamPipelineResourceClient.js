@@ -1,17 +1,19 @@
 import {
   func, integer,
   object,
-  schemaFor, string,
+  schemaFor,
   uri,
   validateOptions
 } from '../support/validation'
 import { isNil, reject } from 'ramda'
 import {
-  teamPipelineJobBuildUrl,
-  teamPipelineResourceVersionsUrl, teamPipelineResourceVersionUrl
+  teamPipelineResourceVersionsUrl,
+  teamPipelineResourceVersionUrl
 } from '../support/urls'
 import { parseJson } from '../support/http/transformers'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
+import TeamPipelineResourceVersionClient
+  from './TeamPipelineResourceVersionClient'
 
 class TeamPipelineResourceClient {
   constructor (options) {
@@ -70,6 +72,28 @@ class TeamPipelineResourceClient {
         { transformResponse: [parseJson, camelcaseKeysDeep] })
 
     return version
+  }
+
+  async forVersion (versionId) {
+    let version
+    try {
+      version = await this.getVersion(versionId)
+    } catch (e) {
+      if (e.response && e.response.status === 404) {
+        throw new Error(`No version for ID: ${versionId}`)
+      } else {
+        throw e
+      }
+    }
+
+    return new TeamPipelineResourceVersionClient({
+      apiUrl: this.apiUrl,
+      httpClient: this.httpClient,
+      team: this.team,
+      pipeline: this.pipeline,
+      resource: this.resource,
+      version
+    })
   }
 }
 
