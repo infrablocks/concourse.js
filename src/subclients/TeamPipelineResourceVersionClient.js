@@ -6,7 +6,10 @@ import {
   validateOptions
 } from '../support/validation'
 import {
-  teamPipelineResourceVersionCausalityUrl
+  teamPipelineJobBuildsUrl,
+  teamPipelineResourceVersionCausalityUrl,
+  teamPipelineResourceVersionInputToUrl,
+  teamPipelineResourceVersionOutputOfUrl
 } from '../support/urls'
 import { parseJson } from '../support/http/transformers'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
@@ -43,6 +46,34 @@ class TeamPipelineResourceVersionClient {
         { transformResponse: [parseJson, camelcaseKeysDeep] })
 
     return causality
+  }
+
+  async listBuildsWithVersionAsInput () {
+    const { data: builds } = await this.httpClient
+      .get(
+        teamPipelineResourceVersionInputToUrl(
+          this.apiUrl,
+          this.team.name,
+          this.pipeline.name,
+          this.resource.name,
+          this.version.id),
+        { transformResponse: [parseJson, camelcaseKeysDeep] })
+
+    return builds
+  }
+
+  async listBuildsWithVersionAsOutput () {
+    const { data: builds } = await this.httpClient
+      .get(
+        teamPipelineResourceVersionOutputOfUrl(
+          this.apiUrl,
+          this.team.name,
+          this.pipeline.name,
+          this.resource.name,
+          this.version.id),
+        { transformResponse: [parseJson, camelcaseKeysDeep] })
+
+    return builds
   }
 }
 

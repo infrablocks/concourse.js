@@ -235,4 +235,90 @@ describe('TeamPipelineResourceVersionClient', () => {
         expect(actualCausality).to.eql(expectedCausality)
       })
   })
+
+  describe('listBuildsWithVersionAsInput', () => {
+    it('lists the builds where this version is an input',
+      async () => {
+        const {
+          client, mock, apiUrl, bearerToken, team, pipeline, resource, version
+        } = buildValidTeamPipelineResourceVersionClient()
+
+        const teamName = team.name
+        const pipelineName = pipeline.name
+        const resourceName = resource.name
+        const versionId = version.id
+
+        const buildId = data.randomId()
+        const buildData = data.randomBuild({
+          teamName,
+          pipelineName,
+          id: buildId
+        })
+
+        const buildFromApi =
+          build.api.build(buildData)
+        const buildsFromApi = [buildFromApi]
+
+        const expectedBuild =
+          build.client.build(buildData)
+        const expectedBuilds = [expectedBuild]
+
+        mock.onGet(
+          `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}` +
+          `/resources/${resourceName}/versions/${versionId}/input_to`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .reply(200, buildsFromApi)
+
+        const actualBuilds = await client.listBuildsWithVersionAsInput()
+
+        expect(actualBuilds).to.eql(expectedBuilds)
+      })
+  })
+
+  describe('listBuildsWithVersionAsOutput', () => {
+    it('lists the builds where this version is an output',
+      async () => {
+        const {
+          client, mock, apiUrl, bearerToken, team, pipeline, resource, version
+        } = buildValidTeamPipelineResourceVersionClient()
+
+        const teamName = team.name
+        const pipelineName = pipeline.name
+        const resourceName = resource.name
+        const versionId = version.id
+
+        const buildId = data.randomId()
+        const buildData = data.randomBuild({
+          teamName,
+          pipelineName,
+          id: buildId
+        })
+
+        const buildFromApi =
+          build.api.build(buildData)
+        const buildsFromApi = [buildFromApi]
+
+        const expectedBuild =
+          build.client.build(buildData)
+        const expectedBuilds = [expectedBuild]
+
+        mock.onGet(
+          `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}` +
+          `/resources/${resourceName}/versions/${versionId}/output_of`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .reply(200, buildsFromApi)
+
+        const actualBuilds = await client.listBuildsWithVersionAsOutput()
+
+        expect(actualBuilds).to.eql(expectedBuilds)
+      })
+  })
 })

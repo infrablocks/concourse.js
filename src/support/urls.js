@@ -35,6 +35,7 @@ export const teamPipelineJobsUrl = (url, teamName, pipelineName) =>
   `${url}/teams/${teamName}/pipelines/${pipelineName}/jobs`
 export const teamPipelineJobUrl = (url, teamName, pipelineName, jobName) =>
   `${url}/teams/${teamName}/pipelines/${pipelineName}/jobs/${jobName}`
+
 export const teamPipelineJobBuildsUrl =
   (url, teamName, pipelineName, jobName) =>
     `${url}/teams/${teamName}/pipelines/${pipelineName}/jobs/${jobName}/builds`
@@ -45,14 +46,17 @@ export const teamPipelineJobBuildUrl =
 export const teamPipelineJobInputsUrl =
   (url, teamName, pipelineName, jobName) =>
     `${url}/teams/${teamName}/pipelines/${pipelineName}/jobs/${jobName}/inputs`
+
 export const teamPipelineResourcesUrl = (url, teamName, pipelineName) =>
   `${url}/teams/${teamName}/pipelines/${pipelineName}/resources`
 export const teamPipelineResourceUrl =
   (url, teamName, pipelineName, resourceName) =>
     `${url}/teams/${teamName}/pipelines/${pipelineName}` +
     `/resources/${resourceName}`
+
 export const teamPipelineResourceTypesUrl = (url, teamName, pipelineName) =>
   `${url}/teams/${teamName}/pipelines/${pipelineName}/resource-types`
+
 export const teamPipelineResourceVersionsUrl =
   (url, teamName, pipelineName, resourceName) =>
     `${url}/teams/${teamName}/pipelines/${pipelineName}` +
@@ -61,7 +65,16 @@ export const teamPipelineResourceVersionUrl =
   (url, teamName, pipelineName, resourceName, versionId) =>
     `${url}/teams/${teamName}/pipelines/${pipelineName}` +
     `/resources/${resourceName}/versions/${versionId}`
+
 export const teamPipelineResourceVersionCausalityUrl =
   (url, teamName, pipelineName, resourceName, versionId) =>
     `${url}/teams/${teamName}/pipelines/${pipelineName}` +
     `/resources/${resourceName}/versions/${versionId}/causality`
+export const teamPipelineResourceVersionInputToUrl =
+  (url, teamName, pipelineName, resourceName, versionId) =>
+    `${url}/teams/${teamName}/pipelines/${pipelineName}` +
+    `/resources/${resourceName}/versions/${versionId}/input_to`
+export const teamPipelineResourceVersionOutputOfUrl =
+  (url, teamName, pipelineName, resourceName, versionId) =>
+    `${url}/teams/${teamName}/pipelines/${pipelineName}` +
+    `/resources/${resourceName}/versions/${versionId}/output_of`

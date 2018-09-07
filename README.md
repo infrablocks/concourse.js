@@ -132,6 +132,12 @@ currently supported are detailed below.
 
 * `TeamPipelineResourceVersionClient#getCausality()` - Returns the team pipeline 
   resource version's causality.
+* `TeamPipelineResourceVersionClient#listBuildsWithVersionAsInput()` - Returns 
+  an array of all builds that have the resource version represented by the 
+  client as an input.
+* `TeamPipelineResourceVersionClient#listBuildsWithVersionAsOutput()` - Returns 
+  an array of all builds that have the resource version represented by the 
+  client as an output.
 
 ## Example
 
