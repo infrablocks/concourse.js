@@ -39,6 +39,8 @@ currently supported are detailed below.
 ### `Client` Methods 
 
 * `Client#listTeams()` - Returns an array of all teams.
+* `Client#forTeam(teamId)` - Returns a `TeamClient` for the team specified by 
+  `teamId`. See below for more details of the methods supported on `TeamClient`.
 * `Client#listWorkers()` - Returns an array of all workers.
 * `Client#listPipelines()` - Returns an array of all pipelines across all teams.
 * `Client#listJobs()` - Returns an array of all jobs across all teams.
@@ -49,8 +51,13 @@ currently supported are detailed below.
   * `since` - the ID of a build to fetch from (integral, > 1).
   * `id` - the ID of a build to fetch up to (integral, > 1).
 * `Client#getBuild(buildId)` - Returns the build specified by `buildId`.
-* `Client#forTeam(teamId)` - Returns a `TeamClient` for the team specified by 
-  `teamId`. See below for more details of the methods supported on `TeamClient`.
+* `Client#forBuild(buildId)` - Returns a `BuildClient` for the build specified 
+  by `buildId`. See below for more details of the methods supported on 
+  `BuildClient`.
+  
+### `BuildClient` Methods
+
+* `BuildClient#listResources()` - Returns an array of resources for the build.
   
 ### `TeamClient` Methods
 

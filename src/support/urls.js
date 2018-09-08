@@ -13,6 +13,8 @@ export const allResourcesUrl = (url) =>
 
 export const buildUrl = (url, buildId) =>
   `${url}/builds/${buildId}`
+export const buildResourcesUrl = (url, buildId) =>
+  `${url}/builds/${buildId}/resources`
 
 export const teamAuthTokenUrl = (url, teamName) =>
   `${url}/teams/${teamName}/auth/token`

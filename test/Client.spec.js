@@ -480,6 +480,63 @@ describe('Client', () => {
       })
   })
 
+  describe('forBuild', () => {
+    it('returns a client for the build with the supplied ID when the build ' +
+      'exists',
+    async () => {
+      const { client, mock, apiUrl, bearerToken, httpClient } =
+          buildValidClient()
+
+      const buildId = data.randomId()
+
+      const buildData = data.randomBuild({
+        id: buildId
+      })
+
+      const buildFromApi = build.api.build(buildData)
+      const expectedBuild = build.client.build(buildData)
+
+      mock.onGet(
+        `${apiUrl}/builds/${buildId}`,
+        {
+          headers: {
+            ...bearerAuthHeader(bearerToken)
+          }
+        })
+        .reply(200, buildFromApi)
+
+      const buildClient = await client.forBuild(buildId)
+
+      expect(buildClient.apiUrl).to.equal(apiUrl)
+      expect(buildClient.httpClient).to.equal(httpClient)
+      expect(buildClient.build).to.eql(expectedBuild)
+    })
+
+    it('throws an exception if no build exists for the supplied ID',
+      async () => {
+        const { client, mock, apiUrl, bearerToken } = buildValidClient()
+
+        const buildId = data.randomId()
+
+        mock.onGet(
+          `${apiUrl}/builds/${buildId}`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .reply(404)
+
+        try {
+          await client.forBuild(buildId)
+          expect.fail('Expected exception but none was thrown.')
+        } catch (e) {
+          expect(e).to.be.an.instanceof(Error)
+          expect(e.message).to.eql(`No build for ID: ${buildId}`)
+        }
+      })
+  })
+
   describe('listResources', () => {
     it('gets all resources',
       async () => {

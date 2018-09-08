@@ -8,7 +8,7 @@
 | SendInputToBuildPlan          | PUT    | /api/v1/builds/:build_id/plan/:plan_id/input                                                                       | Later    |
 | ReadOutputFromBuildPlan       | GET    | /api/v1/builds/:build_id/plan/:plan_id/output                                                                      | Later    |
 | GetBuildPreparation           | GET    | /api/v1/builds/:build_id/preparation                                                                               | Later    |
-| BuildResources                | GET    | /api/v1/builds/:build_id/resources                                                                                 | Now      |
+| BuildResources                | GET    | /api/v1/builds/:build_id/resources                                                                                 | Done     |
 | DownloadCLI                   | GET    | /api/v1/cli                                                                                                        | Later    |
 | ListDestroyingContainers      | GET    | /api/v1/containers/destroying                                                                                      | Later    |
 | ReportWorkerContainers        | PUT    | /api/v1/containers/report                                                                                          | Later    |

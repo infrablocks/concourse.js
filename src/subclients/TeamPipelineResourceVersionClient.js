@@ -6,7 +6,6 @@ import {
   validateOptions
 } from '../support/validation'
 import {
-  teamPipelineJobBuildsUrl,
   teamPipelineResourceVersionCausalityUrl,
   teamPipelineResourceVersionInputToUrl,
   teamPipelineResourceVersionOutputOfUrl

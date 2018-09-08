@@ -20,6 +20,7 @@ import {
 } from './support/urls'
 import { createHttpClient } from './support/http/factory'
 import { parseJson } from './support/http/transformers'
+import BuildClient from './subclients/BuildClient'
 
 export default class Client {
   static instanceFor (apiUrl, teamName, username, password) {
@@ -125,6 +126,25 @@ export default class Client {
       })
 
     return build
+  }
+
+  async forBuild (buildId) {
+    let build
+    try {
+      build = await this.getBuild(buildId)
+    } catch (e) {
+      if (e.response && e.response.status === 404) {
+        throw new Error(`No build for ID: ${buildId}`)
+      } else {
+        throw e
+      }
+    }
+
+    return new BuildClient({
+      apiUrl: this.apiUrl,
+      httpClient: this.httpClient,
+      build
+    })
   }
 
   async listResources () {
