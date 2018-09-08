@@ -43,6 +43,9 @@ currently supported are detailed below.
 * `Client#forTeam(teamId)` - Returns a `TeamClient` for the team specified by 
   `teamId`. See below for more details of the methods supported on `TeamClient`.
 * `Client#listWorkers()` - Returns an array of all workers.
+* `Client#forWorker(workerName)` - Returns a `WorkerClient` for the worker
+  specified by `workerName`. See below for more details of the methods 
+  supported on `WorkerClient`.
 * `Client#listPipelines()` - Returns an array of all pipelines across all teams.
 * `Client#listJobs()` - Returns an array of all jobs across all teams.
 * `Client#listResources()` - Returns an array of all resources across all teams. 
@@ -59,6 +62,10 @@ currently supported are detailed below.
 ### `BuildClient` Methods
 
 * `BuildClient#listResources()` - Returns an array of resources for the build.
+
+### `WorkerClient` Methods
+
+* `WorkerClient#prune()` - Prunes the worker.
   
 ### `TeamClient` Methods
 

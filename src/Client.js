@@ -16,11 +16,14 @@ import {
   allResourcesUrl,
   allTeamsUrl,
   allWorkersUrl,
-  buildUrl, infoUrl, teamAuthTokenUrl
+  buildUrl,
+  infoUrl,
+  teamAuthTokenUrl
 } from './support/urls'
 import { createHttpClient } from './support/http/factory'
 import { parseJson } from './support/http/transformers'
 import BuildClient from './subclients/BuildClient'
+import WorkerClient from './subclients/WorkerClient'
 
 export default class Client {
   static instanceFor (apiUrl, teamName, username, password) {
@@ -85,6 +88,21 @@ export default class Client {
       })
 
     return workers
+  }
+
+  async forWorker (workerName) {
+    const workers = await this.listWorkers()
+    const worker = find(propEq('name', workerName), workers)
+
+    if (!worker) {
+      throw new Error(`No worker with name: ${workerName}`)
+    }
+
+    return new WorkerClient({
+      apiUrl: this.apiUrl,
+      httpClient: this.httpClient,
+      worker
+    })
   }
 
   async listPipelines () {

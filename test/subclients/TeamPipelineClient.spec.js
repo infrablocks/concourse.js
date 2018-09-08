@@ -275,7 +275,7 @@ describe('TeamPipelineClient', () => {
           expect.fail('Expected exception but none was thrown.')
         } catch (e) {
           expect(e).to.be.an.instanceof(Error)
-          expect(e.message).to.eql(`No job for name: ${jobName}`)
+          expect(e.message).to.eql(`No job with name: ${jobName}`)
         }
       })
   })
@@ -428,7 +428,7 @@ describe('TeamPipelineClient', () => {
           expect.fail('Expected exception but none was thrown.')
         } catch (e) {
           expect(e).to.be.an.instanceof(Error)
-          expect(e.message).to.eql(`No resource for name: ${resourceName}`)
+          expect(e.message).to.eql(`No resource with name: ${resourceName}`)
         }
       })
   })

@@ -156,7 +156,7 @@ export default class TeamClient {
       pipeline = await this.getPipeline(pipelineName)
     } catch (e) {
       if (e.response && e.response.status === 404) {
-        throw new Error(`No pipeline for name: ${pipelineName}`)
+        throw new Error(`No pipeline with name: ${pipelineName}`)
       } else {
         throw e
       }

@@ -214,6 +214,70 @@ describe('Client', () => {
       })
   })
 
+  describe('forTeam', () => {
+    it('returns a client for the worker with the supplied name when the ' +
+      'worker exists',
+    async () => {
+      const { client, mock, apiUrl, bearerToken, httpClient } =
+          buildValidClient()
+
+      const workerName = data.randomWorkerName()
+
+      const workerData = data.randomWorker({
+        name: workerName
+      })
+
+      const firstWorkerFromApi = build.api.worker(workerData)
+      const secondWorkerFromApi = build.api.worker(data.randomWorker())
+      const workersFromApi = [secondWorkerFromApi, firstWorkerFromApi]
+
+      const expectedWorker = build.client.worker(workerData)
+
+      mock.onGet(
+        `${apiUrl}/workers`,
+        {
+          headers: {
+            ...bearerAuthHeader(bearerToken)
+          }
+        })
+        .reply(200, workersFromApi)
+
+      const workerClient = await client.forWorker(workerName)
+
+      expect(workerClient.apiUrl).to.equal(apiUrl)
+      expect(workerClient.httpClient).to.equal(httpClient)
+      expect(workerClient.worker).to.eql(expectedWorker)
+    })
+
+    it('throws an exception if no worker exists for the supplied name',
+      async () => {
+        const { client, mock, apiUrl, bearerToken } = buildValidClient()
+
+        const workerName = data.randomWorkerName()
+
+        const firstWorkerFromApi = build.api.worker(data.randomWorker())
+        const secondWorkerFromApi = build.api.worker(data.randomWorker())
+        const workersFromApi = [secondWorkerFromApi, firstWorkerFromApi]
+
+        mock.onGet(
+          `${apiUrl}/workers`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .reply(200, workersFromApi)
+
+        try {
+          await client.forWorker(workerName)
+          expect.fail('Expected exception but none was thrown.')
+        } catch (e) {
+          expect(e).to.be.an.instanceof(Error)
+          expect(e.message).to.eql(`No worker with name: ${workerName}`)
+        }
+      })
+  })
+
   describe('listPipelines', () => {
     it('gets all pipelines',
       async () => {

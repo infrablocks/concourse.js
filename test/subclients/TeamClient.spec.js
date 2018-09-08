@@ -704,7 +704,7 @@ describe('TeamClient', () => {
           expect.fail('Expected exception but none was thrown.')
         } catch (e) {
           expect(e).to.be.an.instanceof(Error)
-          expect(e.message).to.eql(`No pipeline for name: ${pipelineName}`)
+          expect(e.message).to.eql(`No pipeline with name: ${pipelineName}`)
         }
       })
   })

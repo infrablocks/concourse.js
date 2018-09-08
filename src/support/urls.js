@@ -14,6 +14,9 @@ export const allBuildsUrl = (url) =>
 export const allResourcesUrl = (url) =>
   `${url}/resources`
 
+export const workerPruneUrl = (url, workerName) =>
+  `${url}/workers/${workerName}/prune`
+
 export const buildUrl = (url, buildId) =>
   `${url}/builds/${buildId}`
 export const buildResourcesUrl = (url, buildId) =>

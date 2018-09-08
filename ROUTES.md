@@ -75,5 +75,5 @@
 | DeleteWorker                  | DELETE | /api/v1/workers/:worker_name                                                                                       | Later    |
 | HeartbeatWorker               | PUT    | /api/v1/workers/:worker_name/heartbeat                                                                             | Later    |
 | LandWorker                    | PUT    | /api/v1/workers/:worker_name/land                                                                                  | Later    |
-| PruneWorker                   | PUT    | /api/v1/workers/:worker_name/prune                                                                                 | Now      |
+| PruneWorker                   | PUT    | /api/v1/workers/:worker_name/prune                                                                                 | Done     |
 | RetireWorker                  | PUT    | /api/v1/workers/:worker_name/retire                                                                                | Later    |

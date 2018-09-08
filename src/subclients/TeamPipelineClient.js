@@ -66,7 +66,7 @@ class TeamPipelineClient {
       job = await this.getJob(jobName)
     } catch (e) {
       if (e.response && e.response.status === 404) {
-        throw new Error(`No job for name: ${jobName}`)
+        throw new Error(`No job with name: ${jobName}`)
       } else {
         throw e
       }
@@ -114,7 +114,7 @@ class TeamPipelineClient {
       resource = await this.getResource(resourceName)
     } catch (e) {
       if (e.response && e.response.status === 404) {
-        throw new Error(`No resource for name: ${resourceName}`)
+        throw new Error(`No resource with name: ${resourceName}`)
       } else {
         throw e
       }

@@ -300,6 +300,7 @@ export default {
   randomResourceVersionCause,
 
   randomWorker,
+  randomWorkerName,
 
   randomContainer,
   randomContainerId
