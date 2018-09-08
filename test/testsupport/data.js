@@ -264,6 +264,26 @@ const randomContainer = (overrides = {}) => ({
   ...overrides
 })
 
+const randomVolumeId = () =>
+  `${randomLowerHex(8)}-${randomLowerHex(4)}-${randomLowerHex(4)}-` +
+  `${randomLowerHex(4)}-${randomLowerHex(12)}`
+const randomVolumePath = () => faker.random.arrayElement(
+  [`/tmp/${randomResourceName()}/get`, '/scratch'])
+const randomVolume = (overrides = {}) => ({
+  id: randomVolumeId(),
+  workerName: randomWorkerName(),
+  type: 'container',
+  containerHandle: randomContainerId(),
+  path: randomVolumePath(),
+  parentHandle: '',
+  resourceType: null,
+  baseResourceType: null,
+  pipelineName: '',
+  jobName: '',
+  stepName: '',
+  ...overrides
+})
+
 export default {
   randomApiUrl,
   randomUsername,
@@ -303,5 +323,8 @@ export default {
   randomWorkerName,
 
   randomContainer,
-  randomContainerId
+  randomContainerId,
+
+  randomVolumeId,
+  randomVolume
 }

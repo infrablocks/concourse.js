@@ -143,6 +143,33 @@ export const container =
     workingDirectory
   })
 
+export const volume =
+  ({
+    id = '44177fd7-2a5a-4bef-4e0f-c78042e5c21d',
+    workerName = '01b1290c5352',
+    type = 'container',
+    containerHandle = '9a5767ce-369d-4145-43ab-4767bdd4de08',
+    path = '/',
+    parentHandle = '75ecca0e-1e84-4da9-5bf8-538d717794d0',
+    resourceType = null,
+    baseResourceType = null,
+    pipelineName = '',
+    jobName = '',
+    stepName = ''
+  } = {}) => ({
+    id,
+    workerName,
+    type,
+    containerHandle,
+    path,
+    parentHandle,
+    resourceType,
+    baseResourceType,
+    pipelineName,
+    jobName,
+    stepName
+  })
+
 export const workerResourceType =
   ({
     type = 'bosh-deployment',

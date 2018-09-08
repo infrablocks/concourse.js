@@ -16,7 +16,8 @@ import {
   teamContainersUrl,
   teamContainerUrl,
   teamPipelinesUrl,
-  teamPipelineUrl
+  teamPipelineUrl,
+  teamVolumesUrl
 } from '../support/urls'
 import { parseJson } from '../support/http/transformers'
 import TeamPipelineClient from './TeamPipelineClient'
@@ -112,6 +113,15 @@ export default class TeamClient {
       })
 
     return container
+  }
+
+  async listVolumes () {
+    const { data: volumes } = await this.httpClient
+      .get(teamVolumesUrl(this.apiUrl, this.team.name), {
+        transformResponse: [parseJson, camelcaseKeysDeep]
+      })
+
+    return volumes
   }
 
   async listPipelines () {

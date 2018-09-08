@@ -67,7 +67,7 @@
 | GetVersionsDB                 | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/versions-db                                                      | Later    |
 | OrderPipelines                | PUT    | /api/v1/teams/:team_name/pipelines/ordering                                                                        | Later    |
 | RenameTeam                    | PUT    | /api/v1/teams/:team_name/rename                                                                                    | Now      |
-| ListVolumes                   | GET    | /api/v1/teams/:team_name/volumes                                                                                   | Now      |
+| ListVolumes                   | GET    | /api/v1/teams/:team_name/volumes                                                                                   | Done     |
 | ListDestroyingVolumes         | GET    | /api/v1/volumes/destroying                                                                                         | Later    |
 | ReportWorkerVolumes           | PUT    | /api/v1/volumes/report                                                                                             | Later    |
 | ListWorkers                   | GET    | /api/v1/workers                                                                                                    | Done     |

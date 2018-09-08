@@ -100,6 +100,7 @@ currently supported are detailed below.
   * `buildName` - the name of the build for which to fetch containers (string).
 * `TeamClient#getContainer(containerId)` - Returns the container specified by 
   `containerId`.
+* `TeamClient#listVolumes()` - Returns an array of team volumes.
 
 ### `TeamPipelineClient` Methods
 

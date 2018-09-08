@@ -447,6 +447,36 @@ describe('TeamClient', () => {
     })
   })
 
+  describe('listVolumes', () => {
+    it('gets all volumes for team',
+      async () => {
+        const { client, mock, apiUrl, bearerToken, team } =
+          buildValidTeamClient()
+
+        const teamName = team.name
+        const volumeData = data.randomVolume()
+
+        const volumeFromApi = build.api.volume(volumeData)
+        const volumesFromApi = [volumeFromApi]
+
+        const convertedVolume = build.client.volume(volumeData)
+        const expectedVolumes = [convertedVolume]
+
+        mock.onGet(
+          `${apiUrl}/teams/${teamName}/volumes`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .reply(200, volumesFromApi)
+
+        const actualVolumes = await client.listVolumes()
+
+        expect(actualVolumes).to.eql(expectedVolumes)
+      })
+  })
+
   describe('getContainer', () => {
     it('gets the container with the specified ID', async () => {
       const { client, mock, apiUrl, bearerToken, team } =
