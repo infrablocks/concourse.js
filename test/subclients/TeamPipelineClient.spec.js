@@ -127,6 +127,60 @@ describe('TeamPipelineClient', () => {
     })
   })
 
+  describe('delete', () => {
+    it('deletes the pipeline',
+      async () => {
+        const { client, mock, apiUrl, bearerToken, team, pipeline } =
+          buildValidTeamPipelineClient()
+
+        const teamName = team.name
+        const pipelineName = pipeline.name
+
+        mock.onDelete(
+          `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .reply(204)
+
+        await client.delete()
+        expect(mock.history.delete).to.have.length(1)
+
+        const call = mock.history.delete[0]
+        expect(call.url)
+          .to.eql(`${apiUrl}/teams/${teamName}/pipelines/${pipelineName}`)
+        expect(call.headers)
+          .to.include(bearerAuthHeader(bearerToken))
+      })
+
+    it('throws the underlying http client exception on failure',
+      async () => {
+        const { client, mock, apiUrl, bearerToken, team, pipeline } =
+          buildValidTeamPipelineClient()
+
+        const teamName = team.name
+        const pipelineName = pipeline.name
+
+        mock.onDelete(
+          `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .networkError()
+
+        try {
+          await client.delete()
+        } catch (e) {
+          expect(e).to.be.instanceOf(Error)
+          expect(e.message).to.eql('Network Error')
+        }
+      })
+  })
+
   describe('listJobs', () => {
     it('gets all jobs for team pipeline',
       async () => {

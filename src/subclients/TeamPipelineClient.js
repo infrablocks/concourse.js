@@ -10,7 +10,7 @@ import {
   teamPipelineJobsUrl,
   teamPipelineJobUrl,
   teamPipelineResourcesUrl, teamPipelineResourceTypesUrl,
-  teamPipelineResourceUrl
+  teamPipelineResourceUrl, teamPipelineUrl
 } from '../support/urls'
 import { parseJson } from '../support/http/transformers'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
@@ -31,6 +31,14 @@ class TeamPipelineClient {
     this.httpClient = validatedOptions.httpClient
     this.team = validatedOptions.team
     this.pipeline = validatedOptions.pipeline
+  }
+
+  async delete () {
+    await this.httpClient.delete(
+      teamPipelineUrl(
+        this.apiUrl,
+        this.team.name,
+        this.pipeline.name))
   }
 
   async listJobs () {

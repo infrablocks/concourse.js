@@ -72,8 +72,6 @@ currently supported are detailed below.
 * `TeamClient#listPipelines()` - Returns an array of team pipelines.
 * `TeamClient#getPipeline(pipelineName)` - Returns the team pipeline specified 
   by `pipelineName`.
-* `TeamClient#deletePipeline(pipelineName)` - Deletes the pipeline specified by
-  `pipelineName`.
 * `TeamClient#forPipeline(pipelineName)` - Returns a `TeamPipelineClient` for 
   the pipeline specified by `pipelineName`. See below for more details of the 
   methods supported on `TeamPipelineClient`.
@@ -105,6 +103,7 @@ currently supported are detailed below.
 
 ### `TeamPipelineClient` Methods
 
+* `TeamPipelineClient#delete()` - Deletes the pipeline.
 * `TeamPipelineClient#listJobs()` - Returns an array of team pipeline jobs.
 * `TeamPipelineClient#getJob(jobName)` - Returns the team pipeline job 
   specified by `jobName`.
