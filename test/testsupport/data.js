@@ -12,7 +12,7 @@ const randomUsername = () => faker.internet.userName(
   faker.name.lastName())
 const randomPassword = () => faker.random.alphaNumeric(40)
 
-const randomDigit = () => faker.random.number({max: 9})
+const randomDigit = () => faker.random.number({ max: 9 })
 const randomVersion = () => `${randomDigit()}.${randomDigit()}.${randomDigit()}`
 
 const randomInfo = (overrides = {}) => ({
