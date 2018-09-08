@@ -12,7 +12,7 @@
 | DownloadCLI                   | GET    | /api/v1/cli                                                                                                        | Later    |
 | ListDestroyingContainers      | GET    | /api/v1/containers/destroying                                                                                      | Later    |
 | ReportWorkerContainers        | PUT    | /api/v1/containers/report                                                                                          | Later    |
-| GetInfo                       | GET    | /api/v1/info                                                                                                       | Now      |
+| GetInfo                       | GET    | /api/v1/info                                                                                                       | Done     |
 | GetInfoCreds                  | GET    | /api/v1/info/creds                                                                                                 | Later    |
 | ListAllJobs                   | GET    | /api/v1/jobs                                                                                                       | Done     |
 | GetLogLevel                   | GET    | /api/v1/log-level                                                                                                  | Later    |

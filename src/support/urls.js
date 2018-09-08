@@ -1,3 +1,6 @@
+export const infoUrl = (url) =>
+  `${url}/info`
+
 export const allTeamsUrl = (url) =>
   `${url}/teams`
 export const allWorkersUrl = (url) =>

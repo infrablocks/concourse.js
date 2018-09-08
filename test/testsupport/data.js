@@ -12,6 +12,15 @@ const randomUsername = () => faker.internet.userName(
   faker.name.lastName())
 const randomPassword = () => faker.random.alphaNumeric(40)
 
+const randomDigit = () => faker.random.number({max: 9})
+const randomVersion = () => `${randomDigit()}.${randomDigit()}.${randomDigit()}`
+
+const randomInfo = (overrides = {}) => ({
+  version: randomVersion(),
+  workerVersion: randomVersion(),
+  ...overrides
+})
+
 const randomId = () => faker.random.number()
 
 const randomCsrfToken = () => randomLowerHex(64)
@@ -259,6 +268,8 @@ export default {
   randomApiUrl,
   randomUsername,
   randomPassword,
+
+  randomInfo,
 
   randomId,
 

@@ -33,11 +33,12 @@ const client = Client.instanceFor(apiUrl, teamName, username, password)
 ```
 
 The client does not yet have full coverage of all available API endpoints, 
-(currently at 31% coverage) however that is the eventual goal. The methods 
+(currently at 36% coverage) however that is the eventual goal. The methods 
 currently supported are detailed below.
 
 ### `Client` Methods 
 
+* `Client#getInfo()` - Returns an object with server version information.
 * `Client#listTeams()` - Returns an array of all teams.
 * `Client#forTeam(teamId)` - Returns a `TeamClient` for the team specified by 
   `teamId`. See below for more details of the methods supported on `TeamClient`.

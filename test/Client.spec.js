@@ -60,6 +60,30 @@ describe('Client', () => {
       })
   })
 
+  describe('getInfo', () => {
+    it('gets server info', async () => {
+      const { client, mock, apiUrl, bearerToken } = buildValidClient()
+
+      const infoData = data.randomInfo()
+
+      const infoFromApi = build.api.info(infoData)
+      const expectedInfo = build.client.info(infoData)
+
+      mock.onGet(
+        `${apiUrl}/info`,
+        {
+          headers: {
+            ...bearerAuthHeader(bearerToken)
+          }
+        })
+        .reply(200, infoFromApi)
+
+      const actualInfo = await client.getInfo()
+
+      expect(actualInfo).to.eql(expectedInfo)
+    })
+  })
+
   describe('listTeams', () => {
     it('gets all teams',
       async () => {

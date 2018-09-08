@@ -1,3 +1,12 @@
+export const info =
+  ({
+    version = '3.14.1',
+    workerVersion = '2.1'
+  } = {}) => ({
+    version,
+    workerVersion
+  })
+
 export const team =
   ({
     id = 1,

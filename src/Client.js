@@ -16,7 +16,7 @@ import {
   allResourcesUrl,
   allTeamsUrl,
   allWorkersUrl,
-  buildUrl, teamAuthTokenUrl
+  buildUrl, infoUrl, teamAuthTokenUrl
 } from './support/urls'
 import { createHttpClient } from './support/http/factory'
 import { parseJson } from './support/http/transformers'
@@ -43,6 +43,15 @@ export default class Client {
 
     this.apiUrl = validatedOptions.apiUrl
     this.httpClient = validatedOptions.httpClient
+  }
+
+  async getInfo () {
+    const { data: info } = await this.httpClient
+      .get(infoUrl(this.apiUrl), {
+        transformResponse: [parseJson, camelcaseKeysDeep]
+      })
+
+    return info
   }
 
   async listTeams () {
