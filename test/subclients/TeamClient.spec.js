@@ -96,6 +96,74 @@ describe('TeamClient', () => {
     })
   })
 
+  describe('rename', () => {
+    it('renames the team', async () => {
+      const { client, mock, apiUrl, bearerToken, team } =
+        buildValidTeamClient()
+
+      const newTeamName = data.randomTeamName()
+
+      mock.onPut(
+        `${apiUrl}/teams/${team.name}/rename`,
+        {
+          name: newTeamName
+        })
+        .reply(204)
+
+      await client.rename(newTeamName)
+      expect(mock.history.put).to.have.length(1)
+
+      const call = mock.history.put[0]
+      expect(call.url)
+        .to.eql(`${apiUrl}/teams/${team.name}/rename`)
+      expect(call.data).to.eql(`{"name":"${newTeamName}"}`)
+      expect(call.headers)
+        .to.include(bearerAuthHeader(bearerToken))
+    })
+
+    it('throws the underlying http client exception on failure',
+      async () => {
+        const { client, mock, apiUrl, team } =
+          buildValidTeamClient()
+
+        const newTeamName = data.randomTeamName()
+
+        mock.onPut(
+          `${apiUrl}/teams/${team.name}/rename`,
+          {
+            name: newTeamName
+          })
+          .networkError()
+
+        try {
+          await client.rename(newTeamName)
+        } catch (e) {
+          expect(e).to.be.instanceOf(Error)
+          expect(e.message).to.eql('Network Error')
+        }
+      })
+
+    it('throws an exception if the new team name is not a string',
+      async () => {
+        const { client } = buildValidTeamClient()
+        await forInstance(client)
+          .onCallOf('rename')
+          .withArguments(12345)
+          .throwsError(
+            'Invalid parameter(s): ["newTeamName" must be a string].')
+      })
+
+    it('throws an exception if the new team name is not provided',
+      async () => {
+        const { client } = buildValidTeamClient()
+        await forInstance(client)
+          .onCallOf('rename')
+          .withArguments()
+          .throwsError(
+            'Invalid parameter(s): ["newTeamName" is required].')
+      })
+  })
+
   describe('listBuilds', () => {
     it('gets all builds for team',
       async () => {

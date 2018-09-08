@@ -25,6 +25,11 @@ export const buildResourcesUrl = (url, buildId) =>
 export const teamAuthTokenUrl = (url, teamName) =>
   `${url}/teams/${teamName}/auth/token`
 
+export const teamUrl = (url, teamName) =>
+  `${url}/teams/${teamName}`
+export const teamRenameUrl = (url, teamName) =>
+  `${url}/teams/${teamName}/rename`
+
 export const teamPipelinesUrl = (url, teamName) =>
   `${url}/teams/${teamName}/pipelines`
 export const teamPipelineUrl = (url, teamName, pipelineName) =>

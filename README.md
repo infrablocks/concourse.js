@@ -33,7 +33,7 @@ const client = Client.instanceFor(apiUrl, teamName, username, password)
 ```
 
 The client does not yet have full coverage of all available API endpoints, 
-(currently at 36% coverage) however that is the eventual goal. The methods 
+(currently at 40% coverage) however that is the eventual goal. The methods 
 currently supported are detailed below.
 
 ### `Client` Methods 
@@ -69,6 +69,8 @@ currently supported are detailed below.
   
 ### `TeamClient` Methods
 
+* `TeamClient#rename(newTeamName)` - Renames the team to the provided 
+  `newTeamName`.
 * `TeamClient#listPipelines()` - Returns an array of team pipelines.
 * `TeamClient#getPipeline(pipelineName)` - Returns the team pipeline specified 
   by `pipelineName`.

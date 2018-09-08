@@ -16,7 +16,7 @@ import {
   teamContainersUrl,
   teamContainerUrl,
   teamPipelinesUrl,
-  teamPipelineUrl,
+  teamPipelineUrl, teamRenameUrl,
   teamVolumesUrl
 } from '../support/urls'
 import { parseJson } from '../support/http/transformers'
@@ -34,6 +34,20 @@ export default class TeamClient {
     this.apiUrl = validatedOptions.apiUrl
     this.httpClient = validatedOptions.httpClient
     this.team = validatedOptions.team
+  }
+
+  async rename (newTeamName) {
+    const validatedOptions = validateOptions(
+      schemaFor({
+        newTeamName: string().required()
+      }), { newTeamName })
+
+    await this.httpClient
+      .put(teamRenameUrl(this.apiUrl, this.team.name), {
+        name: validatedOptions.newTeamName
+      })
+
+    this.team.name = newTeamName
   }
 
   async listBuilds (options = {}) {
