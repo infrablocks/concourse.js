@@ -36,7 +36,7 @@ Note, `teamName` only needs to be provided for a Concourse CI instance with a
 version less than `4.0.0`.
 
 The client does not yet have full coverage of all available API endpoints, 
-(currently at 40% coverage) however that is the eventual goal. The methods 
+(currently at 43% coverage) however that is the eventual goal. The methods 
 currently supported are detailed below.
 
 ### `Client` Methods 
