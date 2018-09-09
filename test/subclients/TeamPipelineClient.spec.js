@@ -216,6 +216,78 @@ describe('TeamPipelineClient', () => {
       })
   })
 
+  describe('rename', () => {
+    it('renames the pipeline', async () => {
+      const { client, mock, apiUrl, bearerToken, team, pipeline } =
+        buildValidTeamPipelineClient()
+
+      const originalPipelineName = pipeline.name
+      const newPipelineName = data.randomTeamName()
+
+      mock.onPut(
+        `${apiUrl}/teams/${team.name}/pipelines/${originalPipelineName}/rename`,
+        {
+          name: newPipelineName
+        })
+        .reply(204)
+
+      await client.rename(newPipelineName)
+      expect(mock.history.put).to.have.length(1)
+
+      const call = mock.history.put[0]
+      expect(call.url)
+        .to.eql(
+          `${apiUrl}/teams/${team.name}/pipelines/${originalPipelineName}` +
+          '/rename')
+      expect(call.data).to.eql(`{"name":"${newPipelineName}"}`)
+      expect(call.headers)
+        .to.include(bearerAuthHeader(bearerToken))
+    })
+
+    it('throws the underlying http client exception on failure',
+      async () => {
+        const { client, mock, apiUrl, team, pipeline } =
+          buildValidTeamPipelineClient()
+
+        const newTeamName = data.randomTeamName()
+
+        mock.onPut(
+          `${apiUrl}/teams/${team.name}/pipelines/${pipeline.name}` +
+          '/rename',
+          {
+            name: newTeamName
+          })
+          .networkError()
+
+        try {
+          await client.rename(newTeamName)
+        } catch (e) {
+          expect(e).to.be.instanceOf(Error)
+          expect(e.message).to.eql('Network Error')
+        }
+      })
+
+    it('throws an exception if the new pipeline name is not a string',
+      async () => {
+        const { client } = buildValidTeamPipelineClient()
+        await forInstance(client)
+          .onCallOf('rename')
+          .withArguments(12345)
+          .throwsError(
+            'Invalid parameter(s): ["newPipelineName" must be a string].')
+      })
+
+    it('throws an exception if the new pipeline name is not provided',
+      async () => {
+        const { client } = buildValidTeamPipelineClient()
+        await forInstance(client)
+          .onCallOf('rename')
+          .withArguments()
+          .throwsError(
+            'Invalid parameter(s): ["newPipelineName" is required].')
+      })
+  })
+
   describe('delete', () => {
     it('deletes the pipeline',
       async () => {

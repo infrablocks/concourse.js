@@ -48,7 +48,7 @@
 | PauseJob                      | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/pause                                             | Done     |
 | UnpauseJob                    | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/unpause                                           | Done     |
 | PausePipeline                 | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/pause                                                            | Done     |
-| RenamePipeline                | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/rename                                                           | Now      |
+| RenamePipeline                | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/rename                                                           | Done     |
 | ListResourceTypes             | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resource-types                                                   | Done     |
 | ListResources                 | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources                                                        | Done     |
 | GetResource                   | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name                                         | Done     |

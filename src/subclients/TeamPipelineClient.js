@@ -9,7 +9,7 @@ import {
 import {
   teamPipelineJobsUrl,
   teamPipelineJobUrl,
-  teamPipelinePauseUrl,
+  teamPipelinePauseUrl, teamPipelineRenameUrl,
   teamPipelineResourcesUrl,
   teamPipelineResourceTypesUrl,
   teamPipelineResourceUrl,
@@ -51,6 +51,20 @@ class TeamPipelineClient {
         this.apiUrl,
         this.team.name,
         this.pipeline.name))
+  }
+
+  async rename (newPipelineName) {
+    const validatedOptions = validateOptions(
+      schemaFor({
+        newPipelineName: string().required()
+      }), { newPipelineName })
+
+    await this.httpClient
+      .put(
+        teamPipelineRenameUrl(this.apiUrl, this.team.name, this.pipeline.name),
+        { name: validatedOptions.newPipelineName })
+
+    this.pipeline.name = newPipelineName
   }
 
   async delete () {

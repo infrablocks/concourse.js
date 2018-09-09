@@ -111,6 +111,8 @@ currently supported are detailed below.
 
 * `TeamPipelineClient#pause()` - Pauses the team pipeline.
 * `TeamPipelineClient#unpause()` - Unpauses the team pipeline.
+* `TeamPipelineClient#rename(newPipelineName)` - Renames the team pipeline to 
+  the provided `newPipelineName`.
 * `TeamPipelineClient#delete()` - Deletes the pipeline.
 * `TeamPipelineClient#listJobs()` - Returns an array of team pipeline jobs.
 * `TeamPipelineClient#getJob(jobName)` - Returns the team pipeline job 
