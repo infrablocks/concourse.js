@@ -1,16 +1,20 @@
 import axios from 'axios'
 import jwt from 'jsonwebtoken'
 import AwaitLock from 'await-lock'
+import formurlencoded from 'form-urlencoded'
 
 import {
   basicAuthHeader,
   bearerAuthHeader,
+  contentTypeHeader,
+  contentTypes,
   csrfTokenHeader
 } from './headers'
 
-import {
-  currentUnixTime
-} from '../date'
+import { currentUnixTime } from '../date'
+import { parseJson } from './transformers'
+import camelcaseKeysDeep from 'camelcase-keys-deep'
+import * as semver from 'semver'
 
 const isExpired = (token) => {
   const decoded = jwt.decode(token)
@@ -21,16 +25,53 @@ const isExpired = (token) => {
   return nowInSeconds > (expiryInSeconds - tenMinutesInSeconds)
 }
 
-const ensureValidToken = async (token, credentials, httpClient) => {
-  if (!token || isExpired(token)) {
-    const response = await httpClient.get(credentials.url, {
+const fetchTokenPreVersion4 = async (credentials, httpClient) => {
+  const response = await httpClient.get(credentials.tokenUrlPreVersion4, {
+    headers: {
+      ...basicAuthHeader(credentials.username, credentials.password)
+    }
+  })
+
+  return response.data.value
+}
+
+const fetchTokenPostVersion4 = async (credentials, httpClient) => {
+  const data = formurlencoded({
+    grant_type: 'password',
+    username: credentials.username,
+    password: credentials.password,
+    scope: 'openid+profile+email+federated:id+groups'
+  })
+
+  const response = await httpClient.post(
+    credentials.tokenUrlPostVersion4,
+    data,
+    {
       headers: {
-        ...basicAuthHeader(credentials.username, credentials.password)
-      }
+        ...basicAuthHeader('fly', 'Zmx5'),
+        ...contentTypeHeader(contentTypes.formUrlEncoded)
+      },
+      transformResponse: [parseJson, camelcaseKeysDeep]
     })
-    return response.data.value
+
+  return response.data.accessToken
+}
+
+const fetchToken = async (credentials, httpClient) => {
+  const serverInfo = await httpClient.get(credentials.infoUrl)
+  const version = serverInfo.data.version
+
+  if (semver.lt(version, '4.0.0')) {
+    return fetchTokenPreVersion4(credentials, httpClient)
+  } else {
+    return fetchTokenPostVersion4(credentials, httpClient)
   }
-  return token
+}
+
+const ensureValidToken = async (token, credentials, httpClient) => {
+  return (!token || isExpired(token))
+    ? fetchToken(credentials, httpClient)
+    : token
 }
 
 export const createSessionInterceptor =

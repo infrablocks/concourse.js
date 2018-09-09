@@ -41,10 +41,12 @@
     "await-lock": "^1.1.3",
     "axios": "^0.18.0",
     "camelcase-keys-deep": "^0.1.0",
+    "form-urlencoded": "^3.0.0",
     "joi": "^13.6.0",
     "js-base64": "^2.4.9",
     "jsonwebtoken": "^8.3.0",
-    "ramda": "^0.25.0"
+    "ramda": "^0.25.0",
+    "semver": "^5.5.1"
   },
   "devDependencies": {
     "axios-mock-adapter": "^1.15.0",

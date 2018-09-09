@@ -10,6 +10,7 @@ import {
   validateOptions
 } from './support/validation'
 import {
+  apiUrl as apiUrlFor,
   allBuildsUrl,
   allJobsUrl,
   allPipelinesUrl,
@@ -18,7 +19,8 @@ import {
   allWorkersUrl,
   buildUrl,
   infoUrl,
-  teamAuthTokenUrl
+  teamAuthTokenUrl,
+  skyTokenUrl
 } from './support/urls'
 import { createHttpClient } from './support/http/factory'
 import { parseJson } from './support/http/transformers'
@@ -26,9 +28,12 @@ import BuildClient from './subclients/BuildClient'
 import WorkerClient from './subclients/WorkerClient'
 
 export default class Client {
-  static instanceFor (apiUrl, teamName, username, password) {
+  static instanceFor (url, username, password, teamName = 'main') {
+    const apiUrl = apiUrlFor(url)
     const credentials = {
-      url: teamAuthTokenUrl(apiUrl, teamName),
+      infoUrl: infoUrl(apiUrl),
+      tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
+      tokenUrlPostVersion4: skyTokenUrl(url),
       username: username,
       password: password
     }

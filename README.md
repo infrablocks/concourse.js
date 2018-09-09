@@ -24,13 +24,16 @@ particular team. To construct a client:
 ```javascript
 import { Client } from '@infrablocks/concourse'
 
-const apiUrl = 'https://concourse.example.com/api/v1'
-const teamName = 'main'
+const url = 'https://concourse.example.com'
 const username = 'concourse-client'
 const password = 'super-secret-password'
+const teamName = 'main'
 
-const client = Client.instanceFor(apiUrl, teamName, username, password)
+const client = Client.instanceFor(url, username, password, teamName)
 ```
+
+Note, `teamName` only needs to be provided for a Concourse CI instance with a 
+version less than `4.0.0`.
 
 The client does not yet have full coverage of all available API endpoints, 
 (currently at 40% coverage) however that is the eventual goal. The methods 

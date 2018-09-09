@@ -101,10 +101,11 @@ describe('TeamClient', () => {
       const { client, mock, apiUrl, bearerToken, team } =
         buildValidTeamClient()
 
+      const originalTeamName = team.name
       const newTeamName = data.randomTeamName()
 
       mock.onPut(
-        `${apiUrl}/teams/${team.name}/rename`,
+        `${apiUrl}/teams/${originalTeamName}/rename`,
         {
           name: newTeamName
         })
@@ -115,7 +116,7 @@ describe('TeamClient', () => {
 
       const call = mock.history.put[0]
       expect(call.url)
-        .to.eql(`${apiUrl}/teams/${team.name}/rename`)
+        .to.eql(`${apiUrl}/teams/${originalTeamName}/rename`)
       expect(call.data).to.eql(`{"name":"${newTeamName}"}`)
       expect(call.headers)
         .to.include(bearerAuthHeader(bearerToken))

@@ -2,12 +2,11 @@ import { expect } from 'chai'
 
 import { Client } from '../src'
 
-const apiUrl = process.env.CONCOURSE_JS_INTEGRATION_API_URL
-const teamName = process.env.CONCOURSE_JS_INTEGRATION_TEAM_NAME
+const url = process.env.CONCOURSE_JS_INTEGRATION_URL
 const username = process.env.CONCOURSE_JS_INTEGRATION_USERNAME
 const password = process.env.CONCOURSE_JS_INTEGRATION_PASSWORD
 
-const client = Client.instanceFor(apiUrl, teamName, username, password)
+const client = Client.instanceFor(url, username, password)
 
 describe('Client', () => {
   it('fetches all pipelines', async () => {

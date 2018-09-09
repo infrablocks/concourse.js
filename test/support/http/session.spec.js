@@ -1,6 +1,8 @@
 import { expect } from 'chai'
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
+import formurlencoded from 'form-urlencoded'
+import { filter } from 'ramda'
 
 import data from '../../testsupport/data'
 import build from '../../testsupport/builders'
@@ -8,6 +10,7 @@ import build from '../../testsupport/builders'
 import { createSessionInterceptor }
   from '../../../src/support/http/session'
 import {
+  infoUrl, skyTokenUrl,
   teamAuthTokenUrl,
   teamBuildsUrl,
   teamPipelinesUrl
@@ -19,54 +22,123 @@ import {
 } from '../../../src/support/http/headers'
 
 describe('session interceptor', () => {
-  it('fetches token on first request when none provided',
-    async () => {
-      const apiUrl = data.randomApiUrl()
-      const teamName = data.randomTeamName()
-      const csrfToken = data.randomCsrfToken()
+  it('fetches token on first request when none provided and concourse ' +
+    'version is < 4',
+  async () => {
+    const concourseUrl = data.randomConcourseUrl()
+    const apiUrl = `${concourseUrl}/api/v1`
+    const teamName = data.randomTeamName()
+    const csrfToken = data.randomCsrfToken()
 
-      const credentials = {
-        username: data.randomUsername(),
-        password: data.randomPassword(),
-        url: teamAuthTokenUrl(apiUrl, teamName),
-        token: undefined
-      }
-      const httpClient = axios.create()
-      const mock = new MockAdapter(httpClient)
+    const credentials = {
+      username: data.randomUsername(),
+      password: data.randomPassword(),
+      tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
+      tokenUrlPostVersion4: skyTokenUrl(concourseUrl),
+      infoUrl: infoUrl(apiUrl),
+      token: undefined
+    }
+    const httpClient = axios.create()
+    const mock = new MockAdapter(httpClient)
 
-      const bearerToken = data.randomBearerToken({ csrf: csrfToken })
-      const authToken = build.api.authToken({ value: bearerToken })
+    const bearerToken = data.randomBearerToken({ csrf: csrfToken })
+    const authToken = build.api.authTokenPreVersion4({ value: bearerToken })
 
-      const interceptor = createSessionInterceptor({ credentials, httpClient })
+    const interceptor = createSessionInterceptor({ credentials, httpClient })
 
-      mock
-        .onGet(credentials.url, {
-          headers: {
-            ...basicAuthHeader(credentials.username, credentials.password)
-          }
-        })
-        .reply(200, authToken)
+    mock
+      .onGet(credentials.infoUrl)
+      .reply(200, build.api.info({
+        version: '3.14.1'
+      }))
 
-      const initialConfig = {
-        url: teamPipelinesUrl(apiUrl, teamName),
-        method: 'get'
-      }
-      const updatedConfig = await interceptor(initialConfig)
-      const expectedConfig = {
-        url: teamPipelinesUrl(apiUrl, teamName),
-        method: 'get',
+    mock
+      .onGet(credentials.tokenUrlPreVersion4, {
         headers: {
-          ...bearerAuthHeader(bearerToken),
-          ...csrfTokenHeader(csrfToken)
+          ...basicAuthHeader(credentials.username, credentials.password)
         }
-      }
+      })
+      .reply(200, authToken)
 
-      expect(updatedConfig).to.eql(expectedConfig)
+    const initialConfig = {
+      url: teamPipelinesUrl(apiUrl, teamName),
+      method: 'get'
+    }
+    const updatedConfig = await interceptor(initialConfig)
+    const expectedConfig = {
+      url: teamPipelinesUrl(apiUrl, teamName),
+      method: 'get',
+      headers: {
+        ...bearerAuthHeader(bearerToken),
+        ...csrfTokenHeader(csrfToken)
+      }
+    }
+
+    expect(updatedConfig).to.eql(expectedConfig)
+  })
+
+  it('fetches token on first request when none provided and concourse ' +
+    'version is >= 4',
+  async () => {
+    const concourseUrl = data.randomConcourseUrl()
+    const apiUrl = `${concourseUrl}/api/v1`
+    const teamName = data.randomTeamName()
+    const csrfToken = data.randomCsrfToken()
+
+    const credentials = {
+      username: data.randomUsername(),
+      password: data.randomPassword(),
+      tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
+      tokenUrlPostVersion4: skyTokenUrl(concourseUrl),
+      infoUrl: infoUrl(apiUrl),
+      token: undefined
+    }
+    const httpClient = axios.create()
+    const mock = new MockAdapter(httpClient)
+
+    const bearerToken = data.randomBearerToken({ csrf: csrfToken })
+    const authToken = build.api.authTokenPostVersion4({ accessToken: bearerToken })
+
+    const interceptor = createSessionInterceptor({ credentials, httpClient })
+
+    mock
+      .onGet(credentials.infoUrl)
+      .reply(200, build.api.info({
+        version: '4.0.0'
+      }))
+
+    const expectedData = formurlencoded({
+      grant_type: 'password',
+      username: credentials.username,
+      password: credentials.password,
+      scope: 'openid+profile+email+federated:id+groups'
     })
+
+    mock
+      .onPost(credentials.tokenUrlPostVersion4, expectedData)
+      .reply(200, authToken)
+
+    const initialConfig = {
+      url: teamPipelinesUrl(apiUrl, teamName),
+      method: 'get'
+    }
+    const updatedConfig = await interceptor(initialConfig)
+    const expectedConfig = {
+      url: teamPipelinesUrl(apiUrl, teamName),
+      method: 'get',
+      headers: {
+        ...bearerAuthHeader(bearerToken),
+        ...csrfTokenHeader(csrfToken)
+      }
+    }
+
+    expect(updatedConfig).to.eql(expectedConfig)
+  })
 
   it('does not fetch token if provided and still valid',
     async () => {
-      const apiUrl = data.randomApiUrl()
+      const concourseUrl = data.randomConcourseUrl()
+      const apiUrl = `${concourseUrl}/api/v1`
       const teamName = data.randomTeamName()
       const csrfToken = data.randomCsrfToken()
       const bearerToken = data.randomBearerToken({ csrf: csrfToken })
@@ -74,7 +146,9 @@ describe('session interceptor', () => {
       const credentials = {
         username: data.randomUsername(),
         password: data.randomPassword(),
-        url: teamAuthTokenUrl(apiUrl, teamName),
+        tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
+        tokenUrlPostVersion4: skyTokenUrl(concourseUrl),
+        infoUrl: infoUrl(apiUrl),
         token: bearerToken
       }
       const httpClient = axios.create()
@@ -100,26 +174,35 @@ describe('session interceptor', () => {
 
   it('does not fetch token on calls after the first if still valid',
     async () => {
-      const apiUrl = data.randomApiUrl()
+      const concourseUrl = data.randomConcourseUrl()
+      const apiUrl = `${concourseUrl}/api/v1`
       const teamName = data.randomTeamName()
       const csrfToken = data.randomCsrfToken()
 
       const credentials = {
         username: data.randomUsername(),
         password: data.randomPassword(),
-        url: teamAuthTokenUrl(apiUrl, teamName),
+        tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
+        tokenUrlPostVersion4: skyTokenUrl(concourseUrl),
+        infoUrl: infoUrl(apiUrl),
         token: undefined
       }
       const httpClient = axios.create()
       const mock = new MockAdapter(httpClient)
 
       const bearerToken = data.randomBearerToken({ csrf: csrfToken })
-      const authToken = build.api.authToken({ value: bearerToken })
+      const authToken = build.api.authTokenPreVersion4({ value: bearerToken })
 
       const interceptor = createSessionInterceptor({ credentials, httpClient })
 
       mock
-        .onGet(credentials.url, {
+        .onGet(credentials.infoUrl)
+        .reply(200, build.api.info({
+          version: '3.14.1'
+        }))
+
+      mock
+        .onGet(credentials.tokenUrlPreVersion4, {
           headers: {
             ...basicAuthHeader(credentials.username, credentials.password)
           }
@@ -156,11 +239,18 @@ describe('session interceptor', () => {
 
       expect(firstCallUpdatedConfig).to.eql(firstCallExpectedConfig)
       expect(secondCallUpdatedConfig).to.eql(secondCallExpectedConfig)
-      expect(mock.history.get).to.have.length(1)
+
+      const getRequests = mock.history.get
+      const tokenRequests = filter(
+        (request) => request.url === credentials.tokenUrlPreVersion4,
+        getRequests)
+
+      expect(tokenRequests).to.have.length(1)
     })
 
   it('retains existing headers', async () => {
-    const apiUrl = data.randomApiUrl()
+    const concourseUrl = data.randomConcourseUrl()
+    const apiUrl = `${concourseUrl}/api/v1`
     const teamName = data.randomTeamName()
     const csrfToken = data.randomCsrfToken()
     const bearerToken = data.randomBearerToken({ csrf: csrfToken })
@@ -168,7 +258,9 @@ describe('session interceptor', () => {
     const credentials = {
       username: data.randomUsername(),
       password: data.randomPassword(),
-      url: teamAuthTokenUrl(apiUrl, teamName),
+      tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
+      tokenUrlPostVersion4: skyTokenUrl(concourseUrl),
+      infoUrl: infoUrl(apiUrl),
       token: bearerToken
     }
     const httpClient = axios.create()
@@ -197,7 +289,8 @@ describe('session interceptor', () => {
   })
 
   it('re-fetches token after expiry', async () => {
-    const apiUrl = data.randomApiUrl()
+    const concourseUrl = data.randomConcourseUrl()
+    const apiUrl = `${concourseUrl}/api/v1`
     const teamName = data.randomTeamName()
     const oldCsrfToken = data.randomCsrfToken()
     const expiredBearerToken = data.randomBearerToken({
@@ -209,7 +302,9 @@ describe('session interceptor', () => {
     const credentials = {
       username: data.randomUsername(),
       password: data.randomPassword(),
-      url: teamAuthTokenUrl(apiUrl, teamName),
+      tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
+      tokenUrlPostVersion4: skyTokenUrl(concourseUrl),
+      infoUrl: infoUrl(apiUrl),
       token: expiredBearerToken
     }
     const httpClient = axios.create()
@@ -217,12 +312,18 @@ describe('session interceptor', () => {
 
     const newCsrfToken = data.randomCsrfToken()
     const newBearerToken = data.randomBearerToken({ csrf: newCsrfToken })
-    const newAuthToken = build.api.authToken({ value: newBearerToken })
+    const newAuthToken = build.api.authTokenPreVersion4({ value: newBearerToken })
 
     const interceptor = createSessionInterceptor({ credentials, httpClient })
 
     mock
-      .onGet(credentials.url, {
+      .onGet(credentials.infoUrl)
+      .reply(200, build.api.info({
+        version: '3.14.1'
+      }))
+
+    mock
+      .onGet(credentials.tokenUrlPreVersion4, {
         headers: {
           ...basicAuthHeader(credentials.username, credentials.password)
         }
@@ -247,26 +348,35 @@ describe('session interceptor', () => {
   })
 
   it('prevents concurrent token fetches', async () => {
-    const apiUrl = data.randomApiUrl()
+    const concourseUrl = data.randomConcourseUrl()
+    const apiUrl = `${concourseUrl}/api/v1`
     const teamName = data.randomTeamName()
     const csrfToken = data.randomCsrfToken()
 
     const credentials = {
       username: data.randomUsername(),
       password: data.randomPassword(),
-      url: teamAuthTokenUrl(apiUrl, teamName),
+      tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
+      tokenUrlPostVersion4: skyTokenUrl(concourseUrl),
+      infoUrl: infoUrl(apiUrl),
       token: undefined
     }
     const httpClient = axios.create()
     const mock = new MockAdapter(httpClient)
 
     const bearerToken = data.randomBearerToken({ csrf: csrfToken })
-    const authToken = build.api.authToken({ value: bearerToken })
+    const authToken = build.api.authTokenPreVersion4({ value: bearerToken })
 
     const interceptor = createSessionInterceptor({ credentials, httpClient })
 
     mock
-      .onGet(credentials.url, {
+      .onGet(credentials.infoUrl)
+      .reply(200, build.api.info({
+        version: '3.14.1'
+      }))
+
+    mock
+      .onGet(credentials.tokenUrlPreVersion4, {
         headers: {
           ...basicAuthHeader(credentials.username, credentials.password)
         }
@@ -292,6 +402,12 @@ describe('session interceptor', () => {
 
     expect(result1).to.eql(expectedConfig)
     expect(result2).to.eql(expectedConfig)
-    expect(mock.history.get).to.have.length(1)
+
+    const getRequests = mock.history.get
+    const tokenRequests = filter(
+      (request) => request.url === credentials.tokenUrlPreVersion4,
+      getRequests)
+
+    expect(tokenRequests).to.have.length(1)
   })
 })

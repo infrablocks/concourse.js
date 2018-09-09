@@ -6,7 +6,8 @@ import { randomLowerHex } from './helpers'
 
 import { toUnixTime } from '../../src/support/date'
 
-const randomApiUrl = () => faker.internet.url()
+const randomConcourseUrl = () => faker.internet.url()
+const randomApiUrl = () => `${randomConcourseUrl()}/api/v1`
 const randomUsername = () => faker.internet.userName(
   faker.name.firstName(),
   faker.name.lastName())
@@ -285,7 +286,9 @@ const randomVolume = (overrides = {}) => ({
 })
 
 export default {
+  randomConcourseUrl,
   randomApiUrl,
+
   randomUsername,
   randomPassword,
 
