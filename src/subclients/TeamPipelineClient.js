@@ -1,5 +1,5 @@
 import {
-  func,
+  func, integer,
   object,
   schemaFor,
   string,
@@ -7,6 +7,7 @@ import {
   validateOptions
 } from '../support/validation'
 import {
+  teamPipelineBuildsUrl,
   teamPipelineJobsUrl,
   teamPipelineJobUrl,
   teamPipelinePauseUrl, teamPipelineRenameUrl,
@@ -20,6 +21,7 @@ import { parseJson } from '../support/http/transformers'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
 import TeamPipelineJobClient from './TeamPipelineJobClient'
 import TeamPipelineResourceClient from './TeamPipelineResourceClient'
+import { isNil, reject } from 'ramda'
 
 class TeamPipelineClient {
   constructor (options) {
@@ -179,6 +181,32 @@ class TeamPipelineClient {
         { transformResponse: [parseJson, camelcaseKeysDeep] })
 
     return resourceTypes
+  }
+
+  async listBuilds (options = {}) {
+    const validatedOptions = validateOptions(
+      schemaFor({
+        limit: integer().min(1),
+        since: integer().min(1),
+        until: integer().min(1)
+      }), options)
+
+    const params = reject(isNil, {
+      limit: validatedOptions.limit,
+      since: validatedOptions.since,
+      until: validatedOptions.until
+    })
+
+    const { data: builds } = await this.httpClient
+      .get(
+        teamPipelineBuildsUrl(
+          this.apiUrl, this.team.name, this.pipeline.name),
+        {
+          params,
+          transformResponse: [parseJson, camelcaseKeysDeep]
+        })
+
+    return builds
   }
 }
 

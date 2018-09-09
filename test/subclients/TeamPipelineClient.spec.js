@@ -678,4 +678,160 @@ describe('TeamPipelineClient', () => {
         expect(actualResourceTypes).to.eql(expectedResourceTypes)
       })
   })
+
+  describe('listBuilds', () => {
+    it('gets all builds for team pipeline',
+      async () => {
+        const { client, mock, apiUrl, bearerToken, team, pipeline } =
+          buildValidTeamPipelineClient()
+
+        const teamName = team.name
+        const pipelineName = pipeline.name
+        const buildData = data.randomBuild({ teamName, pipelineName })
+
+        const buildFromApi = build.api.build(buildData)
+        const buildsFromApi = [buildFromApi]
+
+        const convertedBuild = build.client.build(buildData)
+        const expectedBuilds = [convertedBuild]
+
+        mock.onGet(
+          `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/builds`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            }
+          })
+          .reply(200, buildsFromApi)
+
+        const actualBuilds = await client.listBuilds()
+
+        expect(actualBuilds).to.eql(expectedBuilds)
+      })
+
+    it('uses provided page options when supplied',
+      async () => {
+        const { client, mock, apiUrl, bearerToken, team, pipeline } =
+          buildValidTeamPipelineClient()
+
+        const teamName = team.name
+        const pipelineName = pipeline.name
+        const buildData = data.randomBuild({ teamName, pipelineName })
+
+        const buildFromApi = build.api.build(buildData)
+        const buildsFromApi = [buildFromApi]
+
+        const convertedBuild = build.client.build(buildData)
+        const expectedBuilds = [convertedBuild]
+
+        mock.onGet(
+          `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/builds`,
+          {
+            headers: {
+              ...bearerAuthHeader(bearerToken)
+            },
+            params: {
+              limit: 20,
+              since: 123,
+              until: 456
+            }
+          })
+          .reply(200, buildsFromApi)
+
+        const actualBuilds = await client.listBuilds({
+          limit: 20,
+          since: 123,
+          until: 456
+        })
+
+        expect(actualBuilds).to.eql(expectedBuilds)
+      })
+
+    it('throws an exception if the value provided for limit is not a number',
+      async () => {
+        const { client } = buildValidTeamPipelineClient()
+        await forInstance(client)
+          .onCallOf('listBuilds')
+          .withArguments({ limit: 'badger' })
+          .throwsError('Invalid parameter(s): ["limit" must be a number].')
+      })
+
+    it('throws an exception if the value provided for limit is not an integer',
+      async () => {
+        const { client } = buildValidTeamPipelineClient()
+        await forInstance(client)
+          .onCallOf('listBuilds')
+          .withArguments({ limit: 32.654 })
+          .throwsError('Invalid parameter(s): ["limit" must be an integer].')
+      })
+
+    it('throws an exception if the value provided for limit is less than 1',
+      async () => {
+        const { client } = buildValidTeamPipelineClient()
+        await forInstance(client)
+          .onCallOf('listBuilds')
+          .withArguments({ limit: -20 })
+          .throwsError(
+            'Invalid parameter(s): [' +
+            '"limit" must be larger than or equal to 1].')
+      })
+
+    it('throws an exception if the value provided for since is not a number',
+      async () => {
+        const { client } = buildValidTeamPipelineClient()
+        await forInstance(client)
+          .onCallOf('listBuilds')
+          .withArguments({ since: 'badger' })
+          .throwsError('Invalid parameter(s): ["since" must be a number].')
+      })
+
+    it('throws an exception if the value provided for since is not an integer',
+      async () => {
+        const { client } = buildValidTeamPipelineClient()
+        await forInstance(client)
+          .onCallOf('listBuilds')
+          .withArguments({ since: 32.654 })
+          .throwsError('Invalid parameter(s): ["since" must be an integer].')
+      })
+
+    it('throws an exception if the value provided for since is less than 1',
+      async () => {
+        const { client } = buildValidTeamPipelineClient()
+        await forInstance(client)
+          .onCallOf('listBuilds')
+          .withArguments({ since: -20 })
+          .throwsError(
+            'Invalid parameter(s): [' +
+            '"since" must be larger than or equal to 1].')
+      })
+
+    it('throws an exception if the value provided for until is not a number',
+      async () => {
+        const { client } = buildValidTeamPipelineClient()
+        await forInstance(client)
+          .onCallOf('listBuilds')
+          .withArguments({ until: 'badger' })
+          .throwsError('Invalid parameter(s): ["until" must be a number].')
+      })
+
+    it('throws an exception if the value provided for until is not an integer',
+      async () => {
+        const { client } = buildValidTeamPipelineClient()
+        await forInstance(client)
+          .onCallOf('listBuilds')
+          .withArguments({ until: 32.654 })
+          .throwsError('Invalid parameter(s): ["until" must be an integer].')
+      })
+
+    it('throws an exception if the value provided for until is less than 1',
+      async () => {
+        const { client } = buildValidTeamPipelineClient()
+        await forInstance(client)
+          .onCallOf('listBuilds')
+          .withArguments({ until: -20 })
+          .throwsError(
+            'Invalid parameter(s): [' +
+            '"until" must be larger than or equal to 1].')
+      })
+  })
 })

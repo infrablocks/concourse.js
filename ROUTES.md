@@ -32,7 +32,7 @@
 | DeletePipeline                | DELETE | /api/v1/teams/:team_name/pipelines/:pipeline_name                                                                  | Done     |
 | GetPipeline                   | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name                                                                  | Done     |
 | PipelineBadge                 | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/badge                                                            | Later    |
-| ListPipelineBuilds            | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/builds                                                           | Now      |
+| ListPipelineBuilds            | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/builds                                                           | Done     |
 | CreatePipelineBuild           | POST   | /api/v1/teams/:team_name/pipelines/:pipeline_name/builds                                                           | Now      |
 | GetConfig                     | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/config                                                           | Later    |
 | SaveConfig                    | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/config                                                           | Later    |

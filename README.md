@@ -130,6 +130,8 @@ currently supported are detailed below.
   `TeamPipelineResourceClient`.
 * `TeamPipelineClient#listResourceTypes()` - Returns an array of team pipeline 
   resource types.
+* `TeamPipelineClient#listBuilds()` - Returns an array of team pipeline 
+  builds.
 
 ### `TeamPipelineJobClient` Methods
 
