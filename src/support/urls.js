@@ -40,6 +40,10 @@ export const teamPipelinesUrl = (apiUrl, teamName) =>
   `${apiUrl}/teams/${teamName}/pipelines`
 export const teamPipelineUrl = (apiUrl, teamName, pipelineName) =>
   `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}`
+export const teamPipelinePauseUrl = (apiUrl, teamName, pipelineName) =>
+  `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/pause`
+export const teamPipelineUnpauseUrl = (apiUrl, teamName, pipelineName) =>
+  `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/unpause`
 
 export const teamBuildsUrl = (apiUrl, teamName) =>
   `${apiUrl}/teams/${teamName}/builds`

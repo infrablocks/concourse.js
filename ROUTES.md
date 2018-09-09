@@ -47,7 +47,7 @@
 | ListJobInputs                 | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/inputs                                            | Done     |
 | PauseJob                      | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/pause                                             | Now      |
 | UnpauseJob                    | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/unpause                                           | Now      |
-| PausePipeline                 | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/pause                                                            | Now      |
+| PausePipeline                 | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/pause                                                            | Done     |
 | RenamePipeline                | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/rename                                                           | Now      |
 | ListResourceTypes             | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resource-types                                                   | Done     |
 | ListResources                 | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources                                                        | Done     |
@@ -63,7 +63,7 @@
 | EnableResourceVersion         | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_version_id/enable    | Later    |
 | ListBuildsWithVersionAsInput  | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_version_id/input_to  | Done     |
 | ListBuildsWithVersionAsOutput | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_version_id/output_of | Done     |
-| UnpausePipeline               | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/unpause                                                          | Now      |
+| UnpausePipeline               | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/unpause                                                          | Done     |
 | GetVersionsDB                 | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/versions-db                                                      | Later    |
 | OrderPipelines                | PUT    | /api/v1/teams/:team_name/pipelines/ordering                                                                        | Later    |
 | RenameTeam                    | PUT    | /api/v1/teams/:team_name/rename                                                                                    | Done     |

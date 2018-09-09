@@ -109,6 +109,8 @@ currently supported are detailed below.
 
 ### `TeamPipelineClient` Methods
 
+* `TeamPipelineClient#pause()` - Pauses the pipeline.
+* `TeamPipelineClient#unpause()` - Unpauses the pipeline.
 * `TeamPipelineClient#delete()` - Deletes the pipeline.
 * `TeamPipelineClient#listJobs()` - Returns an array of team pipeline jobs.
 * `TeamPipelineClient#getJob(jobName)` - Returns the team pipeline job 

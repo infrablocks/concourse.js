@@ -127,6 +127,95 @@ describe('TeamPipelineClient', () => {
     })
   })
 
+  describe('pause', () => {
+    it('pauses the pipeline',
+      async () => {
+        const { client, mock, apiUrl, bearerToken, team, pipeline } =
+          buildValidTeamPipelineClient()
+
+        const teamName = team.name
+        const pipelineName = pipeline.name
+
+        mock.onPut(
+          `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/pause`)
+          .reply(200)
+
+        await client.pause()
+        expect(mock.history.put).to.have.length(1)
+
+        const call = mock.history.put[0]
+        expect(call.url)
+          .to.eql(`${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/pause`)
+        expect(call.headers)
+          .to.include(bearerAuthHeader(bearerToken))
+      })
+
+    it('throws the underlying http client exception on failure',
+      async () => {
+        const { client, mock, apiUrl, team, pipeline } =
+          buildValidTeamPipelineClient()
+
+        const teamName = team.name
+        const pipelineName = pipeline.name
+
+        mock.onPut(
+          `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/pause`)
+          .networkError()
+
+        try {
+          await client.pause()
+        } catch (e) {
+          expect(e).to.be.instanceOf(Error)
+          expect(e.message).to.eql('Network Error')
+        }
+      })
+  })
+
+  describe('unpause', () => {
+    it('unpauses the pipeline',
+      async () => {
+        const { client, mock, apiUrl, bearerToken, team, pipeline } =
+          buildValidTeamPipelineClient()
+
+        const teamName = team.name
+        const pipelineName = pipeline.name
+
+        mock.onPut(
+          `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/unpause`)
+          .reply(200)
+
+        await client.unpause()
+        expect(mock.history.put).to.have.length(1)
+
+        const call = mock.history.put[0]
+        expect(call.url)
+          .to.eql(
+            `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/unpause`)
+        expect(call.headers)
+          .to.include(bearerAuthHeader(bearerToken))
+      })
+
+    it('throws the underlying http client exception on failure',
+      async () => {
+        const { client, mock, apiUrl, team, pipeline } =
+          buildValidTeamPipelineClient()
+
+        const teamName = team.name
+        const pipelineName = pipeline.name
+
+        mock.onPut(
+          `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/unpause`)
+          .networkError()
+
+        try {
+          await client.unpause()
+        } catch (e) {
+          expect(e).to.be.instanceOf(Error)
+          expect(e.message).to.eql('Network Error')
+        }
+      })
+  })
+
   describe('delete', () => {
     it('deletes the pipeline',
       async () => {
