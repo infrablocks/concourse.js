@@ -36,7 +36,7 @@ Note, `teamName` only needs to be provided for a Concourse CI instance with a
 version less than `4.0.0`.
 
 The client does not yet have full coverage of all available API endpoints, 
-(currently at 43% coverage) however that is the eventual goal. The methods 
+(currently at 45% coverage) however that is the eventual goal. The methods 
 currently supported are detailed below.
 
 ### `Client` Methods 
@@ -109,8 +109,8 @@ currently supported are detailed below.
 
 ### `TeamPipelineClient` Methods
 
-* `TeamPipelineClient#pause()` - Pauses the pipeline.
-* `TeamPipelineClient#unpause()` - Unpauses the pipeline.
+* `TeamPipelineClient#pause()` - Pauses the team pipeline.
+* `TeamPipelineClient#unpause()` - Unpauses the team pipeline.
 * `TeamPipelineClient#delete()` - Deletes the pipeline.
 * `TeamPipelineClient#listJobs()` - Returns an array of team pipeline jobs.
 * `TeamPipelineClient#getJob(jobName)` - Returns the team pipeline job 
@@ -131,6 +131,8 @@ currently supported are detailed below.
 
 ### `TeamPipelineJobClient` Methods
 
+* `TeamPipelineJobClient#pause()` - Pauses the team pipeline job.
+* `TeamPipelineJobClient#unpause()` - Unpauses the team pipeline job.
 * `TeamPipelineJobClient#listBuilds()` - Returns an array of team pipeline job 
   builds.
 * `TeamPipelineJobClient#getBuild(buildName)` - Returns the team pipeline job 

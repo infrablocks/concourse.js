@@ -63,6 +63,14 @@ export const teamPipelineJobsUrl = (apiUrl, teamName, pipelineName) =>
   `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/jobs`
 export const teamPipelineJobUrl = (apiUrl, teamName, pipelineName, jobName) =>
   `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/jobs/${jobName}`
+export const teamPipelineJobPauseUrl =
+  (apiUrl, teamName, pipelineName, jobName) =>
+    `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}` +
+    `/jobs/${jobName}/pause`
+export const teamPipelineJobUnpauseUrl =
+  (apiUrl, teamName, pipelineName, jobName) =>
+    `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/` +
+    `jobs/${jobName}/unpause`
 
 export const teamPipelineJobBuildsUrl =
   (apiUrl, teamName, pipelineName, jobName) =>

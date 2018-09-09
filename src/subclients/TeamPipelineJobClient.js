@@ -8,7 +8,9 @@ import {
 import {
   teamPipelineJobBuildsUrl,
   teamPipelineJobBuildUrl,
-  teamPipelineJobInputsUrl
+  teamPipelineJobInputsUrl,
+  teamPipelineJobPauseUrl,
+  teamPipelineJobUnpauseUrl
 } from '../support/urls'
 import { parseJson } from '../support/http/transformers'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
@@ -29,6 +31,24 @@ class TeamPipelineJobClient {
     this.team = validatedOptions.team
     this.pipeline = validatedOptions.pipeline
     this.job = validatedOptions.job
+  }
+
+  async pause () {
+    await this.httpClient.put(
+      teamPipelineJobPauseUrl(
+        this.apiUrl,
+        this.team.name,
+        this.pipeline.name,
+        this.job.name))
+  }
+
+  async unpause () {
+    await this.httpClient.put(
+      teamPipelineJobUnpauseUrl(
+        this.apiUrl,
+        this.team.name,
+        this.pipeline.name,
+        this.job.name))
   }
 
   async listBuilds () {
