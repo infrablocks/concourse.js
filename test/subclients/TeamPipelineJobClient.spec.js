@@ -160,7 +160,7 @@ describe('TeamPipelineJobClient', () => {
   })
 
   describe('pause', () => {
-    it('pauses the pipeline',
+    it('pauses the job',
       async () => {
         const { client, mock, apiUrl, bearerToken, team, pipeline, job } =
           buildValidTeamPipelineJobClient()
@@ -210,7 +210,7 @@ describe('TeamPipelineJobClient', () => {
   })
 
   describe('unpause', () => {
-    it('unpauses the pipeline',
+    it('unpauses the job',
       async () => {
         const { client, mock, apiUrl, bearerToken, team, pipeline, job } =
           buildValidTeamPipelineJobClient()

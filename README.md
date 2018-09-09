@@ -36,7 +36,7 @@ Note, `teamName` only needs to be provided for a Concourse CI instance with a
 version less than `4.0.0`.
 
 The client does not yet have full coverage of all available API endpoints, 
-(currently at 45% coverage) however that is the eventual goal. The methods 
+(currently at 48% coverage) however that is the eventual goal. The methods 
 currently supported are detailed below.
 
 ### `Client` Methods 
@@ -142,6 +142,8 @@ currently supported are detailed below.
   
 ### `TeamPipelineResourceClient` Methods
   
+* `TeamPipelineResourceClient#pause()` - Pauses the team pipeline resource.
+* `TeamPipelineResourceClient#unpause()` - Unpauses the team pipeline resource.  
 * `TeamPipelineResourceClient#listVersions(options = {})` - Returns an array of 
   team pipeline resource versions. The `options` map can contain:
   * `limit` - the number of versions to include in the response (integral, > 1).

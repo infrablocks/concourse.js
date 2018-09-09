@@ -7,6 +7,8 @@ import {
 } from '../support/validation'
 import { isNil, reject } from 'ramda'
 import {
+  teamPipelineResourcePauseUrl,
+  teamPipelineResourceUnpauseUrl,
   teamPipelineResourceVersionsUrl,
   teamPipelineResourceVersionUrl
 } from '../support/urls'
@@ -31,6 +33,24 @@ class TeamPipelineResourceClient {
     this.team = validatedOptions.team
     this.pipeline = validatedOptions.pipeline
     this.resource = validatedOptions.resource
+  }
+
+  async pause () {
+    await this.httpClient.put(
+      teamPipelineResourcePauseUrl(
+        this.apiUrl,
+        this.team.name,
+        this.pipeline.name,
+        this.resource.name))
+  }
+
+  async unpause () {
+    await this.httpClient.put(
+      teamPipelineResourceUnpauseUrl(
+        this.apiUrl,
+        this.team.name,
+        this.pipeline.name,
+        this.resource.name))
   }
 
   async listVersions (options = {}) {

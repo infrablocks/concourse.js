@@ -54,8 +54,8 @@
 | GetResource                   | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name                                         | Done     |
 | CheckResource                 | POST   | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/check                                   | Later    |
 | CheckResourceWebHook          | POST   | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/check/webhook                           | Later    |
-| PauseResource                 | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/pause                                   | Now      |
-| UnpauseResource               | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/unpause                                 | Now      |
+| PauseResource                 | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/pause                                   | Done     |
+| UnpauseResource               | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/unpause                                 | Done     |
 | ListResourceVersions          | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions                                | Done     |
 | GetResourceVersion            | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_version_id           | Done     |
 | GetResourceCausality          | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_version_id/causality | Done     |

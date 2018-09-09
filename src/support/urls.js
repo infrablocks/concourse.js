@@ -91,6 +91,14 @@ export const teamPipelineResourceUrl =
   (apiUrl, teamName, pipelineName, resourceName) =>
     `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}` +
     `/resources/${resourceName}`
+export const teamPipelineResourcePauseUrl =
+  (apiUrl, teamName, pipelineName, resourceName) =>
+    `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}` +
+    `/resources/${resourceName}/pause`
+export const teamPipelineResourceUnpauseUrl =
+  (apiUrl, teamName, pipelineName, resourceName) =>
+    `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/` +
+    `resources/${resourceName}/unpause`
 
 export const teamPipelineResourceTypesUrl = (apiUrl, teamName, pipelineName) =>
   `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/resource-types`
