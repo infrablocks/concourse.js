@@ -165,6 +165,43 @@ describe('TeamClient', () => {
       })
   })
 
+  describe('destroy', () => {
+    it('destroys the team', async () => {
+      const { client, mock, apiUrl, bearerToken, team } =
+        buildValidTeamClient()
+
+      mock.onDelete(
+        `${apiUrl}/teams/${team.name}`)
+        .reply(204)
+
+      await client.destroy()
+      expect(mock.history.delete).to.have.length(1)
+
+      const call = mock.history.delete[0]
+      expect(call.url)
+        .to.eql(`${apiUrl}/teams/${team.name}`)
+      expect(call.headers)
+        .to.include(bearerAuthHeader(bearerToken))
+    })
+
+    it('throws the underlying http client exception on failure',
+      async () => {
+        const { client, mock, apiUrl, team } =
+          buildValidTeamClient()
+
+        mock.onDelete(
+          `${apiUrl}/teams/${team.name}`)
+          .networkError()
+
+        try {
+          await client.destroy()
+        } catch (e) {
+          expect(e).to.be.instanceOf(Error)
+          expect(e.message).to.eql('Network Error')
+        }
+      })
+  })
+
   describe('listBuilds', () => {
     it('gets all builds for team',
       async () => {

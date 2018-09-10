@@ -80,6 +80,7 @@ currently supported are detailed below.
 
 * `TeamClient#rename(newTeamName)` - Renames the team to the provided 
   `newTeamName`.
+* `TeamClient#destroy()` - Destroys the team.
 * `TeamClient#listPipelines()` - Returns an array of team pipelines.
 * `TeamClient#getPipeline(pipelineName)` - Returns the team pipeline specified 
   by `pipelineName`.

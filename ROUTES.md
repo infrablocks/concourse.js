@@ -21,7 +21,7 @@
 | MainJobBadge                  | GET    | /api/v1/pipelines/:pipeline_name/jobs/:job_name/badge                                                              | Later    |
 | ListAllResources              | GET    | /api/v1/resources                                                                                                  | Done     |
 | ListTeams                     | GET    | /api/v1/teams                                                                                                      | Done     |
-| DestroyTeam                   | DELETE | /api/v1/teams/:team_name                                                                                           | Now      |
+| DestroyTeam                   | DELETE | /api/v1/teams/:team_name                                                                                           | Done     |
 | SetTeam                       | PUT    | /api/v1/teams/:team_name                                                                                           | Done     |
 | ListTeamBuilds                | GET    | /api/v1/teams/:team_name/builds                                                                                    | Done     |
 | CreateBuild                   | POST   | /api/v1/teams/:team_name/builds                                                                                    | Now      |

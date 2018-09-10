@@ -16,7 +16,7 @@ import {
   teamContainersUrl,
   teamContainerUrl,
   teamPipelinesUrl,
-  teamPipelineUrl, teamRenameUrl,
+  teamPipelineUrl, teamRenameUrl, teamUrl,
   teamVolumesUrl
 } from '../support/urls'
 import { parseJson } from '../support/http/transformers'
@@ -48,6 +48,11 @@ export default class TeamClient {
       })
 
     this.team.name = newTeamName
+  }
+
+  async destroy () {
+    await this.httpClient
+      .delete(teamUrl(this.apiUrl, this.team.name))
   }
 
   async listBuilds (options = {}) {
