@@ -93,12 +93,12 @@ export default class Client {
     return team
   }
 
-  async forTeam (teamId) {
+  async forTeam (teamName) {
     const teams = await this.listTeams()
-    const team = find(propEq('id', teamId), teams)
+    const team = find(propEq('name', teamName), teams)
 
     if (!team) {
-      throw new Error(`No team for ID: ${teamId}`)
+      throw new Error(`No team for name: ${teamName}`)
     }
 
     return new TeamClient({

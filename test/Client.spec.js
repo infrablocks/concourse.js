@@ -288,16 +288,16 @@ describe('Client', () => {
   })
 
   describe('forTeam', () => {
-    it('returns a client for the team with the supplied ID when the team ' +
+    it('returns a client for the team with the supplied name when the team ' +
       'exists',
     async () => {
       const { client, mock, apiUrl, bearerToken, httpClient } =
           buildValidClient()
 
-      const teamId = data.randomId()
+      const teamName = data.randomTeamName()
 
       const teamData = data.randomTeam({
-        id: teamId
+        name: teamName
       })
 
       const firstTeamFromApi = build.api.team(teamData)
@@ -315,18 +315,18 @@ describe('Client', () => {
         })
         .reply(200, teamsFromApi)
 
-      const teamClient = await client.forTeam(teamId)
+      const teamClient = await client.forTeam(teamName)
 
       expect(teamClient.apiUrl).to.equal(apiUrl)
       expect(teamClient.httpClient).to.equal(httpClient)
       expect(teamClient.team).to.eql(expectedTeam)
     })
 
-    it('throws an exception if no team exists for the supplied ID',
+    it('throws an exception if no team exists for the supplied name',
       async () => {
         const { client, mock, apiUrl, bearerToken } = buildValidClient()
 
-        const teamId = data.randomId()
+        const teamName = data.randomTeamName()
 
         const firstTeamFromApi = build.api.team(data.randomTeam())
         const secondTeamFromApi = build.api.team(data.randomTeam())
@@ -342,11 +342,11 @@ describe('Client', () => {
           .reply(200, teamsFromApi)
 
         try {
-          await client.forTeam(teamId)
+          await client.forTeam(teamName)
           expect.fail('Expected exception but none was thrown.')
         } catch (e) {
           expect(e).to.be.an.instanceof(Error)
-          expect(e.message).to.eql(`No team for ID: ${teamId}`)
+          expect(e.message).to.eql(`No team for name: ${teamName}`)
         }
       })
   })

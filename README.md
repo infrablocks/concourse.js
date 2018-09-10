@@ -49,8 +49,8 @@ currently supported are detailed below.
     team, e.g., `local:fred` or `github:bob`.
   * `groups`: an array of strings identifying groups that have access to this
     team, e.g., `github:organisation`.
-* `Client#forTeam(teamId)` - Returns a `TeamClient` for the team specified by 
-  `teamId`. See below for more details of the methods supported on `TeamClient`.
+* `Client#forTeam(teamName)` - Returns a `TeamClient` for the team specified by 
+  `teamName`. See below for more details of the methods supported on `TeamClient`.
 * `Client#listWorkers()` - Returns an array of all workers.
 * `Client#forWorker(workerName)` - Returns a `WorkerClient` for the worker
   specified by `workerName`. See below for more details of the methods 
