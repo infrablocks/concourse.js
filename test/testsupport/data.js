@@ -149,9 +149,27 @@ const randomWorker = (overrides = {}) => ({
   ...overrides
 })
 
+const randomTeamAuthenticationUser = () => faker.random.arrayElement(
+  [
+    'local:administrator',
+    'github:some-user-1',
+    'github:some-user-2',
+    'local:other'
+  ])
+const randomTeamAuthenticationGroup = () => faker.random.arrayElement(
+  [
+    'github:some-org-1',
+    'github:some-org-2'
+  ])
+const randomTeamAuthentication = (overrides = {}) => ({
+  users: [randomTeamAuthenticationUser(), randomTeamAuthenticationUser()],
+  groups: [randomTeamAuthenticationGroup(), randomTeamAuthenticationGroup()],
+  ...overrides
+})
 const randomTeam = (overrides = {}) => ({
   id: randomId(),
   name: randomTeamName(),
+  auth: randomTeamAuthentication(),
   ...overrides
 })
 
@@ -301,6 +319,9 @@ export default {
 
   randomTeam,
   randomTeamName,
+  randomTeamAuthentication,
+  randomTeamAuthenticationUser,
+  randomTeamAuthenticationGroup,
 
   randomBuildName,
   randomBuild,

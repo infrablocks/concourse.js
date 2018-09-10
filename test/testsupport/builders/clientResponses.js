@@ -7,13 +7,24 @@ export const info =
     workerVersion
   })
 
+export const teamAuthentication =
+  ({
+    users = ['local:some-user'],
+    groups = ['github:some-group']
+  } = {}) => ({
+    users,
+    groups
+  })
+
 export const team =
   ({
     id = 1,
-    name = 'example-team'
+    name = 'example-team',
+    auth = teamAuthentication()
   } = {}) => ({
     id,
-    name
+    name,
+    auth
   })
 
 export const pipeline =

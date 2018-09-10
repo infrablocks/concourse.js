@@ -7,7 +7,7 @@ import {
   integer,
   uri,
   schemaFor,
-  validateOptions
+  validateOptions, array, string
 } from './support/validation'
 import {
   apiUrl as apiUrlFor,
@@ -20,7 +20,8 @@ import {
   buildUrl,
   infoUrl,
   teamAuthTokenUrl,
-  skyTokenUrl
+  skyTokenUrl,
+  teamUrl
 } from './support/urls'
 import { createHttpClient } from './support/http/factory'
 import { parseJson } from './support/http/transformers'
@@ -69,6 +70,27 @@ export default class Client {
       })
 
     return teams
+  }
+
+  async setTeam (teamName, options = {}) {
+    const validatedOptions = validateOptions(
+      schemaFor({
+        users: array().items(string()).default([]),
+        groups: array().items(string()).default([])
+      }), options)
+
+    const { data: team } = await this.httpClient
+      .put(
+        teamUrl(this.apiUrl, teamName),
+        {
+          auth: {
+            users: validatedOptions.users,
+            groups: validatedOptions.groups
+          }
+        },
+        { transformResponse: [parseJson, camelcaseKeysDeep] })
+
+    return team
   }
 
   async forTeam (teamId) {

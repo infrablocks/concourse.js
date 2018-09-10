@@ -113,6 +113,180 @@ describe('Client', () => {
       })
   })
 
+  describe('setTeam', () => {
+    it('sets the team with the provided name and user and group configuration',
+      async () => {
+        const { client, mock, apiUrl, bearerToken } =
+          buildValidClient()
+
+        const teamName = data.randomTeamName()
+        const teamAuthenticationUsersData = [
+          data.randomTeamAuthenticationUser(),
+          data.randomTeamAuthenticationUser()
+        ]
+        const teamAuthenticationGroupsData = [
+          data.randomTeamAuthenticationGroup(),
+          data.randomTeamAuthenticationGroup()
+        ]
+        const teamAuthenticationData = data.randomTeamAuthentication({
+          users: teamAuthenticationUsersData,
+          groups: teamAuthenticationGroupsData
+        })
+
+        const teamApiRequest = {
+          auth: teamAuthenticationData
+        }
+        const teamApiResponse = build.api.team({
+          name: teamName,
+          auth: teamAuthenticationData
+        })
+        const expectedTeam = build.client.team({
+          name: teamName,
+          auth: teamAuthenticationData
+        })
+
+        mock.onPut(
+          `${apiUrl}/teams/${teamName}`,
+          teamApiRequest)
+          .reply(201, teamApiResponse)
+
+        const actualTeam = await client.setTeam(
+          teamName, teamAuthenticationData)
+
+        expect(actualTeam).to.eql(expectedTeam)
+        expect(mock.history.put).to.have.length(1)
+
+        const call = mock.history.put[0]
+        expect(call.url).to.eql(`${apiUrl}/teams/${teamName}`)
+        expect(call.headers)
+          .to.include(bearerAuthHeader(bearerToken))
+      })
+
+    it('defaults to no users when none provided', async () => {
+      const { client, mock, apiUrl, bearerToken } =
+        buildValidClient()
+
+      const teamName = data.randomTeamName()
+      const teamAuthenticationGroupsData = [
+        data.randomTeamAuthenticationGroup(),
+        data.randomTeamAuthenticationGroup()
+      ]
+      const teamAuthenticationData = data.randomTeamAuthentication({
+        users: [],
+        groups: teamAuthenticationGroupsData
+      })
+
+      const teamApiRequest = {
+        auth: teamAuthenticationData
+      }
+      const teamApiResponse = build.api.team({
+        name: teamName,
+        auth: teamAuthenticationData
+      })
+      const expectedTeam = build.client.team({
+        name: teamName,
+        auth: teamAuthenticationData
+      })
+
+      mock.onPut(
+        `${apiUrl}/teams/${teamName}`,
+        teamApiRequest)
+        .reply(201, teamApiResponse)
+
+      const actualTeam = await client.setTeam(
+        teamName, { groups: teamAuthenticationGroupsData })
+
+      expect(actualTeam).to.eql(expectedTeam)
+      expect(mock.history.put).to.have.length(1)
+
+      const call = mock.history.put[0]
+      expect(call.url).to.eql(`${apiUrl}/teams/${teamName}`)
+      expect(call.headers)
+        .to.include(bearerAuthHeader(bearerToken))
+    })
+
+    it('defaults to no groups when none provided', async () => {
+      const { client, mock, apiUrl, bearerToken } =
+        buildValidClient()
+
+      const teamName = data.randomTeamName()
+      const teamAuthenticationUsersData = [
+        data.randomTeamAuthenticationUser(),
+        data.randomTeamAuthenticationUser()
+      ]
+      const teamAuthenticationData = data.randomTeamAuthentication({
+        users: teamAuthenticationUsersData,
+        groups: []
+      })
+
+      const teamApiRequest = {
+        auth: teamAuthenticationData
+      }
+      const teamApiResponse = build.api.team({
+        name: teamName,
+        auth: teamAuthenticationData
+      })
+      const expectedTeam = build.client.team({
+        name: teamName,
+        auth: teamAuthenticationData
+      })
+
+      mock.onPut(
+        `${apiUrl}/teams/${teamName}`,
+        teamApiRequest)
+        .reply(201, teamApiResponse)
+
+      const actualTeam = await client.setTeam(
+        teamName, { users: teamAuthenticationUsersData })
+
+      expect(actualTeam).to.eql(expectedTeam)
+      expect(mock.history.put).to.have.length(1)
+
+      const call = mock.history.put[0]
+      expect(call.url).to.eql(`${apiUrl}/teams/${teamName}`)
+      expect(call.headers)
+        .to.include(bearerAuthHeader(bearerToken))
+    })
+
+    it('throws an exception if the value provided for users is not an array',
+      async () => {
+        const { client } = buildValidClient()
+        await forInstance(client)
+          .onCallOf('setTeam')
+          .withArguments(data.randomTeamName(), { users: 32.654 })
+          .throwsError('Invalid parameter(s): ["users" must be an array].')
+      })
+
+    it('throws an exception if the array provided for users does not ' +
+      'contain strings',
+    async () => {
+      const { client } = buildValidClient()
+      await forInstance(client)
+        .onCallOf('setTeam')
+        .withArguments(data.randomTeamName(), { users: [32.654] })
+        .throwsError('Invalid parameter(s): ["0" must be a string].')
+    })
+
+    it('throws an exception if the value provided for groups is not an array',
+      async () => {
+        const { client } = buildValidClient()
+        await forInstance(client)
+          .onCallOf('setTeam')
+          .withArguments(data.randomTeamName(), { groups: 32.654 })
+          .throwsError('Invalid parameter(s): ["groups" must be an array].')
+      })
+
+    it('throws an exception if the array provided for groups does not ' +
+      'contain strings',
+    async () => {
+      const { client } = buildValidClient()
+      await forInstance(client)
+        .onCallOf('setTeam')
+        .withArguments(data.randomTeamName(), { groups: [32.654] })
+        .throwsError('Invalid parameter(s): ["0" must be a string].')
+    })
+  })
+
   describe('forTeam', () => {
     it('returns a client for the team with the supplied ID when the team ' +
       'exists',

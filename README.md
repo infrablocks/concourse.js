@@ -43,6 +43,12 @@ currently supported are detailed below.
 
 * `Client#getInfo()` - Returns an object with server version information.
 * `Client#listTeams()` - Returns an array of all teams.
+* `Client#setTeam(teamName, options)` - Creates or updates the team with name
+  `teamName` according to the provided `options`. `options` can contain:
+  * `users`: an array of strings identifying users that have access to this 
+    team, e.g., `local:fred` or `github:bob`.
+  * `groups`: an array of strings identifying groups that have access to this
+    team, e.g., `github:organisation`.
 * `Client#forTeam(teamId)` - Returns a `TeamClient` for the team specified by 
   `teamId`. See below for more details of the methods supported on `TeamClient`.
 * `Client#listWorkers()` - Returns an array of all workers.

@@ -22,7 +22,7 @@
 | ListAllResources              | GET    | /api/v1/resources                                                                                                  | Done     |
 | ListTeams                     | GET    | /api/v1/teams                                                                                                      | Done     |
 | DestroyTeam                   | DELETE | /api/v1/teams/:team_name                                                                                           | Now      |
-| SetTeam                       | PUT    | /api/v1/teams/:team_name                                                                                           | Now      |
+| SetTeam                       | PUT    | /api/v1/teams/:team_name                                                                                           | Done     |
 | ListTeamBuilds                | GET    | /api/v1/teams/:team_name/builds                                                                                    | Done     |
 | CreateBuild                   | POST   | /api/v1/teams/:team_name/builds                                                                                    | Now      |
 | ListContainers                | GET    | /api/v1/teams/:team_name/containers                                                                                | Done     |

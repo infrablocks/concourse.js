@@ -2,7 +2,7 @@ import { expect } from 'chai'
 
 const throwsError = (instance, method, args) => async (message) => {
   try {
-    await instance[method](args)
+    await instance[method](...args)
   } catch (e) {
     expect(e instanceof Error).to.eql(true)
     expect(e.message)
@@ -12,8 +12,8 @@ const throwsError = (instance, method, args) => async (message) => {
   expect.fail(null, null, 'Expected exception but none was thrown.')
 }
 
-const withArguments = (instance, method) => (options) => {
-  return { throwsError: throwsError(instance, method, options) }
+const withArguments = (instance, method) => (...args) => {
+  return { throwsError: throwsError(instance, method, args) }
 }
 
 const onCallOf = (instance) => (method) => {
