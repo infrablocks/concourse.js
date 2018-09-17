@@ -18,13 +18,13 @@ const buildValidTeamPipelineResourceVersionClient = () => {
   })
   const mock = new MockAdapter(httpClient)
 
-  const team = build.client.team(data.randomTeam())
-  const pipeline = build.client.pipeline(data.randomPipeline())
-  const resource = build.client.resource(data.randomResource())
-  const version = build.client.resourceVersion(data.randomResourceVersion())
+  const teamName = data.randomTeamName()
+  const pipelineName = data.randomPipelineName()
+  const resourceName = data.randomResourceName()
+  const versionId = data.randomId()
 
   const client = new TeamPipelineResourceVersionClient({
-    apiUrl, httpClient, team, pipeline, resource, version
+    apiUrl, httpClient, teamName, pipelineName, resourceName, versionId
   })
 
   return {
@@ -33,10 +33,10 @@ const buildValidTeamPipelineResourceVersionClient = () => {
     mock,
     apiUrl,
     bearerToken,
-    team,
-    pipeline,
-    resource,
-    version
+    teamName,
+    pipelineName,
+    resourceName,
+    versionId
   }
 }
 
@@ -45,10 +45,10 @@ describe('TeamPipelineResourceVersionClient', () => {
     it('throws an exception if the API URI is not provided', () => {
       onConstructionOf(TeamPipelineResourceVersionClient)
         .withArguments({
-          team: data.randomTeam(),
-          pipeline: data.randomPipeline(),
-          resource: data.randomResource(),
-          version: data.randomResourceVersion(),
+          teamName: data.randomTeamName(),
+          pipelineName: data.randomPipelineName(),
+          resourceName: data.randomResourceName(),
+          versionId: data.randomId(),
           httpClient: axios
         })
         .throwsError('Invalid parameter(s): ["apiUrl" is required].')
@@ -58,10 +58,10 @@ describe('TeamPipelineResourceVersionClient', () => {
       onConstructionOf(TeamPipelineResourceVersionClient)
         .withArguments({
           apiUrl: 25,
-          team: data.randomTeam(),
-          pipeline: data.randomPipeline(),
-          resource: data.randomResource(),
-          version: data.randomResourceVersion(),
+          teamName: data.randomTeamName(),
+          pipelineName: data.randomPipelineName(),
+          resourceName: data.randomResourceName(),
+          versionId: data.randomId(),
           httpClient: axios
         })
         .throwsError('Invalid parameter(s): ["apiUrl" must be a string].')
@@ -71,10 +71,10 @@ describe('TeamPipelineResourceVersionClient', () => {
       onConstructionOf(TeamPipelineResourceVersionClient)
         .withArguments({
           apiUrl: 'spinach',
-          team: data.randomTeam(),
-          pipeline: data.randomPipeline(),
-          resource: data.randomResource(),
-          version: data.randomResourceVersion(),
+          teamName: data.randomTeamName(),
+          pipelineName: data.randomPipelineName(),
+          resourceName: data.randomResourceName(),
+          versionId: data.randomId(),
           httpClient: axios
         })
         .throwsError('Invalid parameter(s): ["apiUrl" must be a valid uri].')
@@ -85,114 +85,142 @@ describe('TeamPipelineResourceVersionClient', () => {
         onConstructionOf(TeamPipelineResourceVersionClient)
           .withArguments({
             httpClient: 35,
-            team: data.randomTeam(),
-            pipeline: data.randomPipeline(),
-            resource: data.randomResource(),
-            version: data.randomResourceVersion(),
+            teamName: data.randomTeamName(),
+            pipelineName: data.randomPipelineName(),
+            resourceName: data.randomResourceName(),
+            versionId: data.randomId(),
             apiUrl: faker.internet.url()
           })
           .throwsError(
             'Invalid parameter(s): ["httpClient" must be a Function].')
       })
 
-    it('throws an exception if the team is not provided', () => {
+    it('throws an exception if the team name is not provided', () => {
       onConstructionOf(TeamPipelineResourceVersionClient)
         .withArguments({
           apiUrl: faker.internet.url(),
           httpClient: axios,
-          pipeline: data.randomPipeline(),
-          resource: data.randomResource(),
-          version: data.randomResourceVersion()
+          pipelineName: data.randomPipelineName(),
+          resourceName: data.randomResourceName(),
+          versionId: data.randomId()
         })
-        .throwsError('Invalid parameter(s): ["team" is required].')
+        .throwsError('Invalid parameter(s): ["teamName" is required].')
     })
 
-    it('throws an exception if the team is not an object', () => {
+    it('throws an exception if the team name is not a string', () => {
       onConstructionOf(TeamPipelineResourceVersionClient)
         .withArguments({
-          team: 'wat',
+          teamName: 123,
           apiUrl: faker.internet.url(),
           httpClient: axios,
-          pipeline: data.randomPipeline(),
-          resource: data.randomResource(),
-          version: data.randomResourceVersion()
+          pipelineName: data.randomPipelineName(),
+          resourceName: data.randomResourceName(),
+          versionId: data.randomId()
         })
-        .throwsError('Invalid parameter(s): ["team" must be an object].')
+        .throwsError('Invalid parameter(s): ["teamName" must be a string].')
     })
 
-    it('throws an exception if the pipeline is not provided', () => {
+    it('throws an exception if the pipeline name is not provided', () => {
       onConstructionOf(TeamPipelineResourceVersionClient)
         .withArguments({
           apiUrl: faker.internet.url(),
           httpClient: axios,
-          team: data.randomTeam(),
-          resource: data.randomResource(),
-          version: data.randomResourceVersion()
+          teamName: data.randomTeamName(),
+          resourceName: data.randomResourceName(),
+          versionId: data.randomId()
         })
-        .throwsError('Invalid parameter(s): ["pipeline" is required].')
+        .throwsError('Invalid parameter(s): ["pipelineName" is required].')
     })
 
-    it('throws an exception if the pipeline is not an object', () => {
+    it('throws an exception if the pipeline name is not a string', () => {
       onConstructionOf(TeamPipelineResourceVersionClient)
         .withArguments({
-          pipeline: 'wat',
+          pipelineName: 123,
           apiUrl: faker.internet.url(),
           httpClient: axios,
-          team: data.randomTeam(),
-          resource: data.randomResource(),
-          version: data.randomResourceVersion()
+          teamName: data.randomTeamName(),
+          resourceName: data.randomResourceName(),
+          versionId: data.randomId()
         })
-        .throwsError('Invalid parameter(s): ["pipeline" must be an object].')
+        .throwsError('Invalid parameter(s): ["pipelineName" must be a string].')
     })
 
-    it('throws an exception if the resource is not provided', () => {
+    it('throws an exception if the resource name is not provided', () => {
       onConstructionOf(TeamPipelineResourceVersionClient)
         .withArguments({
           apiUrl: faker.internet.url(),
           httpClient: axios,
-          team: data.randomTeam(),
-          pipeline: data.randomPipeline(),
-          version: data.randomResourceVersion()
+          teamName: data.randomTeamName(),
+          pipelineName: data.randomPipelineName(),
+          versionId: data.randomId()
         })
-        .throwsError('Invalid parameter(s): ["resource" is required].')
+        .throwsError('Invalid parameter(s): ["resourceName" is required].')
     })
 
-    it('throws an exception if the resource is not an object', () => {
+    it('throws an exception if the resource name is not a string', () => {
       onConstructionOf(TeamPipelineResourceVersionClient)
         .withArguments({
-          resource: 'wat',
+          resourceName: 123,
           apiUrl: faker.internet.url(),
           httpClient: axios,
-          team: data.randomTeam(),
-          pipeline: data.randomPipeline(),
-          version: data.randomResourceVersion()
+          teamName: data.randomTeamName(),
+          pipelineName: data.randomPipelineName(),
+          versionId: data.randomId()
         })
-        .throwsError('Invalid parameter(s): ["resource" must be an object].')
+        .throwsError('Invalid parameter(s): ["resourceName" must be a string].')
     })
 
-    it('throws an exception if the version is not provided', () => {
+    it('throws an exception if the version ID is not provided', () => {
       onConstructionOf(TeamPipelineResourceVersionClient)
         .withArguments({
           apiUrl: faker.internet.url(),
           httpClient: axios,
-          team: data.randomTeam(),
-          pipeline: data.randomPipeline(),
-          resource: data.randomResource()
+          teamName: data.randomTeamName(),
+          pipelineName: data.randomPipelineName(),
+          resourceName: data.randomResourceName()
         })
-        .throwsError('Invalid parameter(s): ["version" is required].')
+        .throwsError('Invalid parameter(s): ["versionId" is required].')
     })
 
-    it('throws an exception if the version is not an object', () => {
+    it('throws an exception if the version ID is not a number', () => {
       onConstructionOf(TeamPipelineResourceVersionClient)
         .withArguments({
-          version: 'wat',
+          versionId: 'wat',
           apiUrl: faker.internet.url(),
           httpClient: axios,
-          team: data.randomTeam(),
-          pipeline: data.randomPipeline(),
-          resource: data.randomResource()
+          teamName: data.randomTeamName(),
+          pipelineName: data.randomPipelineName(),
+          resourceName: data.randomResourceName()
         })
-        .throwsError('Invalid parameter(s): ["version" must be an object].')
+        .throwsError('Invalid parameter(s): ["versionId" must be a number].')
+    })
+
+    it('throws an exception if the version ID is not an integer', () => {
+      onConstructionOf(TeamPipelineResourceVersionClient)
+        .withArguments({
+          versionId: 1.1,
+          apiUrl: faker.internet.url(),
+          httpClient: axios,
+          teamName: data.randomTeamName(),
+          pipelineName: data.randomPipelineName(),
+          resourceName: data.randomResourceName()
+        })
+        .throwsError('Invalid parameter(s): ["versionId" must be an integer].')
+    })
+
+    it('throws an exception if the version ID is not positive', () => {
+      onConstructionOf(TeamPipelineResourceVersionClient)
+        .withArguments({
+          versionId: -6,
+          apiUrl: faker.internet.url(),
+          httpClient: axios,
+          teamName: data.randomTeamName(),
+          pipelineName: data.randomPipelineName(),
+          resourceName: data.randomResourceName()
+        })
+        .throwsError(
+          'Invalid parameter(s): ' +
+          '["versionId" must be larger than or equal to 1].')
     })
   })
 
@@ -200,13 +228,9 @@ describe('TeamPipelineResourceVersionClient', () => {
     it('gets the causality of the resource version',
       async () => {
         const {
-          client, mock, apiUrl, bearerToken, team, pipeline, resource, version
+          client, mock, apiUrl, bearerToken,
+          teamName, pipelineName, resourceName, versionId
         } = buildValidTeamPipelineResourceVersionClient()
-
-        const teamName = team.name
-        const pipelineName = pipeline.name
-        const resourceName = resource.name
-        const versionId = version.id
 
         const causeData = data.randomResourceVersionCause({
           versionedResourceId: versionId
@@ -240,13 +264,9 @@ describe('TeamPipelineResourceVersionClient', () => {
     it('lists the builds where this version is an input',
       async () => {
         const {
-          client, mock, apiUrl, bearerToken, team, pipeline, resource, version
+          client, mock, apiUrl, bearerToken,
+          teamName, pipelineName, resourceName, versionId
         } = buildValidTeamPipelineResourceVersionClient()
-
-        const teamName = team.name
-        const pipelineName = pipeline.name
-        const resourceName = resource.name
-        const versionId = version.id
 
         const buildId = data.randomId()
         const buildData = data.randomBuild({
@@ -283,13 +303,9 @@ describe('TeamPipelineResourceVersionClient', () => {
     it('lists the builds where this version is an output',
       async () => {
         const {
-          client, mock, apiUrl, bearerToken, team, pipeline, resource, version
+          client, mock, apiUrl, bearerToken,
+          teamName, pipelineName, resourceName, versionId
         } = buildValidTeamPipelineResourceVersionClient()
-
-        const teamName = team.name
-        const pipelineName = pipeline.name
-        const resourceName = resource.name
-        const versionId = version.id
 
         const buildId = data.randomId()
         const buildData = data.randomBuild({

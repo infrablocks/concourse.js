@@ -6,7 +6,6 @@ import faker from 'faker'
 import { bearerAuthHeader } from '../../src/support/http/headers'
 import { expect } from 'chai'
 import MockAdapter from 'axios-mock-adapter'
-import build from '../testsupport/builders'
 
 const buildValidWorkerClient = () => {
   const apiUrl = data.randomApiUrl()
@@ -17,9 +16,9 @@ const buildValidWorkerClient = () => {
   })
   const mock = new MockAdapter(httpClient)
 
-  const worker = build.client.worker(data.randomWorker())
+  const workerName = data.randomWorkerName()
 
-  const client = new WorkerClient({ apiUrl, httpClient, worker })
+  const client = new WorkerClient({ apiUrl, httpClient, workerName })
 
   return {
     client,
@@ -27,7 +26,7 @@ const buildValidWorkerClient = () => {
     mock,
     apiUrl,
     bearerToken,
-    worker
+    workerName
   }
 }
 
@@ -74,33 +73,31 @@ describe('WorkerClient', () => {
             'Invalid parameter(s): ["httpClient" must be a Function].')
       })
 
-    it('throws an exception if the worker is not provided', () => {
+    it('throws an exception if the worker name is not provided', () => {
       onConstructionOf(WorkerClient)
         .withArguments({
           apiUrl: faker.internet.url(),
           httpClient: axios
         })
-        .throwsError('Invalid parameter(s): ["worker" is required].')
+        .throwsError('Invalid parameter(s): ["workerName" is required].')
     })
 
-    it('throws an exception if the worker is not an object', () => {
+    it('throws an exception if the worker name is not a string', () => {
       onConstructionOf(WorkerClient)
         .withArguments({
           apiUrl: faker.internet.url(),
           httpClient: axios,
-          worker: 'wat'
+          workerName: 123
         })
-        .throwsError('Invalid parameter(s): ["worker" must be an object].')
+        .throwsError('Invalid parameter(s): ["workerName" must be a string].')
     })
   })
 
   describe('prune', () => {
     it('prunes the pipeline with the specified name',
       async () => {
-        const { client, mock, apiUrl, bearerToken, worker } =
+        const { client, mock, apiUrl, bearerToken, workerName } =
           buildValidWorkerClient()
-
-        const workerName = worker.name
 
         mock.onPut(`${apiUrl}/workers/${workerName}/prune`)
           .reply(204)
@@ -117,10 +114,8 @@ describe('WorkerClient', () => {
 
     it('throws the underlying http client exception on failure',
       async () => {
-        const { client, mock, apiUrl, worker } =
+        const { client, mock, apiUrl, workerName } =
           buildValidWorkerClient()
-
-        const workerName = worker.name
 
         mock.onPut(`${apiUrl}/workers/${workerName}/prune`)
           .networkError()

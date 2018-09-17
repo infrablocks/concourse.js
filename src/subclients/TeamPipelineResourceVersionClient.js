@@ -1,7 +1,8 @@
 import {
   func,
-  object,
+  integer,
   schemaFor,
+  string,
   uri,
   validateOptions
 } from '../support/validation'
@@ -19,18 +20,18 @@ class TeamPipelineResourceVersionClient {
       schemaFor({
         apiUrl: uri().required(),
         httpClient: func().required(),
-        team: object().required(),
-        pipeline: object().required(),
-        resource: object().required(),
-        version: object().required()
+        teamName: string().required(),
+        pipelineName: string().required(),
+        resourceName: string().required(),
+        versionId: integer().min(1).required()
       }), options)
 
     this.apiUrl = validatedOptions.apiUrl
     this.httpClient = validatedOptions.httpClient
-    this.team = validatedOptions.team
-    this.pipeline = validatedOptions.pipeline
-    this.resource = validatedOptions.resource
-    this.version = validatedOptions.version
+    this.teamName = validatedOptions.teamName
+    this.pipelineName = validatedOptions.pipelineName
+    this.resourceName = validatedOptions.resourceName
+    this.versionId = validatedOptions.versionId
   }
 
   async getCausality () {
@@ -38,10 +39,10 @@ class TeamPipelineResourceVersionClient {
       .get(
         teamPipelineResourceVersionCausalityUrl(
           this.apiUrl,
-          this.team.name,
-          this.pipeline.name,
-          this.resource.name,
-          this.version.id),
+          this.teamName,
+          this.pipelineName,
+          this.resourceName,
+          this.versionId),
         { transformResponse: [parseJson, camelcaseKeysDeep] })
 
     return causality
@@ -52,10 +53,10 @@ class TeamPipelineResourceVersionClient {
       .get(
         teamPipelineResourceVersionInputToUrl(
           this.apiUrl,
-          this.team.name,
-          this.pipeline.name,
-          this.resource.name,
-          this.version.id),
+          this.teamName,
+          this.pipelineName,
+          this.resourceName,
+          this.versionId),
         { transformResponse: [parseJson, camelcaseKeysDeep] })
 
     return builds
@@ -66,10 +67,10 @@ class TeamPipelineResourceVersionClient {
       .get(
         teamPipelineResourceVersionOutputOfUrl(
           this.apiUrl,
-          this.team.name,
-          this.pipeline.name,
-          this.resource.name,
-          this.version.id),
+          this.teamName,
+          this.pipelineName,
+          this.resourceName,
+          this.versionId),
         { transformResponse: [parseJson, camelcaseKeysDeep] })
 
     return builds

@@ -17,9 +17,9 @@ const buildValidBuildClient = () => {
   })
   const mock = new MockAdapter(httpClient)
 
-  const theBuild = build.client.build(data.randomBuild())
+  const buildId = data.randomId()
 
-  const client = new BuildClient({ apiUrl, httpClient, build: theBuild })
+  const client = new BuildClient({ apiUrl, httpClient, buildId })
 
   return {
     client,
@@ -27,7 +27,7 @@ const buildValidBuildClient = () => {
     mock,
     apiUrl,
     bearerToken,
-    build: theBuild
+    buildId
   }
 }
 
@@ -74,30 +74,52 @@ describe('BuildClient', () => {
             'Invalid parameter(s): ["httpClient" must be a Function].')
       })
 
-    it('throws an exception if the build is not provided', () => {
+    it('throws an exception if the build ID is not provided', () => {
       onConstructionOf(BuildClient)
         .withArguments({
           apiUrl: faker.internet.url(),
           httpClient: axios
         })
-        .throwsError('Invalid parameter(s): ["build" is required].')
+        .throwsError('Invalid parameter(s): ["buildId" is required].')
     })
 
-    it('throws an exception if the build is not an object', () => {
+    it('throws an exception if the build ID is not a number', () => {
       onConstructionOf(BuildClient)
         .withArguments({
           apiUrl: faker.internet.url(),
           httpClient: axios,
-          build: 'wat'
+          buildId: 'wat'
         })
-        .throwsError('Invalid parameter(s): ["build" must be an object].')
+        .throwsError('Invalid parameter(s): ["buildId" must be a number].')
+    })
+
+    it('throws an exception if the build ID is not an integer', () => {
+      onConstructionOf(BuildClient)
+        .withArguments({
+          apiUrl: faker.internet.url(),
+          httpClient: axios,
+          buildId: 1.1
+        })
+        .throwsError('Invalid parameter(s): ["buildId" must be an integer].')
+    })
+
+    it('throws an exception if the build ID is not positive', () => {
+      onConstructionOf(BuildClient)
+        .withArguments({
+          apiUrl: faker.internet.url(),
+          httpClient: axios,
+          buildId: -6
+        })
+        .throwsError(
+          'Invalid parameter(s): ' +
+          '["buildId" must be larger than or equal to 1].')
     })
   })
 
   describe('listResources', () => {
     it('gets all resources for build',
       async () => {
-        const { client, mock, apiUrl, bearerToken, build: theBuild } =
+        const { client, mock, apiUrl, bearerToken, buildId } =
           buildValidBuildClient()
 
         const resourceData = data.randomResource()
@@ -109,7 +131,7 @@ describe('BuildClient', () => {
         const expectedResources = [convertedResource]
 
         mock.onGet(
-          `${apiUrl}/builds/${theBuild.id}/resources`,
+          `${apiUrl}/builds/${buildId}/resources`,
           {
             headers: {
               ...bearerAuthHeader(bearerToken)

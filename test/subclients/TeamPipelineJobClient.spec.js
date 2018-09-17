@@ -18,12 +18,12 @@ const buildValidTeamPipelineJobClient = () => {
   })
   const mock = new MockAdapter(httpClient)
 
-  const team = build.client.team(data.randomTeam())
-  const pipeline = build.client.pipeline(data.randomPipeline())
-  const job = build.client.job(data.randomJob())
+  const teamName = data.randomTeamName()
+  const pipelineName = data.randomPipelineName()
+  const jobName = data.randomJobName()
 
   const client = new TeamPipelineJobClient({
-    apiUrl, httpClient, team, pipeline, job
+    apiUrl, httpClient, teamName, pipelineName, jobName
   })
 
   return {
@@ -32,9 +32,9 @@ const buildValidTeamPipelineJobClient = () => {
     mock,
     apiUrl,
     bearerToken,
-    team,
-    pipeline,
-    job
+    teamName,
+    pipelineName,
+    jobName
   }
 }
 
@@ -43,9 +43,9 @@ describe('TeamPipelineJobClient', () => {
     it('throws an exception if the API URI is not provided', () => {
       onConstructionOf(TeamPipelineJobClient)
         .withArguments({
-          team: data.randomTeam(),
-          pipeline: data.randomPipeline(),
-          job: data.randomJob(),
+          teamName: data.randomTeamName(),
+          pipelineName: data.randomPipelineName(),
+          jobName: data.randomJobName(),
           httpClient: axios
         })
         .throwsError('Invalid parameter(s): ["apiUrl" is required].')
@@ -55,9 +55,9 @@ describe('TeamPipelineJobClient', () => {
       onConstructionOf(TeamPipelineJobClient)
         .withArguments({
           apiUrl: 25,
-          team: data.randomTeam(),
-          pipeline: data.randomPipeline(),
-          job: data.randomJob(),
+          teamName: data.randomTeamName(),
+          pipelineName: data.randomPipelineName(),
+          jobName: data.randomJobName(),
           httpClient: axios
         })
         .throwsError('Invalid parameter(s): ["apiUrl" must be a string].')
@@ -67,9 +67,9 @@ describe('TeamPipelineJobClient', () => {
       onConstructionOf(TeamPipelineJobClient)
         .withArguments({
           apiUrl: 'spinach',
-          team: data.randomTeam(),
-          pipeline: data.randomPipeline(),
-          job: data.randomJob(),
+          teamName: data.randomTeamName(),
+          pipelineName: data.randomPipelineName(),
+          jobName: data.randomJobName(),
           httpClient: axios
         })
         .throwsError('Invalid parameter(s): ["apiUrl" must be a valid uri].')
@@ -80,94 +80,91 @@ describe('TeamPipelineJobClient', () => {
         onConstructionOf(TeamPipelineJobClient)
           .withArguments({
             httpClient: 35,
-            team: data.randomTeam(),
-            pipeline: data.randomPipeline(),
-            job: data.randomJob(),
+            teamName: data.randomTeamName(),
+            pipelineName: data.randomPipelineName(),
+            jobName: data.randomJobName(),
             apiUrl: faker.internet.url()
           })
           .throwsError(
             'Invalid parameter(s): ["httpClient" must be a Function].')
       })
 
-    it('throws an exception if the team is not provided', () => {
+    it('throws an exception if the team name is not provided', () => {
       onConstructionOf(TeamPipelineJobClient)
         .withArguments({
           apiUrl: faker.internet.url(),
           httpClient: axios,
-          pipeline: data.randomPipeline(),
-          job: data.randomJob()
+          pipelineName: data.randomPipelineName(),
+          jobName: data.randomJobName()
         })
-        .throwsError('Invalid parameter(s): ["team" is required].')
+        .throwsError('Invalid parameter(s): ["teamName" is required].')
     })
 
-    it('throws an exception if the team is not an object', () => {
+    it('throws an exception if the team name is not a string', () => {
       onConstructionOf(TeamPipelineJobClient)
         .withArguments({
-          team: 'wat',
+          teamName: 123,
           apiUrl: faker.internet.url(),
           httpClient: axios,
-          pipeline: data.randomPipeline(),
-          job: data.randomJob()
+          pipelineName: data.randomPipelineName(),
+          jobName: data.randomJobName()
         })
-        .throwsError('Invalid parameter(s): ["team" must be an object].')
+        .throwsError('Invalid parameter(s): ["teamName" must be a string].')
     })
 
-    it('throws an exception if the pipeline is not provided', () => {
+    it('throws an exception if the pipeline name is not provided', () => {
       onConstructionOf(TeamPipelineJobClient)
         .withArguments({
           apiUrl: faker.internet.url(),
           httpClient: axios,
-          team: data.randomTeam(),
-          job: data.randomJob()
+          teamName: data.randomTeamName(),
+          jobName: data.randomJobName()
         })
-        .throwsError('Invalid parameter(s): ["pipeline" is required].')
+        .throwsError('Invalid parameter(s): ["pipelineName" is required].')
     })
 
-    it('throws an exception if the pipeline is not an object', () => {
+    it('throws an exception if the pipeline name is not a string', () => {
       onConstructionOf(TeamPipelineJobClient)
         .withArguments({
-          pipeline: 'wat',
+          pipelineName: 123,
           apiUrl: faker.internet.url(),
           httpClient: axios,
-          team: data.randomTeam(),
-          job: data.randomJob()
+          teamName: data.randomTeamName(),
+          jobName: data.randomJobName()
         })
-        .throwsError('Invalid parameter(s): ["pipeline" must be an object].')
+        .throwsError('Invalid parameter(s): ["pipelineName" must be a string].')
     })
 
-    it('throws an exception if the job is not provided', () => {
+    it('throws an exception if the job name is not provided', () => {
       onConstructionOf(TeamPipelineJobClient)
         .withArguments({
           apiUrl: faker.internet.url(),
           httpClient: axios,
-          team: data.randomTeam(),
-          pipeline: data.randomPipeline()
+          teamName: data.randomTeamName(),
+          pipelineName: data.randomPipelineName()
         })
-        .throwsError('Invalid parameter(s): ["job" is required].')
+        .throwsError('Invalid parameter(s): ["jobName" is required].')
     })
 
-    it('throws an exception if the pipeline is not an object', () => {
+    it('throws an exception if the job name is not an string', () => {
       onConstructionOf(TeamPipelineJobClient)
         .withArguments({
-          job: 'wat',
+          jobName: 123,
           apiUrl: faker.internet.url(),
           httpClient: axios,
-          team: data.randomTeam(),
-          pipeline: data.randomPipeline()
+          teamName: data.randomTeamName(),
+          pipelineName: data.randomPipelineName()
         })
-        .throwsError('Invalid parameter(s): ["job" must be an object].')
+        .throwsError('Invalid parameter(s): ["jobName" must be a string].')
     })
   })
 
   describe('pause', () => {
     it('pauses the job',
       async () => {
-        const { client, mock, apiUrl, bearerToken, team, pipeline, job } =
-          buildValidTeamPipelineJobClient()
-
-        const teamName = team.name
-        const pipelineName = pipeline.name
-        const jobName = job.name
+        const {
+          client, mock, apiUrl, bearerToken, teamName, pipelineName, jobName
+        } = buildValidTeamPipelineJobClient()
 
         mock.onPut(
           `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}` +
@@ -188,12 +185,8 @@ describe('TeamPipelineJobClient', () => {
 
     it('throws the underlying http client exception on failure',
       async () => {
-        const { client, mock, apiUrl, team, pipeline, job } =
+        const { client, mock, apiUrl, teamName, pipelineName, jobName } =
           buildValidTeamPipelineJobClient()
-
-        const teamName = team.name
-        const pipelineName = pipeline.name
-        const jobName = job.name
 
         mock.onPut(
           `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/` +
@@ -212,12 +205,8 @@ describe('TeamPipelineJobClient', () => {
   describe('unpause', () => {
     it('unpauses the job',
       async () => {
-        const { client, mock, apiUrl, bearerToken, team, pipeline, job } =
+        const { client, mock, apiUrl, bearerToken, teamName, pipelineName, jobName } =
           buildValidTeamPipelineJobClient()
-
-        const teamName = team.name
-        const pipelineName = pipeline.name
-        const jobName = job.name
 
         mock.onPut(
           `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/` +
@@ -238,12 +227,8 @@ describe('TeamPipelineJobClient', () => {
 
     it('throws the underlying http client exception on failure',
       async () => {
-        const { client, mock, apiUrl, team, pipeline, job } =
+        const { client, mock, apiUrl, teamName, pipelineName, jobName } =
           buildValidTeamPipelineJobClient()
-
-        const teamName = team.name
-        const pipelineName = pipeline.name
-        const jobName = job.name
 
         mock.onPut(
           `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}` +
@@ -262,12 +247,10 @@ describe('TeamPipelineJobClient', () => {
   describe('listBuilds', () => {
     it('gets all builds for team pipeline job',
       async () => {
-        const { client, mock, apiUrl, bearerToken, team, pipeline, job } =
-          buildValidTeamPipelineJobClient()
+        const {
+          client, mock, apiUrl, bearerToken, teamName, pipelineName, jobName
+        } = buildValidTeamPipelineJobClient()
 
-        const teamName = team.name
-        const pipelineName = pipeline.name
-        const jobName = job.name
         const buildData = data.randomBuild({ teamName, pipelineName, jobName })
 
         const buildFromApi = build.api.build(buildData)
@@ -314,12 +297,9 @@ describe('TeamPipelineJobClient', () => {
 
     it('gets the build with the specified name',
       async () => {
-        const { client, mock, apiUrl, bearerToken, team, pipeline, job } =
-          buildValidTeamPipelineJobClient()
-
-        const teamName = team.name
-        const pipelineName = pipeline.name
-        const jobName = job.name
+        const {
+          client, mock, apiUrl, bearerToken, teamName, pipelineName, jobName
+        } = buildValidTeamPipelineJobClient()
 
         const buildName = data.randomBuildName()
         const buildData = data.randomBuild({
@@ -352,8 +332,9 @@ describe('TeamPipelineJobClient', () => {
   describe('listInputs', () => {
     it('gets all inputs for team pipeline job',
       async () => {
-        const { client, mock, apiUrl, bearerToken, team, pipeline, job } =
-          buildValidTeamPipelineJobClient()
+        const {
+          client, mock, apiUrl, bearerToken, teamName, pipelineName, jobName
+        } = buildValidTeamPipelineJobClient()
 
         const inputData = data.randomInput()
 
@@ -364,8 +345,8 @@ describe('TeamPipelineJobClient', () => {
         const expectedInputs = [convertedInput]
 
         mock.onGet(
-          `${apiUrl}/teams/${team.name}/pipelines/${pipeline.name}` +
-          `/jobs/${job.name}/inputs`,
+          `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}` +
+          `/jobs/${jobName}/inputs`,
           {
             headers: {
               ...bearerAuthHeader(bearerToken)

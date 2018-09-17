@@ -1,7 +1,7 @@
 import {
   func,
-  object,
-  schemaFor, string,
+  schemaFor,
+  string,
   uri,
   validateOptions
 } from '../support/validation'
@@ -21,41 +21,41 @@ class TeamPipelineJobClient {
       schemaFor({
         apiUrl: uri().required(),
         httpClient: func().required(),
-        team: object().required(),
-        pipeline: object().required(),
-        job: object().required()
+        teamName: string().required(),
+        pipelineName: string().required(),
+        jobName: string().required()
       }), options)
 
     this.apiUrl = validatedOptions.apiUrl
     this.httpClient = validatedOptions.httpClient
-    this.team = validatedOptions.team
-    this.pipeline = validatedOptions.pipeline
-    this.job = validatedOptions.job
+    this.teamName = validatedOptions.teamName
+    this.pipelineName = validatedOptions.pipelineName
+    this.jobName = validatedOptions.jobName
   }
 
   async pause () {
     await this.httpClient.put(
       teamPipelineJobPauseUrl(
         this.apiUrl,
-        this.team.name,
-        this.pipeline.name,
-        this.job.name))
+        this.teamName,
+        this.pipelineName,
+        this.jobName))
   }
 
   async unpause () {
     await this.httpClient.put(
       teamPipelineJobUnpauseUrl(
         this.apiUrl,
-        this.team.name,
-        this.pipeline.name,
-        this.job.name))
+        this.teamName,
+        this.pipelineName,
+        this.jobName))
   }
 
   async listBuilds () {
     const { data: builds } = await this.httpClient
       .get(
         teamPipelineJobBuildsUrl(
-          this.apiUrl, this.team.name, this.pipeline.name, this.job.name),
+          this.apiUrl, this.teamName, this.pipelineName, this.jobName),
         { transformResponse: [parseJson, camelcaseKeysDeep] })
 
     return builds
@@ -71,9 +71,9 @@ class TeamPipelineJobClient {
       .get(
         teamPipelineJobBuildUrl(
           this.apiUrl,
-          this.team.name,
-          this.pipeline.name,
-          this.job.name,
+          this.teamName,
+          this.pipelineName,
+          this.jobName,
           validatedOptions.buildName),
         { transformResponse: [parseJson, camelcaseKeysDeep] })
 
@@ -84,7 +84,7 @@ class TeamPipelineJobClient {
     const { data: inputs } = await this.httpClient
       .get(
         teamPipelineJobInputsUrl(
-          this.apiUrl, this.team.name, this.pipeline.name, this.job.name),
+          this.apiUrl, this.teamName, this.pipelineName, this.jobName),
         { transformResponse: [parseJson, camelcaseKeysDeep] })
 
     return inputs

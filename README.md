@@ -41,58 +41,62 @@ currently supported are detailed below.
 
 ### `Client` Methods 
 
-* `Client#getInfo()` - Returns an object with server version information.
-* `Client#listTeams()` - Returns an array of all teams.
-* `Client#setTeam(teamName, options)` - Creates or updates the team with name
-  `teamName` according to the provided `options`. `options` can contain:
+* `async Client#getInfo()` - Returns an object with server version information.
+* `async Client#listTeams()` - Returns an array of all teams.
+* `async Client#setTeam(teamName, options)` - Creates or updates the team with 
+  name `teamName` according to the provided `options`. `options` can contain:
   * `users`: an array of strings identifying users that have access to this 
     team, e.g., `local:fred` or `github:bob`.
   * `groups`: an array of strings identifying groups that have access to this
     team, e.g., `github:organisation`.
 * `Client#forTeam(teamName)` - Returns a `TeamClient` for the team specified by 
-  `teamName`. See below for more details of the methods supported on `TeamClient`.
-* `Client#listWorkers()` - Returns an array of all workers.
+  `teamName`. See below for more details of the methods supported on 
+  `TeamClient`.
+* `async Client#listWorkers()` - Returns an array of all workers.
 * `Client#forWorker(workerName)` - Returns a `WorkerClient` for the worker
   specified by `workerName`. See below for more details of the methods 
   supported on `WorkerClient`.
-* `Client#listPipelines()` - Returns an array of all pipelines across all teams.
-* `Client#listJobs()` - Returns an array of all jobs across all teams.
-* `Client#listResources()` - Returns an array of all resources across all teams. 
-* `Client#listBuilds(options = {})` - Returns an array of all builds across all 
-  teams. The `options` map can contain:
+* `async Client#listPipelines()` - Returns an array of all pipelines across all 
+  teams.
+* `async Client#listJobs()` - Returns an array of all jobs across all teams.
+* `async Client#listResources()` - Returns an array of all resources across all 
+  teams. 
+* `async Client#listBuilds(options = {})` - Returns an array of all builds 
+  across all teams. The `options` map can contain:
   * `limit` - the number of builds to include in the response (integral, > 1).
   * `since` - the ID of a build to fetch from (integral, > 1).
   * `id` - the ID of a build to fetch up to (integral, > 1).
-* `Client#getBuild(buildId)` - Returns the build specified by `buildId`.
+* `async Client#getBuild(buildId)` - Returns the build specified by `buildId`.
 * `Client#forBuild(buildId)` - Returns a `BuildClient` for the build specified 
   by `buildId`. See below for more details of the methods supported on 
   `BuildClient`.
   
 ### `BuildClient` Methods
 
-* `BuildClient#listResources()` - Returns an array of resources for the build.
+* `async BuildClient#listResources()` - Returns an array of resources for the 
+  build.
 
 ### `WorkerClient` Methods
 
-* `WorkerClient#prune()` - Prunes the worker.
+* `async WorkerClient#prune()` - Prunes the worker.
   
 ### `TeamClient` Methods
 
-* `TeamClient#rename(newTeamName)` - Renames the team to the provided 
+* `async TeamClient#rename(newTeamName)` - Renames the team to the provided 
   `newTeamName`.
-* `TeamClient#destroy()` - Destroys the team.
-* `TeamClient#listPipelines()` - Returns an array of team pipelines.
-* `TeamClient#getPipeline(pipelineName)` - Returns the team pipeline specified 
-  by `pipelineName`.
-* `TeamClient#forPipeline(pipelineName)` - Returns a `TeamPipelineClient` for 
-  the pipeline specified by `pipelineName`. See below for more details of the 
-  methods supported on `TeamPipelineClient`.
-* `TeamClient#listBuilds(options = {})`- Returns an array of team builds. The 
-  `options` map can contain:
+* `async TeamClient#destroy()` - Destroys the team.
+* `async TeamClient#listPipelines()` - Returns an array of team pipelines.
+* `async TeamClient#getPipeline(pipelineName)` - Returns the team pipeline
+  specified by `pipelineName`.
+* `async TeamClient#forPipeline(pipelineName)` - Returns a `TeamPipelineClient` 
+  for the pipeline specified by `pipelineName`. See below for more details of 
+  the methods supported on `TeamPipelineClient`.
+* `async TeamClient#listBuilds(options = {})`- Returns an array of team builds. 
+  The `options` map can contain:
   * `limit` - the number of builds to include in the response (integral, > 1).
   * `since` - the ID of a build to fetch from (integral, > 1).
   * `id` - the ID of a build to fetch up to (integral, > 1).
-* `TeamClient#listContainers(options = {})` - Returns an array of team
+* `async TeamClient#listContainers(options = {})` - Returns an array of team
   containers matched by the specified options:
   * `type` - one of `check`, `get` or `put` determining the type of the 
     container. If `type` is `check`, `pipelineName` and `resourceName` must also
@@ -110,71 +114,73 @@ currently supported are detailed below.
   * `buildId` - the ID of the build for which to fetch containers 
     (integral, > 1).
   * `buildName` - the name of the build for which to fetch containers (string).
-* `TeamClient#getContainer(containerId)` - Returns the container specified by 
-  `containerId`.
-* `TeamClient#listVolumes()` - Returns an array of team volumes.
+* `async TeamClient#getContainer(containerId)` - Returns the container specified
+  by `containerId`.
+* `async TeamClient#listVolumes()` - Returns an array of team volumes.
 
 ### `TeamPipelineClient` Methods
 
-* `TeamPipelineClient#pause()` - Pauses the team pipeline.
-* `TeamPipelineClient#unpause()` - Unpauses the team pipeline.
-* `TeamPipelineClient#rename(newPipelineName)` - Renames the team pipeline to 
-  the provided `newPipelineName`.
-* `TeamPipelineClient#delete()` - Deletes the pipeline.
-* `TeamPipelineClient#listJobs()` - Returns an array of team pipeline jobs.
-* `TeamPipelineClient#getJob(jobName)` - Returns the team pipeline job 
+* `async TeamPipelineClient#pause()` - Pauses the team pipeline.
+* `async TeamPipelineClient#unpause()` - Unpauses the team pipeline.
+* `async TeamPipelineClient#rename(newPipelineName)` - Renames the team pipeline
+  to the provided `newPipelineName`.
+* `async TeamPipelineClient#delete()` - Deletes the pipeline.
+* `async TeamPipelineClient#listJobs()` - Returns an array of team pipeline 
+  jobs.
+* `async TeamPipelineClient#getJob(jobName)` - Returns the team pipeline job 
   specified by `jobName`.
 * `TeamPipelineClient#forJob(jobName)` - Returns a `TeamPipelineJobClient` for 
   the job specified by `jobName`. See below for more details of the 
   methods supported on `TeamPipelineJobClient`.
-* `TeamPipelineClient#listResources()` - Returns an array of team pipeline 
+* `async TeamPipelineClient#listResources()` - Returns an array of team pipeline 
    resources.
-* `TeamPipelineClient#getResource(resourceName)` - Returns the team pipeline 
-  resource specified by `resourceName`.
+* `async TeamPipelineClient#getResource(resourceName)` - Returns the team 
+  pipeline resource specified by `resourceName`.
 * `TeamPipelineClient#forResource(resourceName)` - Returns a 
   `TeamPipelineResourceClient` for the resource specified by `resourceName`. 
   See below for more details of the methods supported on 
   `TeamPipelineResourceClient`.
-* `TeamPipelineClient#listResourceTypes()` - Returns an array of team pipeline 
-  resource types.
-* `TeamPipelineClient#listBuilds()` - Returns an array of team pipeline 
+* `async TeamPipelineClient#listResourceTypes()` - Returns an array of team 
+  pipeline resource types.
+* `async TeamPipelineClient#listBuilds()` - Returns an array of team pipeline 
   builds.
 
 ### `TeamPipelineJobClient` Methods
 
-* `TeamPipelineJobClient#pause()` - Pauses the team pipeline job.
-* `TeamPipelineJobClient#unpause()` - Unpauses the team pipeline job.
-* `TeamPipelineJobClient#listBuilds()` - Returns an array of team pipeline job 
-  builds.
-* `TeamPipelineJobClient#getBuild(buildName)` - Returns the team pipeline job 
-  build specified by `buildName`.
-* `TeamPipelineJobClient#listInputs()` - Returns an array of team pipeline job 
-  inputs.
+* `async TeamPipelineJobClient#pause()` - Pauses the team pipeline job.
+* `async TeamPipelineJobClient#unpause()` - Unpauses the team pipeline job.
+* `async TeamPipelineJobClient#listBuilds()` - Returns an array of team pipeline
+  job builds.
+* `async TeamPipelineJobClient#getBuild(buildName)` - Returns the team pipeline
+  job build specified by `buildName`.
+* `async TeamPipelineJobClient#listInputs()` - Returns an array of team pipeline
+  job inputs.
   
 ### `TeamPipelineResourceClient` Methods
   
-* `TeamPipelineResourceClient#pause()` - Pauses the team pipeline resource.
-* `TeamPipelineResourceClient#unpause()` - Unpauses the team pipeline resource.  
-* `TeamPipelineResourceClient#listVersions(options = {})` - Returns an array of 
-  team pipeline resource versions. The `options` map can contain:
+* `async TeamPipelineResourceClient#pause()` - Pauses the team pipeline resource.
+* `async TeamPipelineResourceClient#unpause()` - Unpauses the team pipeline 
+  resource.  
+* `async TeamPipelineResourceClient#listVersions(options = {})` - Returns an 
+  array of team pipeline resource versions. The `options` map can contain:
   * `limit` - the number of versions to include in the response (integral, > 1).
   * `since` - the ID of a version to fetch from (integral, > 1).
   * `id` - the ID of a version to fetch up to (integral, > 1).
-* `TeamPipelineResourceClient#getVersion(versionId)` - Returns the team pipeline 
-  resource version specified by `versionId`.
+* `async TeamPipelineResourceClient#getVersion(versionId)` - Returns the team 
+  pipeline resource version specified by `versionId`.
 * `TeamPipelineClient#forVersion(versionId)` - Returns a 
   `TeamPipelineResourceVersionClient` for the version specified by `versionId`.
   
 ### `TeamPipelineResourceVersionClient` Methods
 
-* `TeamPipelineResourceVersionClient#getCausality()` - Returns the team pipeline 
-  resource version's causality.
-* `TeamPipelineResourceVersionClient#listBuildsWithVersionAsInput()` - Returns 
-  an array of all builds that have the resource version represented by the 
-  client as an input.
-* `TeamPipelineResourceVersionClient#listBuildsWithVersionAsOutput()` - Returns 
-  an array of all builds that have the resource version represented by the 
-  client as an output.
+* `async TeamPipelineResourceVersionClient#getCausality()` - Returns the team 
+  pipeline resource version's causality.
+* `async TeamPipelineResourceVersionClient#listBuildsWithVersionAsInput()` - 
+  Returns an array of all builds that have the resource version represented by 
+  the client as an input.
+* `async TeamPipelineResourceVersionClient#listBuildsWithVersionAsOutput()` - 
+  Returns an array of all builds that have the resource version represented by 
+  the client as an output.
 
 ## Example
 
@@ -182,7 +188,7 @@ currently supported are detailed below.
 const teams = await client.listTeams()
 // => [{id: 1, name: "main"}] 
 
-const teamClient = await client.forTeam(teams[0].id)
+const teamClient = client.forTeam(teams[0].id)
 // => TeamClient {apiUrl: "https://concourse.example.com/api/v1", httpClient: ..., team: {...}
 
 const pipelines = await teamClient.listPipelines()

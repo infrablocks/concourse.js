@@ -1,6 +1,6 @@
 import {
   func,
-  object,
+  integer,
   schemaFor,
   uri,
   validateOptions
@@ -15,18 +15,18 @@ export default class BuildClient {
       schemaFor({
         apiUrl: uri().required(),
         httpClient: func().required(),
-        build: object().required()
+        buildId: integer().min(1).required()
       }), options)
 
     this.apiUrl = validatedOptions.apiUrl
     this.httpClient = validatedOptions.httpClient
-    this.build = validatedOptions.build
+    this.buildId = validatedOptions.buildId
   }
 
   async listResources () {
     const { data: resources } = await this.httpClient
       .get(
-        buildResourcesUrl(this.apiUrl, this.build.id),
+        buildResourcesUrl(this.apiUrl, this.buildId),
         { transformResponse: [parseJson, camelcaseKeysDeep] })
 
     return resources

@@ -1,6 +1,5 @@
 import {
   func, integer,
-  object,
   schemaFor,
   string,
   uri,
@@ -10,7 +9,8 @@ import {
   teamPipelineBuildsUrl,
   teamPipelineJobsUrl,
   teamPipelineJobUrl,
-  teamPipelinePauseUrl, teamPipelineRenameUrl,
+  teamPipelinePauseUrl,
+  teamPipelineRenameUrl,
   teamPipelineResourcesUrl,
   teamPipelineResourceTypesUrl,
   teamPipelineResourceUrl,
@@ -29,30 +29,30 @@ class TeamPipelineClient {
       schemaFor({
         apiUrl: uri().required(),
         httpClient: func().required(),
-        team: object().required(),
-        pipeline: object().required()
+        teamName: string().required(),
+        pipelineName: string().required()
       }), options)
 
     this.apiUrl = validatedOptions.apiUrl
     this.httpClient = validatedOptions.httpClient
-    this.team = validatedOptions.team
-    this.pipeline = validatedOptions.pipeline
+    this.teamName = validatedOptions.teamName
+    this.pipelineName = validatedOptions.pipelineName
   }
 
   async pause () {
     await this.httpClient.put(
       teamPipelinePauseUrl(
         this.apiUrl,
-        this.team.name,
-        this.pipeline.name))
+        this.teamName,
+        this.pipelineName))
   }
 
   async unpause () {
     await this.httpClient.put(
       teamPipelineUnpauseUrl(
         this.apiUrl,
-        this.team.name,
-        this.pipeline.name))
+        this.teamName,
+        this.pipelineName))
   }
 
   async rename (newPipelineName) {
@@ -63,24 +63,24 @@ class TeamPipelineClient {
 
     await this.httpClient
       .put(
-        teamPipelineRenameUrl(this.apiUrl, this.team.name, this.pipeline.name),
+        teamPipelineRenameUrl(this.apiUrl, this.teamName, this.pipelineName),
         { name: validatedOptions.newPipelineName })
 
-    this.pipeline.name = newPipelineName
+    this.pipelineName = newPipelineName
   }
 
   async delete () {
     await this.httpClient.delete(
       teamPipelineUrl(
         this.apiUrl,
-        this.team.name,
-        this.pipeline.name))
+        this.teamName,
+        this.pipelineName))
   }
 
   async listJobs () {
     const { data: jobs } = await this.httpClient
       .get(
-        teamPipelineJobsUrl(this.apiUrl, this.team.name, this.pipeline.name),
+        teamPipelineJobsUrl(this.apiUrl, this.teamName, this.pipelineName),
         { transformResponse: [parseJson, camelcaseKeysDeep] })
 
     return jobs
@@ -96,39 +96,28 @@ class TeamPipelineClient {
       .get(
         teamPipelineJobUrl(
           this.apiUrl,
-          this.team.name,
-          this.pipeline.name,
+          this.teamName,
+          this.pipelineName,
           validatedOptions.jobName),
         { transformResponse: [parseJson, camelcaseKeysDeep] })
 
     return job
   }
 
-  async forJob (jobName) {
-    let job
-    try {
-      job = await this.getJob(jobName)
-    } catch (e) {
-      if (e.response && e.response.status === 404) {
-        throw new Error(`No job with name: ${jobName}`)
-      } else {
-        throw e
-      }
-    }
-
+  forJob (jobName) {
     return new TeamPipelineJobClient({
       apiUrl: this.apiUrl,
       httpClient: this.httpClient,
-      team: this.team,
-      pipeline: this.pipeline,
-      job
+      teamName: this.teamName,
+      pipelineName: this.pipelineName,
+      jobName
     })
   }
 
   async listResources () {
     const { data: resources } = await this.httpClient
       .get(
-        teamPipelineResourcesUrl(this.apiUrl, this.team.name, this.pipeline.name),
+        teamPipelineResourcesUrl(this.apiUrl, this.teamName, this.pipelineName),
         { transformResponse: [parseJson, camelcaseKeysDeep] })
 
     return resources
@@ -144,32 +133,21 @@ class TeamPipelineClient {
       .get(
         teamPipelineResourceUrl(
           this.apiUrl,
-          this.team.name,
-          this.pipeline.name,
+          this.teamName,
+          this.pipelineName,
           validatedOptions.resourceName),
         { transformResponse: [parseJson, camelcaseKeysDeep] })
 
     return resource
   }
 
-  async forResource (resourceName) {
-    let resource
-    try {
-      resource = await this.getResource(resourceName)
-    } catch (e) {
-      if (e.response && e.response.status === 404) {
-        throw new Error(`No resource with name: ${resourceName}`)
-      } else {
-        throw e
-      }
-    }
-
+  forResource (resourceName) {
     return new TeamPipelineResourceClient({
       apiUrl: this.apiUrl,
       httpClient: this.httpClient,
-      team: this.team,
-      pipeline: this.pipeline,
-      resource
+      teamName: this.teamName,
+      pipelineName: this.pipelineName,
+      resourceName
     })
   }
 
@@ -177,7 +155,7 @@ class TeamPipelineClient {
     const { data: resourceTypes } = await this.httpClient
       .get(
         teamPipelineResourceTypesUrl(
-          this.apiUrl, this.team.name, this.pipeline.name),
+          this.apiUrl, this.teamName, this.pipelineName),
         { transformResponse: [parseJson, camelcaseKeysDeep] })
 
     return resourceTypes
@@ -200,7 +178,7 @@ class TeamPipelineClient {
     const { data: builds } = await this.httpClient
       .get(
         teamPipelineBuildsUrl(
-          this.apiUrl, this.team.name, this.pipeline.name),
+          this.apiUrl, this.teamName, this.pipelineName),
         {
           params,
           transformResponse: [parseJson, camelcaseKeysDeep]

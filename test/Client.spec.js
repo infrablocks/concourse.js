@@ -288,67 +288,38 @@ describe('Client', () => {
   })
 
   describe('forTeam', () => {
-    it('returns a client for the team with the supplied name when the team ' +
-      'exists',
-    async () => {
-      const { client, mock, apiUrl, bearerToken, httpClient } =
-          buildValidClient()
-
-      const teamName = data.randomTeamName()
-
-      const teamData = data.randomTeam({
-        name: teamName
-      })
-
-      const firstTeamFromApi = build.api.team(teamData)
-      const secondTeamFromApi = build.api.team(data.randomTeam())
-      const teamsFromApi = [secondTeamFromApi, firstTeamFromApi]
-
-      const expectedTeam = build.client.team(teamData)
-
-      mock.onGet(
-        `${apiUrl}/teams`,
-        {
-          headers: {
-            ...bearerAuthHeader(bearerToken)
-          }
-        })
-        .reply(200, teamsFromApi)
-
-      const teamClient = await client.forTeam(teamName)
-
-      expect(teamClient.apiUrl).to.equal(apiUrl)
-      expect(teamClient.httpClient).to.equal(httpClient)
-      expect(teamClient.team).to.eql(expectedTeam)
-    })
-
-    it('throws an exception if no team exists for the supplied name',
+    it('returns a client for the team with the supplied name',
       async () => {
-        const { client, mock, apiUrl, bearerToken } = buildValidClient()
+        const { client, apiUrl, httpClient } =
+          buildValidClient()
 
         const teamName = data.randomTeamName()
 
-        const firstTeamFromApi = build.api.team(data.randomTeam())
-        const secondTeamFromApi = build.api.team(data.randomTeam())
-        const teamsFromApi = [secondTeamFromApi, firstTeamFromApi]
+        const teamClient = await client.forTeam(teamName)
 
-        mock.onGet(
-          `${apiUrl}/teams`,
-          {
-            headers: {
-              ...bearerAuthHeader(bearerToken)
-            }
-          })
-          .reply(200, teamsFromApi)
-
-        try {
-          await client.forTeam(teamName)
-          expect.fail('Expected exception but none was thrown.')
-        } catch (e) {
-          expect(e).to.be.an.instanceof(Error)
-          expect(e.message).to.eql(`No team for name: ${teamName}`)
-        }
+        expect(teamClient.apiUrl).to.equal(apiUrl)
+        expect(teamClient.httpClient).to.equal(httpClient)
+        expect(teamClient.teamName).to.eql(teamName)
       })
+
+    it('throws an exception if no value is provided for team name',
+      async () => {
+        const { client } = buildValidClient()
+        await forInstance(client)
+          .onCallOf('forTeam')
+          .withNoArguments()
+          .throwsError('Invalid parameter(s): ["teamName" is required].')
+      })
+
+    it('throws an exception if the value provided for team name is not a ' +
+      'string',
+    async () => {
+      const { client } = buildValidClient()
+      await forInstance(client)
+        .onCallOf('forTeam')
+        .withArguments(1234)
+        .throwsError('Invalid parameter(s): ["teamName" must be a string].')
+    })
   })
 
   describe('listWorkers', () => {
@@ -388,68 +359,39 @@ describe('Client', () => {
       })
   })
 
-  describe('forTeam', () => {
-    it('returns a client for the worker with the supplied name when the ' +
-      'worker exists',
-    async () => {
-      const { client, mock, apiUrl, bearerToken, httpClient } =
+  describe('forWorker', () => {
+    it('returns a client for the worker with the supplied name',
+      () => {
+        const { client, apiUrl, httpClient } =
           buildValidClient()
-
-      const workerName = data.randomWorkerName()
-
-      const workerData = data.randomWorker({
-        name: workerName
-      })
-
-      const firstWorkerFromApi = build.api.worker(workerData)
-      const secondWorkerFromApi = build.api.worker(data.randomWorker())
-      const workersFromApi = [secondWorkerFromApi, firstWorkerFromApi]
-
-      const expectedWorker = build.client.worker(workerData)
-
-      mock.onGet(
-        `${apiUrl}/workers`,
-        {
-          headers: {
-            ...bearerAuthHeader(bearerToken)
-          }
-        })
-        .reply(200, workersFromApi)
-
-      const workerClient = await client.forWorker(workerName)
-
-      expect(workerClient.apiUrl).to.equal(apiUrl)
-      expect(workerClient.httpClient).to.equal(httpClient)
-      expect(workerClient.worker).to.eql(expectedWorker)
-    })
-
-    it('throws an exception if no worker exists for the supplied name',
-      async () => {
-        const { client, mock, apiUrl, bearerToken } = buildValidClient()
 
         const workerName = data.randomWorkerName()
 
-        const firstWorkerFromApi = build.api.worker(data.randomWorker())
-        const secondWorkerFromApi = build.api.worker(data.randomWorker())
-        const workersFromApi = [secondWorkerFromApi, firstWorkerFromApi]
+        const workerClient = client.forWorker(workerName)
 
-        mock.onGet(
-          `${apiUrl}/workers`,
-          {
-            headers: {
-              ...bearerAuthHeader(bearerToken)
-            }
-          })
-          .reply(200, workersFromApi)
-
-        try {
-          await client.forWorker(workerName)
-          expect.fail('Expected exception but none was thrown.')
-        } catch (e) {
-          expect(e).to.be.an.instanceof(Error)
-          expect(e.message).to.eql(`No worker with name: ${workerName}`)
-        }
+        expect(workerClient.apiUrl).to.equal(apiUrl)
+        expect(workerClient.httpClient).to.equal(httpClient)
+        expect(workerClient.workerName).to.eql(workerName)
       })
+
+    it('throws an exception if no value is provided for worker name',
+      async () => {
+        const { client } = buildValidClient()
+        await forInstance(client)
+          .onCallOf('forWorker')
+          .withNoArguments()
+          .throwsError('Invalid parameter(s): ["workerName" is required].')
+      })
+
+    it('throws an exception if the value provided for team name is not a ' +
+      'string',
+    async () => {
+      const { client } = buildValidClient()
+      await forInstance(client)
+        .onCallOf('forWorker')
+        .withArguments(1234)
+        .throwsError('Invalid parameter(s): ["workerName" must be a string].')
+    })
   })
 
   describe('listPipelines', () => {
@@ -745,58 +687,18 @@ describe('Client', () => {
   describe('forBuild', () => {
     it('returns a client for the build with the supplied ID when the build ' +
       'exists',
-    async () => {
-      const { client, mock, apiUrl, bearerToken, httpClient } =
+    () => {
+      const { client, apiUrl, httpClient } =
           buildValidClient()
 
       const buildId = data.randomId()
 
-      const buildData = data.randomBuild({
-        id: buildId
-      })
-
-      const buildFromApi = build.api.build(buildData)
-      const expectedBuild = build.client.build(buildData)
-
-      mock.onGet(
-        `${apiUrl}/builds/${buildId}`,
-        {
-          headers: {
-            ...bearerAuthHeader(bearerToken)
-          }
-        })
-        .reply(200, buildFromApi)
-
-      const buildClient = await client.forBuild(buildId)
+      const buildClient = client.forBuild(buildId)
 
       expect(buildClient.apiUrl).to.equal(apiUrl)
       expect(buildClient.httpClient).to.equal(httpClient)
-      expect(buildClient.build).to.eql(expectedBuild)
+      expect(buildClient.buildId).to.eql(buildId)
     })
-
-    it('throws an exception if no build exists for the supplied ID',
-      async () => {
-        const { client, mock, apiUrl, bearerToken } = buildValidClient()
-
-        const buildId = data.randomId()
-
-        mock.onGet(
-          `${apiUrl}/builds/${buildId}`,
-          {
-            headers: {
-              ...bearerAuthHeader(bearerToken)
-            }
-          })
-          .reply(404)
-
-        try {
-          await client.forBuild(buildId)
-          expect.fail('Expected exception but none was thrown.')
-        } catch (e) {
-          expect(e).to.be.an.instanceof(Error)
-          expect(e.message).to.eql(`No build for ID: ${buildId}`)
-        }
-      })
   })
 
   describe('listResources', () => {

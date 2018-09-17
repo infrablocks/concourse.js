@@ -1,5 +1,5 @@
 import camelcaseKeysDeep from 'camelcase-keys-deep'
-import { find, propEq, reject, isNil } from 'ramda'
+import { reject, isNil } from 'ramda'
 
 import TeamClient from './subclients/TeamClient'
 import {
@@ -93,18 +93,11 @@ export default class Client {
     return team
   }
 
-  async forTeam (teamName) {
-    const teams = await this.listTeams()
-    const team = find(propEq('name', teamName), teams)
-
-    if (!team) {
-      throw new Error(`No team for name: ${teamName}`)
-    }
-
+  forTeam (teamName) {
     return new TeamClient({
       apiUrl: this.apiUrl,
       httpClient: this.httpClient,
-      team
+      teamName
     })
   }
 
@@ -117,18 +110,11 @@ export default class Client {
     return workers
   }
 
-  async forWorker (workerName) {
-    const workers = await this.listWorkers()
-    const worker = find(propEq('name', workerName), workers)
-
-    if (!worker) {
-      throw new Error(`No worker with name: ${workerName}`)
-    }
-
+  forWorker (workerName) {
     return new WorkerClient({
       apiUrl: this.apiUrl,
       httpClient: this.httpClient,
-      worker
+      workerName
     })
   }
 
@@ -182,22 +168,11 @@ export default class Client {
     return build
   }
 
-  async forBuild (buildId) {
-    let build
-    try {
-      build = await this.getBuild(buildId)
-    } catch (e) {
-      if (e.response && e.response.status === 404) {
-        throw new Error(`No build for ID: ${buildId}`)
-      } else {
-        throw e
-      }
-    }
-
+  forBuild (buildId) {
     return new BuildClient({
       apiUrl: this.apiUrl,
       httpClient: this.httpClient,
-      build
+      buildId
     })
   }
 

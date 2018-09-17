@@ -4,7 +4,6 @@ import camelcaseKeysDeep from 'camelcase-keys-deep'
 import {
   func,
   integer,
-  object,
   schemaFor,
   string,
   uri,
@@ -28,12 +27,12 @@ export default class TeamClient {
       schemaFor({
         apiUrl: uri().required(),
         httpClient: func().required(),
-        team: object().required()
+        teamName: string().required()
       }), options)
 
     this.apiUrl = validatedOptions.apiUrl
     this.httpClient = validatedOptions.httpClient
-    this.team = validatedOptions.team
+    this.teamName = validatedOptions.teamName
   }
 
   async rename (newTeamName) {
@@ -43,16 +42,16 @@ export default class TeamClient {
       }), { newTeamName })
 
     await this.httpClient
-      .put(teamRenameUrl(this.apiUrl, this.team.name), {
+      .put(teamRenameUrl(this.apiUrl, this.teamName), {
         name: validatedOptions.newTeamName
       })
 
-    this.team.name = newTeamName
+    this.teamName = newTeamName
   }
 
   async destroy () {
     await this.httpClient
-      .delete(teamUrl(this.apiUrl, this.team.name))
+      .delete(teamUrl(this.apiUrl, this.teamName))
   }
 
   async listBuilds (options = {}) {
@@ -70,7 +69,7 @@ export default class TeamClient {
     })
 
     const { data: builds } = await this.httpClient
-      .get(teamBuildsUrl(this.apiUrl, this.team.name), {
+      .get(teamBuildsUrl(this.apiUrl, this.teamName), {
         params,
         transformResponse: [parseJson, camelcaseKeysDeep]
       })
@@ -109,7 +108,7 @@ export default class TeamClient {
     })
 
     const { data: containers } = await this.httpClient
-      .get(teamContainersUrl(this.apiUrl, this.team.name), {
+      .get(teamContainersUrl(this.apiUrl, this.teamName), {
         params,
         transformResponse: [parseJson, camelcaseKeysDeep]
       })
@@ -126,7 +125,7 @@ export default class TeamClient {
     const { data: container } = await this.httpClient
       .get(teamContainerUrl(
         this.apiUrl,
-        this.team.name,
+        this.teamName,
         validatedOptions.containerId), {
         transformResponse: [parseJson, camelcaseKeysDeep]
       })
@@ -136,7 +135,7 @@ export default class TeamClient {
 
   async listVolumes () {
     const { data: volumes } = await this.httpClient
-      .get(teamVolumesUrl(this.apiUrl, this.team.name), {
+      .get(teamVolumesUrl(this.apiUrl, this.teamName), {
         transformResponse: [parseJson, camelcaseKeysDeep]
       })
 
@@ -145,7 +144,7 @@ export default class TeamClient {
 
   async listPipelines () {
     const { data: pipelines } = await this.httpClient
-      .get(teamPipelinesUrl(this.apiUrl, this.team.name), {
+      .get(teamPipelinesUrl(this.apiUrl, this.teamName), {
         transformResponse: [parseJson, camelcaseKeysDeep]
       })
 
@@ -160,30 +159,19 @@ export default class TeamClient {
 
     const { data: pipeline } = await this.httpClient
       .get(teamPipelineUrl(
-        this.apiUrl, this.team.name, validatedOptions.pipelineName), {
+        this.apiUrl, this.teamName, validatedOptions.pipelineName), {
         transformResponse: [parseJson, camelcaseKeysDeep]
       })
 
     return pipeline
   }
 
-  async forPipeline (pipelineName) {
-    let pipeline
-    try {
-      pipeline = await this.getPipeline(pipelineName)
-    } catch (e) {
-      if (e.response && e.response.status === 404) {
-        throw new Error(`No pipeline with name: ${pipelineName}`)
-      } else {
-        throw e
-      }
-    }
-
+  forPipeline (pipelineName) {
     return new TeamPipelineClient({
       apiUrl: this.apiUrl,
       httpClient: this.httpClient,
-      team: this.team,
-      pipeline
+      teamName: this.teamName,
+      pipelineName
     })
   }
 }

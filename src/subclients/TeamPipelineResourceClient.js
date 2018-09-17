@@ -1,7 +1,8 @@
 import {
-  func, integer,
-  object,
+  func,
+  integer,
   schemaFor,
+  string,
   uri,
   validateOptions
 } from '../support/validation'
@@ -23,34 +24,34 @@ class TeamPipelineResourceClient {
       schemaFor({
         apiUrl: uri().required(),
         httpClient: func().required(),
-        team: object().required(),
-        pipeline: object().required(),
-        resource: object().required()
+        teamName: string().required(),
+        pipelineName: string().required(),
+        resourceName: string().required()
       }), options)
 
     this.apiUrl = validatedOptions.apiUrl
     this.httpClient = validatedOptions.httpClient
-    this.team = validatedOptions.team
-    this.pipeline = validatedOptions.pipeline
-    this.resource = validatedOptions.resource
+    this.teamName = validatedOptions.teamName
+    this.pipelineName = validatedOptions.pipelineName
+    this.resourceName = validatedOptions.resourceName
   }
 
   async pause () {
     await this.httpClient.put(
       teamPipelineResourcePauseUrl(
         this.apiUrl,
-        this.team.name,
-        this.pipeline.name,
-        this.resource.name))
+        this.teamName,
+        this.pipelineName,
+        this.resourceName))
   }
 
   async unpause () {
     await this.httpClient.put(
       teamPipelineResourceUnpauseUrl(
         this.apiUrl,
-        this.team.name,
-        this.pipeline.name,
-        this.resource.name))
+        this.teamName,
+        this.pipelineName,
+        this.resourceName))
   }
 
   async listVersions (options = {}) {
@@ -69,7 +70,7 @@ class TeamPipelineResourceClient {
 
     const { data: builds } = await this.httpClient
       .get(teamPipelineResourceVersionsUrl(
-        this.apiUrl, this.team.name, this.pipeline.name, this.resource.name),
+        this.apiUrl, this.teamName, this.pipelineName, this.resourceName),
       { params, transformResponse: [parseJson, camelcaseKeysDeep] })
 
     return builds
@@ -85,34 +86,23 @@ class TeamPipelineResourceClient {
       .get(
         teamPipelineResourceVersionUrl(
           this.apiUrl,
-          this.team.name,
-          this.pipeline.name,
-          this.resource.name,
+          this.teamName,
+          this.pipelineName,
+          this.resourceName,
           validatedOptions.versionId),
         { transformResponse: [parseJson, camelcaseKeysDeep] })
 
     return version
   }
 
-  async forVersion (versionId) {
-    let version
-    try {
-      version = await this.getVersion(versionId)
-    } catch (e) {
-      if (e.response && e.response.status === 404) {
-        throw new Error(`No version for ID: ${versionId}`)
-      } else {
-        throw e
-      }
-    }
-
+  forVersion (versionId) {
     return new TeamPipelineResourceVersionClient({
       apiUrl: this.apiUrl,
       httpClient: this.httpClient,
-      team: this.team,
-      pipeline: this.pipeline,
-      resource: this.resource,
-      version
+      teamName: this.teamName,
+      pipelineName: this.pipelineName,
+      resourceName: this.resourceName,
+      versionId
     })
   }
 }

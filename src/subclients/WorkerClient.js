@@ -1,6 +1,6 @@
 import {
   func,
-  object,
+  string,
   schemaFor,
   uri,
   validateOptions
@@ -13,18 +13,18 @@ export default class WorkerClient {
       schemaFor({
         apiUrl: uri().required(),
         httpClient: func().required(),
-        worker: object().required()
+        workerName: string().required()
       }), options)
 
     this.apiUrl = validatedOptions.apiUrl
     this.httpClient = validatedOptions.httpClient
-    this.worker = validatedOptions.worker
+    this.workerName = validatedOptions.workerName
   }
 
   async prune () {
     await this.httpClient.put(
       workerPruneUrl(
         this.apiUrl,
-        this.worker.name))
+        this.workerName))
   }
 }
