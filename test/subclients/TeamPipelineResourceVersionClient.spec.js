@@ -21,7 +21,7 @@ const buildValidTeamPipelineResourceVersionClient = () => {
   const teamName = data.randomTeamName()
   const pipelineName = data.randomPipelineName()
   const resourceName = data.randomResourceName()
-  const versionId = data.randomId()
+  const versionId = data.randomResourceVersionId()
 
   const client = new TeamPipelineResourceVersionClient({
     apiUrl, httpClient, teamName, pipelineName, resourceName, versionId
@@ -48,7 +48,7 @@ describe('TeamPipelineResourceVersionClient', () => {
           teamName: data.randomTeamName(),
           pipelineName: data.randomPipelineName(),
           resourceName: data.randomResourceName(),
-          versionId: data.randomId(),
+          versionId: data.randomResourceVersionId(),
           httpClient: axios
         })
         .throwsError('Invalid parameter(s): ["apiUrl" is required].')
@@ -61,7 +61,7 @@ describe('TeamPipelineResourceVersionClient', () => {
           teamName: data.randomTeamName(),
           pipelineName: data.randomPipelineName(),
           resourceName: data.randomResourceName(),
-          versionId: data.randomId(),
+          versionId: data.randomResourceVersionId(),
           httpClient: axios
         })
         .throwsError('Invalid parameter(s): ["apiUrl" must be a string].')
@@ -74,7 +74,7 @@ describe('TeamPipelineResourceVersionClient', () => {
           teamName: data.randomTeamName(),
           pipelineName: data.randomPipelineName(),
           resourceName: data.randomResourceName(),
-          versionId: data.randomId(),
+          versionId: data.randomResourceVersionId(),
           httpClient: axios
         })
         .throwsError('Invalid parameter(s): ["apiUrl" must be a valid uri].')
@@ -88,7 +88,7 @@ describe('TeamPipelineResourceVersionClient', () => {
             teamName: data.randomTeamName(),
             pipelineName: data.randomPipelineName(),
             resourceName: data.randomResourceName(),
-            versionId: data.randomId(),
+            versionId: data.randomResourceVersionId(),
             apiUrl: faker.internet.url()
           })
           .throwsError(
@@ -102,7 +102,7 @@ describe('TeamPipelineResourceVersionClient', () => {
           httpClient: axios,
           pipelineName: data.randomPipelineName(),
           resourceName: data.randomResourceName(),
-          versionId: data.randomId()
+          versionId: data.randomResourceVersionId()
         })
         .throwsError('Invalid parameter(s): ["teamName" is required].')
     })
@@ -115,7 +115,7 @@ describe('TeamPipelineResourceVersionClient', () => {
           httpClient: axios,
           pipelineName: data.randomPipelineName(),
           resourceName: data.randomResourceName(),
-          versionId: data.randomId()
+          versionId: data.randomResourceVersionId()
         })
         .throwsError('Invalid parameter(s): ["teamName" must be a string].')
     })
@@ -127,7 +127,7 @@ describe('TeamPipelineResourceVersionClient', () => {
           httpClient: axios,
           teamName: data.randomTeamName(),
           resourceName: data.randomResourceName(),
-          versionId: data.randomId()
+          versionId: data.randomResourceVersionId()
         })
         .throwsError('Invalid parameter(s): ["pipelineName" is required].')
     })
@@ -140,7 +140,7 @@ describe('TeamPipelineResourceVersionClient', () => {
           httpClient: axios,
           teamName: data.randomTeamName(),
           resourceName: data.randomResourceName(),
-          versionId: data.randomId()
+          versionId: data.randomResourceVersionId()
         })
         .throwsError('Invalid parameter(s): ["pipelineName" must be a string].')
     })
@@ -152,7 +152,7 @@ describe('TeamPipelineResourceVersionClient', () => {
           httpClient: axios,
           teamName: data.randomTeamName(),
           pipelineName: data.randomPipelineName(),
-          versionId: data.randomId()
+          versionId: data.randomResourceVersionId()
         })
         .throwsError('Invalid parameter(s): ["resourceName" is required].')
     })
@@ -165,7 +165,7 @@ describe('TeamPipelineResourceVersionClient', () => {
           httpClient: axios,
           teamName: data.randomTeamName(),
           pipelineName: data.randomPipelineName(),
-          versionId: data.randomId()
+          versionId: data.randomResourceVersionId()
         })
         .throwsError('Invalid parameter(s): ["resourceName" must be a string].')
     })
@@ -268,7 +268,7 @@ describe('TeamPipelineResourceVersionClient', () => {
           teamName, pipelineName, resourceName, versionId
         } = buildValidTeamPipelineResourceVersionClient()
 
-        const buildId = data.randomId()
+        const buildId = data.randomBuildId()
         const buildData = data.randomBuild({
           teamName,
           pipelineName,
@@ -307,7 +307,7 @@ describe('TeamPipelineResourceVersionClient', () => {
           teamName, pipelineName, resourceName, versionId
         } = buildValidTeamPipelineResourceVersionClient()
 
-        const buildId = data.randomId()
+        const buildId = data.randomBuildId()
         const buildData = data.randomBuild({
           teamName,
           pipelineName,

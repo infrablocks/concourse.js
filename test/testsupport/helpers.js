@@ -16,3 +16,6 @@ export const randomLowerHex = (length) => {
 
   return wholeString
 }
+
+export const randomLowerCaseWord = () => faker.lorem.word()
+export const randomBoolean = () => faker.random.boolean()

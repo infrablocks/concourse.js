@@ -444,7 +444,7 @@ describe('TeamPipelineResourceClient', () => {
           teamName, pipelineName, resourceName
         } = buildValidTeamPipelineResourceClient()
 
-        const versionId = data.randomId()
+        const versionId = data.randomBuildId()
         const versionData = data.randomResourceVersion({
           id: versionId
         })
@@ -478,7 +478,7 @@ describe('TeamPipelineResourceClient', () => {
         teamName, pipelineName, resourceName
       } = buildValidTeamPipelineResourceClient()
 
-      const versionId = data.randomId()
+      const versionId = data.randomResourceVersionId()
 
       const teamPipelineResourceClient = client.forVersion(versionId)
 

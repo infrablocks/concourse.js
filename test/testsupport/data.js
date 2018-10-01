@@ -2,7 +2,7 @@ import faker from 'faker'
 import jwt from 'jsonwebtoken'
 import NodeRSA from 'node-rsa'
 
-import { randomLowerHex } from './helpers'
+import { randomBoolean, randomLowerCaseWord, randomLowerHex } from './helpers'
 
 import { toUnixTime } from '../../src/support/date'
 
@@ -21,8 +21,6 @@ const randomInfo = (overrides = {}) => ({
   workerVersion: randomVersion(),
   ...overrides
 })
-
-const randomId = () => faker.random.number()
 
 const randomCsrfToken = () => randomLowerHex(64)
 const randomBearerToken = (overrides = {}, options = {}) => {
@@ -43,9 +41,11 @@ const randomBearerToken = (overrides = {}, options = {}) => {
   return jwt.sign(resolvedData, rsaPrivateKey, resolvedOptions)
 }
 
-const randomBuildName = () => faker.random.word()
-const randomBuildStatus = () => faker.random.arrayElement(
-  ['succeeded', 'failed'])
+const randomBuildId = () => faker.random.number()
+const randomBuildName = () => randomLowerCaseWord()
+const randomBuildStatus = () =>
+  faker.random.arrayElement([
+    'pending', 'started', 'succeeded', 'failed', 'errored', 'aborted'])
 const randomBuildApiUrl = () => faker.internet.url()
 const randomBuildStartTime = () => toUnixTime(faker.date.past())
 const randomBuildEndTime = () => toUnixTime(faker.date.recent())
@@ -56,39 +56,36 @@ const randomContainerId = () =>
 const randomContainerType = () => faker.random.arrayElement(
   ['check', 'put', 'get'])
 
-const randomStepName = () => faker.random.word()
+const randomStepName = () => randomLowerCaseWord()
 
 const randomWorkingDirectory = () =>
   `/tmp/${randomStepName()}/${randomContainerType()}`
 
-const randomTeamName = () => faker.random.word()
+const randomTeamId = () => faker.random.number()
+const randomTeamName = () => randomLowerCaseWord()
 
-const randomPipelineName = () => faker.random.word()
-const randomPipelineIsPaused = () => faker.random.boolean()
-const randomPipelineIsPublic = () => faker.random.boolean()
+const randomPipelineId = () => faker.random.number()
+const randomPipelineName = () => randomLowerCaseWord()
+const randomPipelineIsPaused = () => randomBoolean()
+const randomPipelineIsPublic = () => randomBoolean()
 
-const randomJobName = () => faker.random.word()
-const randomJobGroups = () => []
+const randomInputName = () => randomLowerCaseWord()
+const randomInputTrigger = () => randomBoolean()
 
-const randomInputName = () => faker.random.word()
-const randomInputResource = () => faker.random.word()
-const randomInputTrigger = () => faker.random.boolean()
+const randomOutputName = () => randomLowerCaseWord()
 
-const randomOutputName = () => faker.random.word()
-const randomOutputResource = () => faker.random.word()
-
-const randomResourceTypeName = () => faker.random.word()
+const randomResourceTypeName = () => randomLowerCaseWord()
 const randomResourceTypeType = () => faker.random.arrayElement(
   ['git', 'docker-image', 'slack-notification'])
 const randomResourceTypeSource = (overrides = {}) => ({
-  repository: `${faker.random.word()}/${faker.random.word()}`,
+  repository: `${randomLowerCaseWord()}/${randomLowerCaseWord()}`,
   tag: 'latest',
   ...overrides
 })
 const randomResourceTypeVersion = () => ({
   digest: `sha256:${randomLowerHex(64)})`
 })
-const randomResourceTypeIsPrivileged = () => faker.random.boolean()
+const randomResourceTypeIsPrivileged = () => randomBoolean()
 const randomResourceTypeTags = () => null
 const randomResourceTypeParams = () => null
 
@@ -103,7 +100,7 @@ const randomResourceType = (overrides = {}) => ({
   ...overrides
 })
 
-const randomResourceName = () => faker.random.word()
+const randomResourceName = () => randomLowerCaseWord()
 const randomResourceLastCheckedTime = () => toUnixTime(faker.date.past())
 
 const randomPlatform = () => faker.random.arrayElement(
@@ -121,7 +118,7 @@ const randomWorkerState = () => faker.random.arrayElement(
 const randomWorkerVersion = () => '2.1'
 
 const randomWorkerResourceTypeImage = () =>
-  `/concourse-work-dir/3.14.1/assets/resource-images/${faker.random.word()}` +
+  `/concourse-work-dir/3.14.1/assets/resource-images/${randomLowerCaseWord()}` +
   `/rootfs`
 const randomWorkerResourceType = (overrides = {}) => ({
   type: randomResourceTypeType(),
@@ -167,14 +164,14 @@ const randomTeamAuthentication = (overrides = {}) => ({
   ...overrides
 })
 const randomTeam = (overrides = {}) => ({
-  id: randomId(),
+  id: randomTeamId(),
   name: randomTeamName(),
   auth: randomTeamAuthentication(),
   ...overrides
 })
 
 const randomPipeline = (overrides = {}) => ({
-  id: randomId(),
+  id: randomPipelineId(),
   name: randomPipelineName(),
   paused: randomPipelineIsPaused(),
   'public': randomPipelineIsPublic(),
@@ -184,14 +181,15 @@ const randomPipeline = (overrides = {}) => ({
 
 const randomInput = (overrides = {}) => ({
   name: randomInputName(),
-  resource: randomInputResource(),
+  resource: randomResourceName(),
+  passed: undefined,
   trigger: randomInputTrigger(),
   ...overrides
 })
 
 const randomOutput = (overrides = {}) => ({
   name: randomOutputName(),
-  resource: randomOutputResource(),
+  resource: randomResourceName(),
   ...overrides
 })
 
@@ -204,8 +202,10 @@ const randomResource = (overrides = {}) => ({
   ...overrides
 })
 
-const randomResourceVersionMetadatumName = () => faker.random.word()
-const randomResourceVersionMetadatumValue = () => faker.random.word()
+const randomResourceVersionId = () => faker.random.number()
+
+const randomResourceVersionMetadatumName = () => randomLowerCaseWord()
+const randomResourceVersionMetadatumValue = () => randomLowerCaseWord()
 
 const randomResourceVersionMetadatum = (overrides = {}) => ({
   name: randomResourceVersionMetadatumName(),
@@ -215,7 +215,7 @@ const randomResourceVersionMetadatum = (overrides = {}) => ({
 
 const randomResourceVersionMetadata = () => [randomResourceVersionMetadatum()]
 
-const randomResourceVersionIsEnabled = () => faker.random.boolean()
+const randomResourceVersionIsEnabled = () => randomBoolean()
 
 const randomResourceVersionVersionRef = () => randomLowerHex(40)
 const randomResourceVersionVersion = (overrides = {}) => ({
@@ -224,7 +224,7 @@ const randomResourceVersionVersion = (overrides = {}) => ({
 })
 
 const randomResourceVersion = (overrides = {}) => ({
-  id: randomId(),
+  id: randomResourceVersionId(),
   type: randomResourceTypeType(),
   metadata: randomResourceVersionMetadata(),
   resource: randomResourceName(),
@@ -234,16 +234,19 @@ const randomResourceVersion = (overrides = {}) => ({
 })
 
 const randomResourceVersionCause = (overrides = {}) => ({
-  versionedResourceId: randomId(),
-  buildId: randomId(),
+  versionedResourceId: randomResourceVersionId(),
+  buildId: randomBuildId(),
   ...overrides
 })
 
-const randomJobInputs = () => [randomInput()]
-const randomJobOutputs = () => [randomOutput()]
+const randomJobId = () => faker.random.number()
+const randomJobName = () => randomLowerCaseWord()
+const randomJobInputs = ({ inputs = randomInput() } = {}) => [...inputs]
+const randomJobOutputs = ({ outputs = randomOutput() } = {}) => [...outputs]
+const randomJobGroups = () => [randomLowerCaseWord()]
 
 const randomBuild = (overrides = {}) => ({
-  id: randomId(),
+  id: randomBuildId(),
   name: randomBuildName(),
   status: randomBuildStatus(),
   teamName: randomTeamName(),
@@ -256,7 +259,7 @@ const randomBuild = (overrides = {}) => ({
 })
 
 const randomJob = (overrides = {}) => ({
-  id: randomId(),
+  id: randomJobId(),
   name: randomJobName(),
   pipelineName: randomPipelineName(),
   teamName: randomTeamName(),
@@ -268,14 +271,70 @@ const randomJob = (overrides = {}) => ({
   ...overrides
 })
 
+const randomIndependentJobFor =
+  ({
+    jobName = randomJobName(),
+    pipelineName = randomPipelineName(),
+    resourceName = randomResourceName(),
+    automatic = randomBoolean()
+  } = {}) => randomJob({
+    name: jobName,
+    pipelineName,
+    inputs: randomJobInputs({
+      inputs: [
+        randomInput({
+          trigger: automatic,
+          resource: resourceName
+        })
+      ]
+    }),
+    outputs: randomJobOutputs({
+      outputs: [
+        randomOutput({
+          resource: resourceName
+        })
+      ]
+    })
+  })
+
+const randomDependentJobFor =
+  ({
+    jobName = randomJobName(),
+    dependencyJobName = randomJobName(),
+    pipelineName = randomPipelineName(),
+    resourceName = randomResourceName(),
+    automatic = randomBoolean()
+  }) => randomJob({
+    name: jobName,
+    pipelineName,
+    inputs: randomJobInputs({
+      inputs: [
+        randomInput({
+          trigger: automatic,
+          resource: resourceName,
+          passed: [
+            dependencyJobName
+          ]
+        })
+      ]
+    }),
+    outputs: randomJobOutputs({
+      outputs: [
+        randomOutput({
+          resource: resourceName
+        })
+      ]
+    })
+  })
+
 const randomContainer = (overrides = {}) => ({
   id: randomContainerId(),
   workerName: randomWorkerName(),
   type: randomContainerType(),
   stepName: randomStepName(),
-  pipelineId: randomId(),
-  jobId: randomId(),
-  buildId: randomId(),
+  pipelineId: randomPipelineId(),
+  jobId: randomJobId(),
+  buildId: randomBuildId(),
   pipelineName: randomPipelineName(),
   jobName: randomJobName(),
   buildName: randomBuildName(),
@@ -312,7 +371,7 @@ export default {
 
   randomInfo,
 
-  randomId,
+  randomBuildId,
 
   randomCsrfToken,
   randomBearerToken,
@@ -330,7 +389,11 @@ export default {
   randomPipeline,
 
   randomJobName,
+  randomJobInputs,
+  randomJobOutputs,
   randomJob,
+  randomIndependentJobFor,
+  randomDependentJobFor,
 
   randomInput,
   randomOutput,
@@ -339,6 +402,7 @@ export default {
   randomResourceType,
   randomResourceName,
 
+  randomResourceVersionId,
   randomResourceVersion,
 
   randomResourceVersionCause,
@@ -349,6 +413,5 @@ export default {
   randomContainer,
   randomContainerId,
 
-  randomVolumeId,
   randomVolume
 }

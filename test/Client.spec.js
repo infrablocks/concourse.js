@@ -653,7 +653,7 @@ describe('Client', () => {
       async () => {
         const { client, mock, apiUrl, bearerToken } = buildValidClient()
 
-        const buildId = data.randomId()
+        const buildId = data.randomBuildId()
 
         const teamName = data.randomTeamName()
         const pipelineName = data.randomPipelineName()
@@ -691,7 +691,7 @@ describe('Client', () => {
       const { client, apiUrl, httpClient } =
           buildValidClient()
 
-      const buildId = data.randomId()
+      const buildId = data.randomBuildId()
 
       const buildClient = client.forBuild(buildId)
 

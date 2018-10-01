@@ -17,7 +17,7 @@ const buildValidBuildClient = () => {
   })
   const mock = new MockAdapter(httpClient)
 
-  const buildId = data.randomId()
+  const buildId = data.randomBuildId()
 
   const client = new BuildClient({ apiUrl, httpClient, buildId })
 
