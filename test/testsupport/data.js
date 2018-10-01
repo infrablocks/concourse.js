@@ -1,10 +1,12 @@
 import faker from 'faker'
 import jwt from 'jsonwebtoken'
 import NodeRSA from 'node-rsa'
+import { values } from 'ramda'
 
 import { randomBoolean, randomLowerCaseWord, randomLowerHex } from './helpers'
 
 import { toUnixTime } from '../../src/support/date'
+import BuildStatus from '../../src/model/BuildStatus'
 
 const randomConcourseUrl = () => faker.internet.url()
 const randomApiUrl = () => `${randomConcourseUrl()}/api/v1`
@@ -44,8 +46,7 @@ const randomBearerToken = (overrides = {}, options = {}) => {
 const randomBuildId = () => faker.random.number()
 const randomBuildName = () => randomLowerCaseWord()
 const randomBuildStatus = () =>
-  faker.random.arrayElement([
-    'pending', 'started', 'succeeded', 'failed', 'errored', 'aborted'])
+  faker.random.arrayElement(values(BuildStatus))
 const randomBuildApiUrl = () => faker.internet.url()
 const randomBuildStartTime = () => toUnixTime(faker.date.past())
 const randomBuildEndTime = () => toUnixTime(faker.date.recent())

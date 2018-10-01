@@ -104,7 +104,7 @@ export default class Pipeline {
 // - Job#getDependencyJobs() ✓
 // - Job#getDependencyJobsFor(resourceName) ✓
 // - Job#getLatestBuild() ✓
-// - Job#getLatestBuildWithStatus(status)
+// - Job#getLatestBuildWithStatus(status) ✓
 // - Build#getResourceFor(resourceName)
 // - Pipeline#getResourceFor`(resourceName)
 // - Resource#getVersionHistory()

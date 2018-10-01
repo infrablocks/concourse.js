@@ -3,7 +3,7 @@ import {
   filter,
   find,
   flatten,
-  isEmpty,
+  isEmpty, isNil, last, length,
   map,
   none,
   pathOr,
@@ -145,7 +145,7 @@ export default class Job {
     return any(
       output => {
         const jobsForOutputResource =
-          pathOr([], [output.resource], jobsByInputResource)
+          pathOr([], [ output.resource ], jobsByInputResource)
         const jobsDependingOnThis =
           filter(
             job => job
@@ -176,8 +176,38 @@ export default class Job {
       return null
     }
 
-    const buildData = buildsData[0]
+    const buildData = buildsData[ 0 ]
 
     return new Build({ ...buildData, client: this.client })
+  }
+
+  async getLatestBuildWithStatus (status) {
+    const pipelineClient = this.client
+      .forTeam(this.getTeamName())
+      .forPipeline(this.getPipelineName())
+
+    let buildsData, lastBuildId
+    const buildsPerCall = 10
+
+    do {
+      const options = lastBuildId
+        ? { limit: buildsPerCall, since: lastBuildId }
+        : { limit: buildsPerCall }
+      buildsData = await pipelineClient.listBuilds(options)
+
+      const buildData = find(build => build.status === status, buildsData)
+
+      if (!isNil(buildData)) {
+        return new Build({ ...buildData, client: this.client })
+      }
+
+      if (isEmpty(buildsData)) {
+        return null
+      }
+
+      lastBuildId = last(buildsData).id
+    } while (length(buildsData) === buildsPerCall)
+
+    return null
   }
 }

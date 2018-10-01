@@ -1,6 +1,6 @@
 import sinon from 'sinon'
 import { expect } from 'chai'
-import { map } from 'ramda'
+import { map, times } from 'ramda'
 
 import data from '../testsupport/data'
 import Job from '../../src/model/Job'
@@ -8,6 +8,7 @@ import Input, { toInput } from '../../src/model/Input'
 import Output, { toOutput } from '../../src/model/Output'
 import JobSet from '../../src/model/JobSet'
 import Build from '../../src/model/Build'
+import BuildStatus from '../../src/model/BuildStatus'
 
 describe('Job', () => {
   it('exposes its attributes', () => {
@@ -34,7 +35,7 @@ describe('Job', () => {
 
       const jobData = data.randomJob({
         inputs: data.randomJobInputs({
-          inputs: [firstInputData, secondInputData]
+          inputs: [ firstInputData, secondInputData ]
         })
       })
       const job = new Job(jobData)
@@ -66,7 +67,7 @@ describe('Job', () => {
 
       const jobData = data.randomJob({
         outputs: data.randomJobOutputs({
-          outputs: [firstOutputData, secondOutputData]
+          outputs: [ firstOutputData, secondOutputData ]
         })
       })
       const job = new Job(jobData)
@@ -83,12 +84,12 @@ describe('Job', () => {
       'have passed', () => {
       const otherInput = data.randomInput()
       const inputRequiringOtherJobsToHavePassed = data.randomInput({
-        passed: [data.randomJobName()]
+        passed: [ data.randomJobName() ]
       })
 
       const jobData = data.randomJob({
         inputs: data.randomJobInputs({
-          inputs: [otherInput, inputRequiringOtherJobsToHavePassed]
+          inputs: [ otherInput, inputRequiringOtherJobsToHavePassed ]
         })
       })
 
@@ -103,7 +104,7 @@ describe('Job', () => {
 
       const jobData = data.randomJob({
         inputs: data.randomJobInputs({
-          inputs: [firstInput, secondInput]
+          inputs: [ firstInput, secondInput ]
         })
       })
 
@@ -124,7 +125,7 @@ describe('Job', () => {
       const secondDependencyJobName = data.randomJobName()
 
       const inputRequiringOtherJobsToHavePassed = data.randomInput({
-        passed: [firstDependencyJobName, secondDependencyJobName]
+        passed: [ firstDependencyJobName, secondDependencyJobName ]
       })
 
       const firstDependencyJobData = data.randomJob({
@@ -135,7 +136,7 @@ describe('Job', () => {
       })
       const dependentJobData = data.randomJob({
         inputs: data.randomJobInputs({
-          inputs: [inputRequiringOtherJobsToHavePassed]
+          inputs: [ inputRequiringOtherJobsToHavePassed ]
         })
       })
 
@@ -153,7 +154,10 @@ describe('Job', () => {
       const client = { forTeam }
 
       const firstDependencyJob = new Job({ ...firstDependencyJobData, client })
-      const secondDependencyJob = new Job({ ...secondDependencyJobData, client })
+      const secondDependencyJob = new Job({
+        ...secondDependencyJobData,
+        client
+      })
 
       getJob.withArgs(firstDependencyJobName).resolves(firstDependencyJobData)
       getJob.withArgs(secondDependencyJobName).resolves(secondDependencyJobData)
@@ -163,7 +167,7 @@ describe('Job', () => {
       const dependencyJobs = await job.getDependencyJobs()
 
       expect(dependencyJobs)
-        .to.eql([firstDependencyJob, secondDependencyJob])
+        .to.eql([ firstDependencyJob, secondDependencyJob ])
     })
 
     it('returns the set of jobs that must have passed for all input ' +
@@ -177,10 +181,10 @@ describe('Job', () => {
       const thirdDependencyJobName = data.randomJobName()
 
       const firstInputRequiringOtherJobsToHavePassed = data.randomInput({
-        passed: [firstDependencyJobName, secondDependencyJobName]
+        passed: [ firstDependencyJobName, secondDependencyJobName ]
       })
       const secondInputRequiringOtherJobsToHavePassed = data.randomInput({
-        passed: [secondDependencyJobName, thirdDependencyJobName]
+        passed: [ secondDependencyJobName, thirdDependencyJobName ]
       })
 
       const firstDependencyJobData = data.randomJob({
@@ -215,7 +219,10 @@ describe('Job', () => {
       const client = { forTeam }
 
       const firstDependencyJob = new Job({ ...firstDependencyJobData, client })
-      const secondDependencyJob = new Job({ ...secondDependencyJobData, client })
+      const secondDependencyJob = new Job({
+        ...secondDependencyJobData,
+        client
+      })
       const thirdDependencyJob = new Job({ ...thirdDependencyJobData, client })
 
       getJob.withArgs(firstDependencyJobName).resolves(firstDependencyJobData)
@@ -227,7 +234,7 @@ describe('Job', () => {
       const dependencyJobs = await job.getDependencyJobs()
 
       expect(dependencyJobs)
-        .to.eql([firstDependencyJob, secondDependencyJob, thirdDependencyJob])
+        .to.eql([ firstDependencyJob, secondDependencyJob, thirdDependencyJob ])
     })
 
     it('returns no jobs when no input resources require jobs to have ' +
@@ -268,11 +275,11 @@ describe('Job', () => {
 
       const firstInputRequiringOtherJobsToHavePassed = data.randomInput({
         resource: firstResourceName,
-        passed: [firstDependencyJobName, secondDependencyJobName]
+        passed: [ firstDependencyJobName, secondDependencyJobName ]
       })
       const secondInputRequiringOtherJobsToHavePassed = data.randomInput({
         resource: secondResourceName,
-        passed: [secondDependencyJobName, thirdDependencyJobName]
+        passed: [ secondDependencyJobName, thirdDependencyJobName ]
       })
 
       const firstDependencyJobData = data.randomJob({
@@ -304,7 +311,10 @@ describe('Job', () => {
       const client = { forTeam }
 
       const firstDependencyJob = new Job({ ...firstDependencyJobData, client })
-      const secondDependencyJob = new Job({ ...secondDependencyJobData, client })
+      const secondDependencyJob = new Job({
+        ...secondDependencyJobData,
+        client
+      })
 
       getJob.withArgs(firstDependencyJobName).resolves(firstDependencyJobData)
       getJob.withArgs(secondDependencyJobName).resolves(secondDependencyJobData)
@@ -314,7 +324,7 @@ describe('Job', () => {
       const dependencyJobs = await job.getDependencyJobsFor(firstResourceName)
 
       expect(dependencyJobs)
-        .to.eql([firstDependencyJob, secondDependencyJob])
+        .to.eql([ firstDependencyJob, secondDependencyJob ])
     })
 
     it('returns no jobs when the specified input resource does not require ' +
@@ -327,7 +337,7 @@ describe('Job', () => {
 
       const firstInputRequiringOtherJobsToHavePassed = data.randomInput({
         resource: firstResourceName,
-        passed: [firstDependencyJobName, secondDependencyJobName]
+        passed: [ firstDependencyJobName, secondDependencyJobName ]
       })
       const secondInputRequiringOtherJobsToHavePassed = data.randomInput({
         resource: secondResourceName,
@@ -365,7 +375,7 @@ describe('Job', () => {
 
         const dependentJobData = data.randomJob({
           inputs: data.randomJobInputs({
-            inputs: [matchingInput]
+            inputs: [ matchingInput ]
           })
         })
 
@@ -391,19 +401,19 @@ describe('Job', () => {
 
       const dependentJobData = data.randomJob({
         inputs: data.randomJobInputs({
-          inputs: [data.randomInput({
+          inputs: [ data.randomInput({
             resource: resourceName,
-            passed: [jobName]
-          })]
+            passed: [ jobName ]
+          }) ]
         })
       })
       const otherJobData = data.randomJob()
       const thisJobData = data.randomJob({
         name: jobName,
         outputs: data.randomJobOutputs({
-          outputs: [data.randomOutput({
+          outputs: [ data.randomOutput({
             resource: resourceName
-          })]
+          }) ]
         })
       })
 
@@ -412,7 +422,7 @@ describe('Job', () => {
 
       const thisJob = new Job(thisJobData)
 
-      const jobSet = new JobSet([dependentJob, otherJob, thisJob])
+      const jobSet = new JobSet([ dependentJob, otherJob, thisJob ])
 
       expect(thisJob.hasDependentJobsIn(jobSet)).to.eql(true)
     })
@@ -432,7 +442,7 @@ describe('Job', () => {
 
       const thisJob = new Job(thisJobData)
 
-      const jobSet = new JobSet([dependentJob, otherJob, thisJob])
+      const jobSet = new JobSet([ dependentJob, otherJob, thisJob ])
 
       expect(thisJob.hasDependentJobsIn(jobSet)).to.eql(false)
     })
@@ -571,7 +581,7 @@ describe('Job', () => {
         })
 
         const listBuilds = sinon.stub()
-        listBuilds.withArgs({ limit: 1 }).resolves([buildData])
+        listBuilds.withArgs({ limit: 1 }).resolves([ buildData ])
         const pipelineClient = { listBuilds }
 
         const forPipeline = sinon.stub()
@@ -618,6 +628,175 @@ describe('Job', () => {
       const job = new Job({ ...jobData, client })
 
       const actualBuild = await job.getLatestBuild()
+
+      expect(actualBuild).to.eql(null)
+    })
+  })
+
+  describe('getLatestBuildWithStatus', () => {
+    it('returns the first build with the provided status', async () => {
+      const pipelineName = data.randomPipelineName()
+      const teamName = data.randomTeamName()
+
+      const jobData = data.randomJob({
+        pipelineName
+      })
+
+      const firstBuildData = data.randomBuild({
+        pipelineName,
+        status: BuildStatus.pending
+      })
+      const secondBuildData = data.randomBuild({
+        pipelineName,
+        status: BuildStatus.succeeded
+      })
+      const thirdBuildData = data.randomBuild({
+        pipelineName,
+        status: BuildStatus.failed
+      })
+
+      const listBuilds = sinon.stub()
+      listBuilds
+        .withArgs({ limit: 10 })
+        .resolves([ firstBuildData, secondBuildData, thirdBuildData ])
+      const pipelineClient = { listBuilds }
+
+      const forPipeline = sinon.stub()
+        .withArgs(pipelineName)
+        .returns(pipelineClient)
+      const teamClient = { forPipeline }
+
+      const forTeam = sinon.stub()
+        .withArgs(teamName)
+        .returns(teamClient)
+      const client = { forTeam }
+
+      const job = new Job({ ...jobData, client })
+
+      const expectedBuild = new Build({ ...thirdBuildData, client })
+
+      const actualBuild = await job.getLatestBuildWithStatus(BuildStatus.failed)
+
+      expect(actualBuild).to.eql(expectedBuild)
+    })
+
+    it('returns the first build with the provided status ' +
+      'across pages', async () => {
+      const pipelineName = data.randomPipelineName()
+      const teamName = data.randomTeamName()
+
+      const jobData = data.randomJob({
+        pipelineName
+      })
+
+      const firstTenBuildsData = times(() => data.randomBuild({
+        status: BuildStatus.succeeded
+      }), 10)
+      const firstSecondPageBuildData = data.randomBuild({
+        status: BuildStatus.succeeded
+      })
+      const secondSecondPageBuildData = data.randomBuild({
+        status: BuildStatus.failed
+      })
+
+      const listBuilds = sinon.stub()
+      listBuilds
+        .withArgs({ limit: 10 }).resolves(firstTenBuildsData)
+        .withArgs({ limit: 10, since: firstTenBuildsData[9].id }).resolves(
+          [firstSecondPageBuildData, secondSecondPageBuildData])
+      const pipelineClient = { listBuilds }
+
+      const forPipeline = sinon.stub()
+        .withArgs(pipelineName)
+        .returns(pipelineClient)
+      const teamClient = { forPipeline }
+
+      const forTeam = sinon.stub()
+        .withArgs(teamName)
+        .returns(teamClient)
+      const client = { forTeam }
+
+      const job = new Job({ ...jobData, client })
+
+      const expectedBuild = new Build({ ...secondSecondPageBuildData, client })
+
+      const actualBuild = await job.getLatestBuildWithStatus(BuildStatus.failed)
+
+      expect(actualBuild).to.eql(expectedBuild)
+    })
+
+    it('returns null when the job has no builds', async () => {
+      const pipelineName = data.randomPipelineName()
+      const teamName = data.randomTeamName()
+
+      const jobData = data.randomJob({
+        pipelineName
+      })
+
+      const listBuilds = sinon.stub()
+      listBuilds.withArgs({ limit: 10 }).resolves([])
+      const pipelineClient = { listBuilds }
+
+      const forPipeline = sinon.stub()
+        .withArgs(pipelineName)
+        .returns(pipelineClient)
+      const teamClient = { forPipeline }
+
+      const forTeam = sinon.stub()
+        .withArgs(teamName)
+        .returns(teamClient)
+      const client = { forTeam }
+
+      const job = new Job({ ...jobData, client })
+
+      const actualBuild =
+        await job.getLatestBuildWithStatus(BuildStatus.pending)
+
+      expect(actualBuild).to.eql(null)
+    })
+
+    it('returns null when the job has no builds with the ' +
+      'provided status', async () => {
+      const pipelineName = data.randomPipelineName()
+      const teamName = data.randomTeamName()
+
+      const jobData = data.randomJob({
+        pipelineName
+      })
+
+      const firstBuildData = data.randomBuild({
+        pipelineName,
+        status: BuildStatus.pending
+      })
+      const secondBuildData = data.randomBuild({
+        pipelineName,
+        status: BuildStatus.succeeded
+      })
+      const thirdBuildData = data.randomBuild({
+        pipelineName,
+        status: BuildStatus.failed
+      })
+
+      const listBuilds = sinon.stub()
+      listBuilds
+        .withArgs({ limit: 10 })
+        .resolves([firstBuildData, secondBuildData, thirdBuildData])
+      const pipelineClient = { listBuilds }
+
+      const forPipeline = sinon.stub()
+        .withArgs(pipelineName)
+        .returns(pipelineClient)
+      const teamClient = { forPipeline }
+
+      const forTeam = sinon.stub()
+        .withArgs(teamName)
+        .returns(teamClient)
+      const client = { forTeam }
+
+      const job = new Job({ ...jobData, client })
+
+      const actualBuild =
+        await job.getLatestBuildWithStatus(BuildStatus.aborted)
 
       expect(actualBuild).to.eql(null)
     })
