@@ -6,7 +6,7 @@ const url = process.env.CONCOURSE_JS_INTEGRATION_URL
 const username = process.env.CONCOURSE_JS_INTEGRATION_USERNAME
 const password = process.env.CONCOURSE_JS_INTEGRATION_PASSWORD
 
-const client = Client.instanceFor(url, username, password)
+const client = Client.instanceFor({ url, username, password })
 
 describe('Client', () => {
   it('fetches all pipelines', async () => {

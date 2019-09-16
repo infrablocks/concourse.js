@@ -3,15 +3,15 @@ import { toJob } from './Job'
 import JobSet from './JobSet'
 
 export default class Pipeline {
-  static async load ({teamName, pipelineName, client}) {
+  static async load ({ teamName, pipelineName, client }) {
     const pipelineData = await client
       .forTeam(teamName)
       .getPipeline(pipelineName)
 
-    return new Pipeline({...pipelineData, client})
+    return new Pipeline({ ...pipelineData, client })
   }
 
-  constructor ({id, name, teamName, client, ...data}) {
+  constructor ({ id, name, teamName, client, ...data }) {
     this.client = client
 
     this.id = id

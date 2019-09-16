@@ -29,7 +29,14 @@ import BuildClient from './subclients/BuildClient'
 import WorkerClient from './subclients/WorkerClient'
 
 export default class Client {
-  static instanceFor (url, username, password, teamName = 'main') {
+  static instanceFor
+  ({
+    url,
+    username,
+    password,
+    teamName = 'main',
+    timeout = 5000
+  }) {
     const apiUrl = apiUrlFor(url)
     const credentials = {
       infoUrl: infoUrl(apiUrl),
@@ -38,7 +45,7 @@ export default class Client {
       username: username,
       password: password
     }
-    const httpClient = createHttpClient({ credentials })
+    const httpClient = createHttpClient({ credentials, timeout })
 
     return new Client({ apiUrl, httpClient })
   }
