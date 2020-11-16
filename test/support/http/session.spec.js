@@ -10,7 +10,7 @@ import build from '../../testsupport/builders'
 import { createSessionInterceptor }
   from '../../../src/support/http/session'
 import {
-  infoUrl, skyTokenUrl,
+  infoUrl, skyIssuerTokenUrl, skyTokenUrl,
   teamAuthTokenUrl,
   teamBuildsUrl,
   teamPipelinesUrl
@@ -34,7 +34,8 @@ describe('session interceptor', () => {
       username: data.randomUsername(),
       password: data.randomPassword(),
       tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
-      tokenUrlPostVersion4: skyTokenUrl(concourseUrl),
+      tokenUrlPreVersion6: skyTokenUrl(concourseUrl),
+      tokenUrlPostVersion6: skyIssuerTokenUrl(concourseUrl),
       infoUrl: infoUrl(apiUrl),
       token: undefined
     }
@@ -78,7 +79,7 @@ describe('session interceptor', () => {
   })
 
   it('fetches token on first request when none provided and concourse ' +
-    'version is >= 4',
+    'version is < 6',
   async () => {
     const concourseUrl = data.randomConcourseUrl()
     const apiUrl = `${concourseUrl}/api/v1`
@@ -89,7 +90,8 @@ describe('session interceptor', () => {
       username: data.randomUsername(),
       password: data.randomPassword(),
       tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
-      tokenUrlPostVersion4: skyTokenUrl(concourseUrl),
+      tokenUrlPreVersion6: skyTokenUrl(concourseUrl),
+      tokenUrlPostVersion6: skyIssuerTokenUrl(concourseUrl),
       infoUrl: infoUrl(apiUrl),
       token: undefined
     }
@@ -115,7 +117,7 @@ describe('session interceptor', () => {
     })
 
     mock
-      .onPost(credentials.tokenUrlPostVersion4, expectedData)
+      .onPost(credentials.tokenUrlPreVersion6, expectedData)
       .reply(200, authToken)
 
     const initialConfig = {
@@ -135,6 +137,65 @@ describe('session interceptor', () => {
     expect(updatedConfig).to.eql(expectedConfig)
   })
 
+  it('fetches token on first request when none provided and concourse ' +
+    'version is >= 6',
+    async () => {
+      const concourseUrl = data.randomConcourseUrl()
+      const apiUrl = `${concourseUrl}/api/v1`
+      const teamName = data.randomTeamName()
+      const csrfToken = data.randomCsrfToken()
+
+      const credentials = {
+        username: data.randomUsername(),
+        password: data.randomPassword(),
+        tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
+        tokenUrlPreVersion6: skyTokenUrl(concourseUrl),
+        tokenUrlPostVersion6: skyIssuerTokenUrl(concourseUrl),
+        infoUrl: infoUrl(apiUrl),
+        token: undefined
+      }
+      const httpClient = axios.create()
+      const mock = new MockAdapter(httpClient)
+
+      const bearerToken = data.randomBearerToken({ csrf: csrfToken })
+      const authToken = build.api.authTokenPostVersion4({ accessToken: bearerToken })
+
+      const interceptor = createSessionInterceptor({ credentials, httpClient })
+
+      mock
+        .onGet(credentials.infoUrl)
+        .reply(200, build.api.info({
+          version: '6.0.0'
+        }))
+
+      const expectedData = formurlencoded({
+        grant_type: 'password',
+        username: credentials.username,
+        password: credentials.password,
+        scope: 'openid profile email federated:id groups'
+      })
+
+      mock
+        .onPost(credentials.tokenUrlPostVersion6, expectedData)
+        .reply(200, authToken)
+
+      const initialConfig = {
+        url: teamPipelinesUrl(apiUrl, teamName),
+        method: 'get'
+      }
+      const updatedConfig = await interceptor(initialConfig)
+      const expectedConfig = {
+        url: teamPipelinesUrl(apiUrl, teamName),
+        method: 'get',
+        headers: {
+          ...bearerAuthHeader(bearerToken),
+          ...csrfTokenHeader(csrfToken)
+        }
+      }
+
+      expect(updatedConfig).to.eql(expectedConfig)
+    })
+
   it('does not fetch token if provided and still valid',
     async () => {
       const concourseUrl = data.randomConcourseUrl()
@@ -147,7 +208,8 @@ describe('session interceptor', () => {
         username: data.randomUsername(),
         password: data.randomPassword(),
         tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
-        tokenUrlPostVersion4: skyTokenUrl(concourseUrl),
+        tokenUrlPreVersion6: skyTokenUrl(concourseUrl),
+        tokenUrlPostVersion6: skyIssuerTokenUrl(concourseUrl),
         infoUrl: infoUrl(apiUrl),
         token: bearerToken
       }
@@ -183,7 +245,8 @@ describe('session interceptor', () => {
         username: data.randomUsername(),
         password: data.randomPassword(),
         tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
-        tokenUrlPostVersion4: skyTokenUrl(concourseUrl),
+        tokenUrlPreVersion6: skyTokenUrl(concourseUrl),
+        tokenUrlPostVersion6: skyIssuerTokenUrl(concourseUrl),
         infoUrl: infoUrl(apiUrl),
         token: undefined
       }
@@ -259,7 +322,8 @@ describe('session interceptor', () => {
       username: data.randomUsername(),
       password: data.randomPassword(),
       tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
-      tokenUrlPostVersion4: skyTokenUrl(concourseUrl),
+      tokenUrlPreVersion6: skyTokenUrl(concourseUrl),
+      tokenUrlPostVersion6: skyIssuerTokenUrl(concourseUrl),
       infoUrl: infoUrl(apiUrl),
       token: bearerToken
     }
@@ -303,7 +367,8 @@ describe('session interceptor', () => {
       username: data.randomUsername(),
       password: data.randomPassword(),
       tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
-      tokenUrlPostVersion4: skyTokenUrl(concourseUrl),
+      tokenUrlPreVersion6: skyTokenUrl(concourseUrl),
+      tokenUrlPostVersion6: skyIssuerTokenUrl(concourseUrl),
       infoUrl: infoUrl(apiUrl),
       token: expiredBearerToken
     }
@@ -357,7 +422,8 @@ describe('session interceptor', () => {
       username: data.randomUsername(),
       password: data.randomPassword(),
       tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
-      tokenUrlPostVersion4: skyTokenUrl(concourseUrl),
+      tokenUrlPreVersion6: skyTokenUrl(concourseUrl),
+      tokenUrlPostVersion6: skyIssuerTokenUrl(concourseUrl),
       infoUrl: infoUrl(apiUrl),
       token: undefined
     }

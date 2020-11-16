@@ -35,7 +35,7 @@ const fetchTokenPreVersion4 = async (credentials, httpClient) => {
   return response.data.value
 }
 
-const fetchTokenPostVersion4 = async (credentials, httpClient) => {
+const fetchTokenPreVersion6 = async (credentials, httpClient) => {
   const data = formurlencoded({
     grant_type: 'password',
     username: credentials.username,
@@ -44,7 +44,29 @@ const fetchTokenPostVersion4 = async (credentials, httpClient) => {
   })
 
   const response = await httpClient.post(
-    credentials.tokenUrlPostVersion4,
+    credentials.tokenUrlPreVersion6,
+    data,
+    {
+      headers: {
+        ...basicAuthHeader('fly', 'Zmx5'),
+        ...contentTypeHeader(contentTypes.formUrlEncoded)
+      },
+      transformResponse: [parseJson, camelcaseKeysDeep]
+    })
+
+  return response.data.accessToken
+}
+
+const fetchTokenPostVersion6 = async (credentials, httpClient) => {
+  const data = formurlencoded({
+    grant_type: 'password',
+    username: credentials.username,
+    password: credentials.password,
+    scope: 'openid profile email federated:id groups'
+  })
+
+  const response = await httpClient.post(
+    credentials.tokenUrlPostVersion6,
     data,
     {
       headers: {
@@ -63,9 +85,13 @@ const fetchToken = async (credentials, httpClient) => {
 
   if (semver.lt(version, '4.0.0')) {
     return fetchTokenPreVersion4(credentials, httpClient)
-  } else {
-    return fetchTokenPostVersion4(credentials, httpClient)
   }
+
+  if(semver.lt(version, '6.0.0')) {
+    return fetchTokenPreVersion6(credentials, httpClient)
+  }
+
+  return fetchTokenPostVersion6(credentials, httpClient)
 }
 
 const ensureValidToken = async (token, credentials, httpClient) => {
