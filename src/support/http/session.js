@@ -62,7 +62,7 @@ const fetchTokenPostVersion6 = async (credentials, httpClient) => {
     grant_type: 'password',
     username: credentials.username,
     password: credentials.password,
-    scope: 'openid profile email federated:id groups'
+    scope: 'openid+profile+email+federated:id+groups'
   })
 
   const response = await httpClient.post(
@@ -87,7 +87,7 @@ const fetchToken = async (credentials, httpClient) => {
     return fetchTokenPreVersion4(credentials, httpClient)
   }
 
-  if(semver.lt(version, '6.0.0')) {
+  if (semver.lt(version, '6.0.0')) {
     return fetchTokenPreVersion6(credentials, httpClient)
   }
 
