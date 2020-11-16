@@ -19,7 +19,7 @@ export const authTokenPreVersion4 =
     value
   })
 
-export const authTokenPostVersion4 =
+export const authTokenPreVersion6 =
   ({
     accessToken = 'eyJhbGciOiJSUzI1NiIsImtpZCI6IiIsInR5cCI6IkpXVCJ9.eyJjc3Jm' +
     'IjoiYzQ5NTQwYTYwMjI0Yjk4MDAwMDgwYzNhZjlkZDI2MjE4OTNlYjgwMWMzZGEyYWMzOGJ' +
@@ -40,6 +40,34 @@ export const authTokenPostVersion4 =
     tokenType = 'Bearer',
     expiry = '2018-09-08T22:37:55.973487291Z'
   } = {}) => ({
+    access_token: accessToken,
+    token_type: tokenType,
+    expiry
+  })
+
+export const authTokenPostVersion6 =
+  ({
+    idToken = 'eyJhbGciOiJSUzI1NiIsImtpZCI6IiIsInR5cCI6IkpXVCJ9.eyJjc3Jm' +
+    'IjoiYzQ5NTQwYTYwMjI0Yjk4MDAwMDgwYzNhZjlkZDI2MjE4OTNlYjgwMWMzZGEyYWMzOGJ' +
+    'hNWEwZWM1ZmE1ZTJhYyIsImVtYWlsIjoiYWRtaW5pc3RyYXRvciIsImV4cCI6MTUzNjUyOT' +
+    'A3NSwiaXNfYWRtaW4iOnRydWUsIm5hbWUiOiIiLCJzdWIiOiJDZzFoWkcxcGJtbHpkSEpoZ' +
+    'Ec5eUVnVnNiMk5oYkEiLCJ0ZWFtcyI6WyJtYWluIl0sInVzZXJfaWQiOiJhZG1pbmlzdHJh' +
+    'dG9yIiwidXNlcl9uYW1lIjoiYWRtaW5pc3RyYXRvciJ9.E3eo7uuqhp3r9NKHpvdajTqVbE' +
+    'ZAMUh1mvbLieuY3Uck51TbMHhmSoPgaa6sRUoNfMwOs2Vv3UR6dsa69ZoQn4zGcOtQys-KS' +
+    'A54OBUfxOS32yp8sCCaX3N7-KBot4hZZY9MmVIJ0F2a9dDjAqUtJwCCmrLJJBily7SbYeL9' +
+    'yni3aj8HkCIH9skqVpeLiemNcMc3rcHfHg8GLrwyEg2HRaSomSwjN_5nWxpYPTBkQW9eZz1' +
+    'rN5i1zpgn4iNmY5d084Ommlf9iBUiQgtSvBOeasoW2YZe4ZYzT7ovAQo1sW0uVobk8WRCZa' +
+    'GaUh75pjjf6f-_kJ7wOqX-tSaOSysHNxZM91GVm5hcFOz2W3m54acs7SrA6LS9biPWD5z0U' +
+    '24-0Tk2_GxD8yzIWWcYYNyd61F2vuEANGGpCTJo58uwTLeGOx8hIqUQH-RYv6usqFbkkfU8' +
+    '-7rcNZ6TgCjbBjFAqySiH0YEk_boe6GNCw-T4Khg8nHlQq-FowS8TRlibOq9wdI_7D-aEXD' +
+    'M23yN1jBkt4N4_WP9kC8_l5-FKzVYmi-w_M3FX6rDp5Dbfyi2hKcLcg8eBO6hIwC6MkNcer' +
+    'hl76Y4FhfgpHcFXqJWDwjsKR6abQqGRh9d446VmB3CP86OM03iiZf0qQV4pAxBwHgi7DbZR' +
+    'lK1ak3Up4x9eB_VzCc',
+    accessToken = 'access-token-123',
+    tokenType = 'Bearer',
+    expiry = '2018-09-08T22:37:55.973487291Z'
+  } = {}) => ({
+    id_token: idToken,
     access_token: accessToken,
     token_type: tokenType,
     expiry

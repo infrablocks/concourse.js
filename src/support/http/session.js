@@ -17,12 +17,21 @@ import camelcaseKeysDeep from 'camelcase-keys-deep'
 import * as semver from 'semver'
 
 const isExpired = (token) => {
-  const decoded = jwt.decode(token)
-  const expiryInSeconds = decoded.exp
+  const expiryInSeconds = token.expiry
   const nowInSeconds = currentUnixTime()
   const tenMinutesInSeconds = 10 * 60 // allow for 10 minutes clock drift
 
   return nowInSeconds > (expiryInSeconds - tenMinutesInSeconds)
+}
+
+const getExpiryFromJwt = (token) => {
+  const decoded = jwt.decode(token)
+  return decoded.exp
+}
+
+const getCsrfFromJwt = (token) => {
+  const decoded = jwt.decode(token)
+  return decoded.csrf
 }
 
 const fetchTokenPreVersion4 = async (credentials, httpClient) => {
@@ -32,7 +41,14 @@ const fetchTokenPreVersion4 = async (credentials, httpClient) => {
     }
   })
 
-  return response.data.value
+  const token = response.data.value
+  const csrf = getCsrfFromJwt(token)
+  const expiry = getExpiryFromJwt(token)
+  return {
+    token,
+    csrf,
+    expiry
+  }
 }
 
 const fetchTokenPreVersion6 = async (credentials, httpClient) => {
@@ -54,7 +70,14 @@ const fetchTokenPreVersion6 = async (credentials, httpClient) => {
       transformResponse: [parseJson, camelcaseKeysDeep]
     })
 
-  return response.data.accessToken
+  const token = response.data.accessToken
+  const csrf = getCsrfFromJwt(token)
+  const expiry = getExpiryFromJwt(token)
+  return {
+    token,
+    csrf,
+    expiry
+  }
 }
 
 const fetchTokenPostVersion6 = async (credentials, httpClient) => {
@@ -62,7 +85,7 @@ const fetchTokenPostVersion6 = async (credentials, httpClient) => {
     grant_type: 'password',
     username: credentials.username,
     password: credentials.password,
-    scope: 'openid+profile+email+federated:id+groups'
+    scope: 'openid profile email federated:id groups'
   })
 
   const response = await httpClient.post(
@@ -76,7 +99,14 @@ const fetchTokenPostVersion6 = async (credentials, httpClient) => {
       transformResponse: [parseJson, camelcaseKeysDeep]
     })
 
-  return response.data.accessToken
+  const token = response.data.accessToken
+  const csrf = getCsrfFromJwt(response.data.idToken)
+  const expiry = getExpiryFromJwt(response.data.idToken)
+  return {
+    token,
+    csrf,
+    expiry
+  }
 }
 
 const fetchToken = async (credentials, httpClient) => {
@@ -95,15 +125,15 @@ const fetchToken = async (credentials, httpClient) => {
 }
 
 const ensureValidToken = async (token, credentials, httpClient) => {
-  return (!token || isExpired(token))
+  return (!token || !token.token || isExpired(token))
     ? fetchToken(credentials, httpClient)
     : token
 }
 
 export const createSessionInterceptor =
   ({ credentials, httpClient = axios.create() }) => {
-    let token = credentials.token
     let lock = new AwaitLock()
+    let token = credentials.token
 
     return async (config) => {
       await lock.acquireAsync()
@@ -113,15 +143,14 @@ export const createSessionInterceptor =
         lock.release()
       }
 
-      const decoded = jwt.decode(token)
-      const csrf = decoded.csrf
+      const csrfHeader = token.csrf ? csrfTokenHeader(token.csrf) : {}
 
       return {
         ...config,
         headers: {
           ...config.headers,
-          ...bearerAuthHeader(token),
-          ...csrfTokenHeader(csrf)
+          ...bearerAuthHeader(token.token),
+          ...csrfHeader
         }
       }
     }
