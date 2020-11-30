@@ -144,6 +144,8 @@ currently supported are detailed below.
   pipeline resource types.
 * `async TeamPipelineClient#listBuilds()` - Returns an array of team pipeline 
   builds.
+* `async TeamPipelineClient#saveConfig()` - Creates the team pipeline. 
+  Throws an error if the pipeline already exists.
 
 ### `TeamPipelineJobClient` Methods
 

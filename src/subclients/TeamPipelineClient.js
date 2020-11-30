@@ -14,6 +14,7 @@ import {
   teamPipelineResourcesUrl,
   teamPipelineResourceTypesUrl,
   teamPipelineResourceUrl,
+  teamPipelinesConfigUrl,
   teamPipelineUnpauseUrl,
   teamPipelineUrl
 } from '../support/urls'
@@ -185,6 +186,22 @@ class TeamPipelineClient {
         })
 
     return builds
+  }
+
+  async saveConfig (pipelineConfig) {
+    const validatedOptions = validateOptions(
+      schemaFor({
+        pipelineConfig: string().required()
+      }), { pipelineConfig })
+
+    await this.httpClient
+      .put(
+        teamPipelinesConfigUrl(this.apiUrl, this.teamName, this.pipelineName),
+        validatedOptions.pipelineConfig,
+        { headers: {
+          'Content-Type': 'application/x-yaml'
+        }
+        })
   }
 }
 

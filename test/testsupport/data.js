@@ -422,6 +422,8 @@ const randomVolume = (overrides = {}) => ({
   ...overrides
 })
 
+const randomPipelineConfig = () => randomLowerCaseWord()
+
 export default {
   randomConcourseUrl,
   randomApiUrl,
@@ -477,5 +479,6 @@ export default {
   randomContainer,
   randomContainerId,
 
-  randomVolume
+  randomVolume,
+  randomPipelineConfig
 }
