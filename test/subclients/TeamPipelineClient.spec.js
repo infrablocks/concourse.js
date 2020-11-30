@@ -277,6 +277,72 @@ describe('TeamPipelineClient', () => {
             'Invalid parameter(s): ["newPipelineName" is required].')
       })
   })
+  describe('saveConfig', () => {
+    it('save the config', async () => {
+      const { client, mock, apiUrl, bearerToken, teamName, pipelineName } =
+        buildValidTeamPipelineClient()
+      const pipelineConfig = data.randomPipelineConfig()
+      const saveConfigUrl = `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/config`
+      mock.onPut(saveConfigUrl, pipelineConfig)
+        .reply(201)
+
+      await client.saveConfig(pipelineConfig)
+
+      expect(mock.history.put).to.have.length(1)
+      const call = mock.history.put[0]
+      expect(call.url).to.eql(saveConfigUrl)
+      expect(call.data).to.eql(pipelineConfig)
+      expect(call.headers).to.include({
+        'Content-Type': 'application/x-yaml',
+        ...bearerAuthHeader(bearerToken)
+      })
+    })
+
+    it('throws the underlying http client exception on failure',
+      async () => {
+        const { client, mock, apiUrl, teamName, pipelineName } =
+          buildValidTeamPipelineClient()
+        const pipelineConfig = data.randomPipelineConfig()
+
+        mock.onPut(
+          `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}` +
+          '/config',
+          pipelineConfig
+        )
+          .networkError()
+
+        let actualError = null
+
+        try {
+          await client.saveConfig(pipelineConfig)
+        } catch (e) {
+          actualError = e
+        }
+
+        expect(actualError).to.be.instanceOf(Error)
+        expect(actualError.message).to.eql('Network Error')
+      })
+
+    it('throws an exception if the pipeline config is not a string',
+      async () => {
+        const { client } = buildValidTeamPipelineClient()
+        await forInstance(client)
+          .onCallOf('saveConfig')
+          .withArguments(12345)
+          .throwsError(
+            'Invalid parameter(s): ["pipelineConfig" must be a string].')
+      })
+
+    it('throws an exception if the pipeline config is not provided',
+      async () => {
+        const { client } = buildValidTeamPipelineClient()
+        await forInstance(client)
+          .onCallOf('saveConfig')
+          .withArguments()
+          .throwsError(
+            'Invalid parameter(s): ["pipelineConfig" is required].')
+      })
+  })
 
   describe('delete', () => {
     it('deletes the pipeline',
