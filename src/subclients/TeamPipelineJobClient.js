@@ -80,6 +80,21 @@ class TeamPipelineJobClient {
     return build
   }
 
+  async createJobBuild () {
+    const { data: build } = await this.httpClient
+      .post(
+        teamPipelineJobBuildsUrl(
+          this.apiUrl,
+          this.teamName,
+          this.pipelineName,
+          this.jobName),
+        undefined,
+        { transformResponse: [parseJson, camelcaseKeysDeep] }
+      )
+
+    return build
+  }
+
   async listInputs () {
     const { data: inputs } = await this.httpClient
       .get(
