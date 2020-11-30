@@ -329,6 +329,36 @@ describe('TeamPipelineJobClient', () => {
       })
   })
 
+  describe('createJobBuild', () => {
+    it('create a build for team pipeline job',
+      async () => {
+        const {
+          client, mock, apiUrl, bearerToken, teamName, pipelineName, jobName
+        } = buildValidTeamPipelineJobClient()
+        const createBuildUrl = `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}` +
+          `/jobs/${jobName}/builds`
+        const buildName = data.randomBuildName()
+        const buildData = data.randomBuild({
+          teamName,
+          pipelineName,
+          jobName,
+          name: buildName
+        })
+        const buildFromApi = build.api.build(buildData)
+        const expectedBuild = build.client.build(buildData)
+        mock.onPost(createBuildUrl)
+          .reply(200, buildFromApi)
+
+        const actualBuild = await client.createJobBuild()
+
+        expect(mock.history.post).to.have.length(1)
+        const call = mock.history.post[0]
+        expect(call.url).to.eql(createBuildUrl)
+        expect(call.headers).to.include(bearerAuthHeader(bearerToken))
+        expect(actualBuild).to.eql(expectedBuild)
+      })
+  })
+
   describe('listInputs', () => {
     it('gets all inputs for team pipeline job',
       async () => {
