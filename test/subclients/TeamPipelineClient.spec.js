@@ -1,5 +1,5 @@
-import "core-js/stable";
-import "regenerator-runtime/runtime";
+import 'core-js/stable'
+import 'regenerator-runtime/runtime'
 import axios from 'axios'
 import faker from 'faker'
 import MockAdapter from 'axios-mock-adapter'

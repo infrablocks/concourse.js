@@ -1,5 +1,5 @@
-import "core-js/stable";
-import "regenerator-runtime/runtime";
+import 'core-js/stable'
+import 'regenerator-runtime/runtime'
 import { onConstructionOf } from '../testsupport/dsls/construction'
 import WorkerClient from '../../src/subclients/WorkerClient'
 import data from '../testsupport/data'
