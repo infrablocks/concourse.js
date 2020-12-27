@@ -42,7 +42,7 @@ export const pipeline =
     id,
     name,
     paused: isPaused,
-    'public': isPublic,
+    public: isPublic,
     teamName
   })
 

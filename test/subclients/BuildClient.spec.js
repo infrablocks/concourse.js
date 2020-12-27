@@ -71,7 +71,7 @@ describe('BuildClient', () => {
             httpClient: 35
           })
           .throwsError(
-            'Invalid parameter(s): ["httpClient" must be a Function].')
+            'Invalid parameter(s): ["httpClient" must be of type function].')
       })
 
     it('throws an exception if the build ID is not provided', () => {
@@ -112,7 +112,7 @@ describe('BuildClient', () => {
         })
         .throwsError(
           'Invalid parameter(s): ' +
-          '["buildId" must be larger than or equal to 1].')
+          '["buildId" must be greater than or equal to 1].')
     })
   })
 

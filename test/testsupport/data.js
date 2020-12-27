@@ -179,7 +179,7 @@ const randomWorkerVersion = () => '2.1'
 
 const randomWorkerResourceTypeImage = () =>
   `/concourse-work-dir/3.14.1/assets/resource-images/${randomLowerCaseWord()}` +
-  `/rootfs`
+  '/rootfs'
 const randomWorkerResourceType = (overrides = {}) => ({
   type: randomResourceTypeType(),
   image: randomWorkerResourceTypeImage(),
@@ -234,7 +234,7 @@ const randomPipeline = (overrides = {}) => ({
   id: randomPipelineId(),
   name: randomPipelineName(),
   paused: randomPipelineIsPaused(),
-  'public': randomPipelineIsPublic(),
+  public: randomPipelineIsPublic(),
   teamName: randomTeamName(),
   ...overrides
 })

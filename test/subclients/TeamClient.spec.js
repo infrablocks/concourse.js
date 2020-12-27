@@ -74,7 +74,7 @@ describe('TeamClient', () => {
             httpClient: 35
           })
           .throwsError(
-            'Invalid parameter(s): ["httpClient" must be a Function].')
+            'Invalid parameter(s): ["httpClient" must be of type function].')
       })
 
     it('throws an exception if the team name is not provided', () => {
@@ -91,7 +91,8 @@ describe('TeamClient', () => {
         .withArguments({
           apiUrl: faker.internet.url(),
           httpClient: axios,
-          teamName: 123 })
+          teamName: 123
+        })
         .throwsError('Invalid parameter(s): ["teamName" must be a string].')
     })
   })
@@ -292,7 +293,7 @@ describe('TeamClient', () => {
           .withArguments({ limit: -20 })
           .throwsError(
             'Invalid parameter(s): [' +
-            '"limit" must be larger than or equal to 1].')
+            '"limit" must be greater than or equal to 1].')
       })
 
     it('throws an exception if the value provided for since is not a number',
@@ -321,7 +322,7 @@ describe('TeamClient', () => {
           .withArguments({ since: -20 })
           .throwsError(
             'Invalid parameter(s): [' +
-            '"since" must be larger than or equal to 1].')
+            '"since" must be greater than or equal to 1].')
       })
 
     it('throws an exception if the value provided for until is not a number',
@@ -350,7 +351,7 @@ describe('TeamClient', () => {
           .withArguments({ until: -20 })
           .throwsError(
             'Invalid parameter(s): [' +
-            '"until" must be larger than or equal to 1].')
+            '"until" must be greater than or equal to 1].')
       })
   })
 

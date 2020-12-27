@@ -145,7 +145,7 @@ export default class Job {
     return any(
       output => {
         const jobsForOutputResource =
-          pathOr([], [ output.resource ], jobsByInputResource)
+          pathOr([], [output.resource], jobsByInputResource)
         const jobsDependingOnThis =
           filter(
             job => job
@@ -176,7 +176,7 @@ export default class Job {
       return null
     }
 
-    const buildData = buildsData[ 0 ]
+    const buildData = buildsData[0]
 
     return new Build({ ...buildData, client: this.client })
   }

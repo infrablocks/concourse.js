@@ -92,7 +92,7 @@ describe('TeamPipelineResourceVersionClient', () => {
             apiUrl: faker.internet.url()
           })
           .throwsError(
-            'Invalid parameter(s): ["httpClient" must be a Function].')
+            'Invalid parameter(s): ["httpClient" must be of type function].')
       })
 
     it('throws an exception if the team name is not provided', () => {
@@ -220,7 +220,7 @@ describe('TeamPipelineResourceVersionClient', () => {
         })
         .throwsError(
           'Invalid parameter(s): ' +
-          '["versionId" must be larger than or equal to 1].')
+          '["versionId" must be greater than or equal to 1].')
     })
   })
 

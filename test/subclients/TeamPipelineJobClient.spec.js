@@ -86,7 +86,7 @@ describe('TeamPipelineJobClient', () => {
             apiUrl: faker.internet.url()
           })
           .throwsError(
-            'Invalid parameter(s): ["httpClient" must be a Function].')
+            'Invalid parameter(s): ["httpClient" must be of type function].')
       })
 
     it('throws an exception if the team name is not provided', () => {

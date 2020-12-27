@@ -103,8 +103,8 @@ export const info =
 
 export const teamAuthentication =
   ({
-    users = [ 'local:some-user' ],
-    groups = [ 'github:some-group' ]
+    users = ['local:some-user'],
+    groups = ['github:some-group']
   } = {}) => ({
     users,
     groups
@@ -132,7 +132,7 @@ export const pipeline =
     id,
     name,
     paused: isPaused,
-    'public': isPublic,
+    public: isPublic,
     team_name: teamName
   })
 
@@ -294,7 +294,7 @@ export const worker =
     baggageclaimUrl = 'http://10.240.3.194:45995',
     activeContainers = 3,
     activeVolumes = 0,
-    resourceTypes = [ workerResourceType() ],
+    resourceTypes = [workerResourceType()],
     platform = 'linux',
     tags = null,
     team = '',
@@ -368,8 +368,8 @@ export const job =
     teamName = 'example-team-name',
     nextBuild = null,
     finishedBuild = build(),
-    inputs = [ input() ],
-    outputs = [ output() ],
+    inputs = [input()],
+    outputs = [output()],
     groups = null
   } = {}) => ({
     id,

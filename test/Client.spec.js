@@ -56,7 +56,7 @@ describe('Client', () => {
         onConstructionOf(Client)
           .withArguments({ apiUrl: faker.internet.url(), httpClient: 35 })
           .throwsError(
-            'Invalid parameter(s): ["httpClient" must be a Function].')
+            'Invalid parameter(s): ["httpClient" must be of type function].')
       })
   })
 
@@ -264,7 +264,7 @@ describe('Client', () => {
       await forInstance(client)
         .onCallOf('setTeam')
         .withArguments(data.randomTeamName(), { users: [32.654] })
-        .throwsError('Invalid parameter(s): ["0" must be a string].')
+        .throwsError('Invalid parameter(s): ["users[0]" must be a string].')
     })
 
     it('throws an exception if the value provided for groups is not an array',
@@ -283,7 +283,7 @@ describe('Client', () => {
       await forInstance(client)
         .onCallOf('setTeam')
         .withArguments(data.randomTeamName(), { groups: [32.654] })
-        .throwsError('Invalid parameter(s): ["0" must be a string].')
+        .throwsError('Invalid parameter(s): ["groups[0]" must be a string].')
     })
   })
 
@@ -586,7 +586,7 @@ describe('Client', () => {
           .withArguments({ limit: -20 })
           .throwsError(
             'Invalid parameter(s): [' +
-            '"limit" must be larger than or equal to 1].')
+            '"limit" must be greater than or equal to 1].')
       })
 
     it('throws an exception if the value provided for since is not a number',
@@ -615,7 +615,7 @@ describe('Client', () => {
           .withArguments({ since: -20 })
           .throwsError(
             'Invalid parameter(s): [' +
-            '"since" must be larger than or equal to 1].')
+            '"since" must be greater than or equal to 1].')
       })
 
     it('throws an exception if the value provided for until is not a number',
@@ -644,7 +644,7 @@ describe('Client', () => {
           .withArguments({ until: -20 })
           .throwsError(
             'Invalid parameter(s): [' +
-            '"until" must be larger than or equal to 1].')
+            '"until" must be greater than or equal to 1].')
       })
   })
 

@@ -82,7 +82,7 @@ const authenticatePostVersion4 = async (credentials, httpClient) => {
         ...basicAuthorizationHeader(flyClientId, flyClientSecret),
         ...contentTypeHeader(contentTypes.formUrlEncoded)
       },
-      transformResponse: [ parseJson, camelcaseKeysDeep ]
+      transformResponse: [parseJson, camelcaseKeysDeep]
     })
 
   const { accessToken, tokenType } = tokenResponse.data
@@ -111,7 +111,7 @@ const authenticatePostVersion6_1 = async (credentials, httpClient) => {
         ...basicAuthorizationHeader(flyClientId, flyClientSecret),
         ...contentTypeHeader(contentTypes.formUrlEncoded)
       },
-      transformResponse: [ parseJson, camelcaseKeysDeep ]
+      transformResponse: [parseJson, camelcaseKeysDeep]
     })
 
   const { idToken, accessToken, tokenType } = tokenResponse.data
@@ -154,7 +154,7 @@ const ensureAuthenticated =
 export const createSessionInterceptor =
   ({ credentials, httpClient = axios.create() }) => {
     let authenticationState = credentials.authenticationState
-    let lock = new AwaitLock()
+    const lock = new AwaitLock()
 
     return async (config) => {
       await lock.acquireAsync()

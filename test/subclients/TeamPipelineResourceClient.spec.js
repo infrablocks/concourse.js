@@ -87,7 +87,7 @@ describe('TeamPipelineResourceClient', () => {
             apiUrl: faker.internet.url()
           })
           .throwsError(
-            'Invalid parameter(s): ["httpClient" must be a Function].')
+            'Invalid parameter(s): ["httpClient" must be of type function].')
       })
 
     it('throws an exception if the team name is not provided', () => {
@@ -344,7 +344,7 @@ describe('TeamPipelineResourceClient', () => {
           .withArguments({ limit: -20 })
           .throwsError(
             'Invalid parameter(s): [' +
-            '"limit" must be larger than or equal to 1].')
+            '"limit" must be greater than or equal to 1].')
       })
 
     it('throws an exception if the value provided for since is not a number',
@@ -373,7 +373,7 @@ describe('TeamPipelineResourceClient', () => {
           .withArguments({ since: -20 })
           .throwsError(
             'Invalid parameter(s): [' +
-            '"since" must be larger than or equal to 1].')
+            '"since" must be greater than or equal to 1].')
       })
 
     it('throws an exception if the value provided for until is not a number',
@@ -402,7 +402,7 @@ describe('TeamPipelineResourceClient', () => {
           .withArguments({ until: -20 })
           .throwsError(
             'Invalid parameter(s): [' +
-            '"until" must be larger than or equal to 1].')
+            '"until" must be greater than or equal to 1].')
       })
   })
 
@@ -434,7 +434,7 @@ describe('TeamPipelineResourceClient', () => {
           .withArguments(-21)
           .throwsError(
             'Invalid parameter(s): ' +
-            '["versionId" must be larger than or equal to 1].')
+            '["versionId" must be greater than or equal to 1].')
       })
 
     it('gets the resource version with the specified ID',

@@ -366,7 +366,7 @@ describe('session interceptor', () => {
       url: teamPipelinesUrl(apiUrl, teamName),
       method: 'get',
       headers: {
-        'Accept': 'application/xml'
+        Accept: 'application/xml'
       }
     }
     const updatedConfig = await interceptor(initialConfig)
@@ -374,7 +374,7 @@ describe('session interceptor', () => {
       url: teamPipelinesUrl(apiUrl, teamName),
       method: 'get',
       headers: {
-        'Accept': 'application/xml',
+        Accept: 'application/xml',
         ...bearerAuthorizationHeader(bearerToken),
         ...csrfTokenHeader(csrfToken)
       }

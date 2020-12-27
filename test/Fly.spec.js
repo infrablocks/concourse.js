@@ -258,7 +258,7 @@ describe('Fly', () => {
           `${uri}/teams/${teamName}/auth/token`,
           {
             headers: {
-              'Authorization': authentication
+              Authorization: authentication
             }
           })
           .reply(200, authToken)
@@ -267,7 +267,7 @@ describe('Fly', () => {
           `${uri}/teams/${teamName}/pipelines/${pipelineName}/jobs`,
           {
             headers: {
-              'Authorization': `Bearer ${bearerToken}`
+              Authorization: `Bearer ${bearerToken}`
             }
           })
           .reply(200, jobsFromApi)
@@ -323,7 +323,7 @@ describe('Fly', () => {
           `${uri}/teams/${teamName}/auth/token`,
           {
             headers: {
-              'Authorization': authentication
+              Authorization: authentication
             }
           })
           .reply(200, authToken)
@@ -332,7 +332,7 @@ describe('Fly', () => {
           `${uri}/teams/${teamName}/pipelines`,
           {
             headers: {
-              'Authorization': `Bearer ${bearerToken}`
+              Authorization: `Bearer ${bearerToken}`
             }
           })
           .reply(200, pipelinesFromApi)
@@ -373,7 +373,7 @@ describe('Fly', () => {
           `${uri}/teams/${teamName}/auth/token`,
           {
             headers: {
-              'Authorization': authentication
+              Authorization: authentication
             }
           })
           .reply(200, authToken)
@@ -382,7 +382,7 @@ describe('Fly', () => {
           `${uri}/pipelines`,
           {
             headers: {
-              'Authorization': `Bearer ${bearerToken}`
+              Authorization: `Bearer ${bearerToken}`
             }
           })
           .reply(200, pipelinesFromApi)
@@ -423,7 +423,7 @@ describe('Fly', () => {
           `${uri}/teams/${teamName}/auth/token`,
           {
             headers: {
-              'Authorization': authentication
+              Authorization: authentication
             }
           })
           .reply(200, authToken)
@@ -432,7 +432,7 @@ describe('Fly', () => {
           `${uri}/teams/${teamName}/pipelines`,
           {
             headers: {
-              'Authorization': `Bearer ${bearerToken}`
+              Authorization: `Bearer ${bearerToken}`
             }
           })
           .reply(200, pipelinesFromApi)
@@ -482,7 +482,7 @@ describe('Fly', () => {
           expect(e.message)
             .to.eql(
               'Invalid parameter(s): [' +
-            '"count" must be larger than or equal to 1].')
+            '"count" must be greater than or equal to 1].')
           return
         }
         expect.fail(null, null, 'Expected exception but none was thrown.')
@@ -596,7 +596,7 @@ describe('Fly', () => {
           `${uri}/teams/${teamName}/auth/token`,
           {
             headers: {
-              'Authorization': authentication
+              Authorization: authentication
             }
           })
           .reply(200, authToken)
@@ -605,7 +605,7 @@ describe('Fly', () => {
           `${uri}/builds`,
           {
             headers: {
-              'Authorization': `Bearer ${bearerToken}`
+              Authorization: `Bearer ${bearerToken}`
             },
             params: {
               limit: 50
@@ -651,7 +651,7 @@ describe('Fly', () => {
           `${uri}/teams/${teamName}/auth/token`,
           {
             headers: {
-              'Authorization': authentication
+              Authorization: authentication
             }
           })
           .reply(200, authToken)
@@ -660,7 +660,7 @@ describe('Fly', () => {
           `${uri}/builds`,
           {
             headers: {
-              'Authorization': `Bearer ${bearerToken}`
+              Authorization: `Bearer ${bearerToken}`
             },
             params: {
               limit: count
@@ -704,7 +704,7 @@ describe('Fly', () => {
           `${uri}/teams/${teamName}/auth/token`,
           {
             headers: {
-              'Authorization': authentication
+              Authorization: authentication
             }
           })
           .reply(200, authToken)
@@ -713,7 +713,7 @@ describe('Fly', () => {
           `${uri}/builds`,
           {
             headers: {
-              'Authorization': `Bearer ${bearerToken}`
+              Authorization: `Bearer ${bearerToken}`
             },
             params: {}
           })
@@ -759,7 +759,7 @@ describe('Fly', () => {
           `${uri}/teams/${teamName}/auth/token`,
           {
             headers: {
-              'Authorization': authentication
+              Authorization: authentication
             }
           })
           .reply(200, authToken)
@@ -769,7 +769,7 @@ describe('Fly', () => {
             `jobs/${jobName}/builds`,
           {
             headers: {
-              'Authorization': `Bearer ${bearerToken}`
+              Authorization: `Bearer ${bearerToken}`
             },
             params: {
               limit: 50
@@ -819,7 +819,7 @@ describe('Fly', () => {
           `${uri}/teams/${teamName}/auth/token`,
           {
             headers: {
-              'Authorization': authentication
+              Authorization: authentication
             }
           })
           .reply(200, authToken)
@@ -828,7 +828,7 @@ describe('Fly', () => {
           `${uri}/teams/${teamName}/pipelines/${pipelineName}/builds`,
           {
             headers: {
-              'Authorization': `Bearer ${bearerToken}`
+              Authorization: `Bearer ${bearerToken}`
             },
             params: {
               limit: 50
@@ -878,7 +878,7 @@ describe('Fly', () => {
           `${uri}/teams/${teamName}/auth/token`,
           {
             headers: {
-              'Authorization': authentication
+              Authorization: authentication
             }
           })
           .reply(200, authToken)
@@ -887,7 +887,7 @@ describe('Fly', () => {
           `${uri}/teams/${teamName}/builds`,
           {
             headers: {
-              'Authorization': `Bearer ${bearerToken}`
+              Authorization: `Bearer ${bearerToken}`
             },
             params: {
               limit: 50
@@ -937,7 +937,7 @@ describe('Fly', () => {
           `${uri}/teams/${teamName}/auth/token`,
           {
             headers: {
-              'Authorization': authentication
+              Authorization: authentication
             }
           })
           .reply(200, authToken)
@@ -946,7 +946,7 @@ describe('Fly', () => {
           `${uri}/builds`,
           {
             headers: {
-              'Authorization': `Bearer ${bearerToken}`
+              Authorization: `Bearer ${bearerToken}`
             },
             params: {
               limit: 50
