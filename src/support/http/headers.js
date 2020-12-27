@@ -16,10 +16,10 @@ const basicAuthHeaderValue = (username, password) =>
 const bearerAuthHeaderValue = (token) =>
   `Bearer ${token}`
 
-export const basicAuthHeader = (username, password) => ({
+export const basicAuthorizationHeader = (username, password) => ({
   [authorizationHeaderName]: basicAuthHeaderValue(username, password)
 })
-export const bearerAuthHeader = (token) => ({
+export const bearerAuthorizationHeader = (token) => ({
   [authorizationHeaderName]: bearerAuthHeaderValue(token)
 })
 export const csrfTokenHeader = (token) => ({

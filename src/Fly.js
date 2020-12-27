@@ -1,7 +1,7 @@
 import axios from 'axios'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
 
-import { basicAuthHeader, bearerAuthHeader } from './support/http/headers'
+import { basicAuthorizationHeader, bearerAuthorizationHeader } from './support/http/headers'
 import {
   allBuildsUrl,
   allPipelinesUrl,
@@ -73,12 +73,12 @@ export default class Fly {
 
     const { data: bearerAuthToken } = await axios
       .get(teamAuthTokenUrl(this.uri, this.teamName), {
-        headers: basicAuthHeader(this.username, this.password)
+        headers: basicAuthorizationHeader(this.username, this.password)
       })
 
     const { data: jobs } = await axios
       .get(teamPipelineJobsUrl(this.uri, this.teamName, validatedOptions.pipeline), {
-        headers: bearerAuthHeader(bearerAuthToken.value),
+        headers: bearerAuthorizationHeader(bearerAuthToken.value),
         transformResponse: [camelcaseKeysDeep]
       })
 
@@ -93,7 +93,7 @@ export default class Fly {
 
     const { data: bearerAuthToken } = await axios
       .get(teamAuthTokenUrl(this.uri, this.teamName), {
-        headers: basicAuthHeader(this.username, this.password)
+        headers: basicAuthorizationHeader(this.username, this.password)
       })
 
     const uri = validatedOptions.all
@@ -102,7 +102,7 @@ export default class Fly {
 
     const { data: pipelines } = await axios
       .get(uri, {
-        headers: bearerAuthHeader(bearerAuthToken.value),
+        headers: bearerAuthorizationHeader(bearerAuthToken.value),
         transformResponse: [camelcaseKeysDeep]
       })
 
@@ -123,7 +123,7 @@ export default class Fly {
 
     const { data: bearerAuthToken } = await axios
       .get(teamAuthTokenUrl(this.uri, this.teamName), {
-        headers: basicAuthHeader(this.username, this.password)
+        headers: basicAuthorizationHeader(this.username, this.password)
       })
 
     const pipelineName = validatedOptions.job
@@ -135,7 +135,7 @@ export default class Fly {
 
     const uri = buildsUriFor(
       this.uri, this.teamName, pipelineName, jobName, validatedOptions.team)
-    const headers = bearerAuthHeader(bearerAuthToken.value)
+    const headers = bearerAuthorizationHeader(bearerAuthToken.value)
     const params = validatedOptions.count
       ? { limit: validatedOptions.count }
       : {}

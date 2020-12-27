@@ -3,16 +3,16 @@ import WorkerClient from '../../src/subclients/WorkerClient'
 import data from '../testsupport/data'
 import axios from 'axios'
 import faker from 'faker'
-import { bearerAuthHeader } from '../../src/support/http/headers'
+import { bearerAuthorizationHeader } from '../../src/support/http/headers'
 import { expect } from 'chai'
 import MockAdapter from 'axios-mock-adapter'
 
 const buildValidWorkerClient = () => {
   const apiUrl = data.randomApiUrl()
-  const bearerToken = data.randomBearerToken()
+  const bearerToken = data.randomBearerTokenPre4()
 
   const httpClient = axios.create({
-    headers: bearerAuthHeader(bearerToken)
+    headers: bearerAuthorizationHeader(bearerToken)
   })
   const mock = new MockAdapter(httpClient)
 
@@ -109,7 +109,7 @@ describe('WorkerClient', () => {
         expect(call.url)
           .to.eql(`${apiUrl}/workers/${workerName}/prune`)
         expect(call.headers)
-          .to.include(bearerAuthHeader(bearerToken))
+          .to.include(bearerAuthorizationHeader(bearerToken))
       })
 
     it('throws the underlying http client exception on failure',

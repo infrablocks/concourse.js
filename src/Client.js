@@ -21,7 +21,8 @@ import {
   infoUrl,
   teamAuthTokenUrl,
   skyTokenUrl,
-  teamUrl, skyIssuerTokenUrl
+  skyIssuerTokenUrl,
+  teamUrl
 } from './support/urls'
 import { createHttpClient } from './support/http/factory'
 import { parseJson } from './support/http/transformers'
@@ -41,8 +42,8 @@ export default class Client {
     const credentials = {
       infoUrl: infoUrl(apiUrl),
       tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
-      tokenUrlPreVersion6: skyTokenUrl(url),
-      tokenUrlPostVersion6: skyIssuerTokenUrl(url),
+      tokenUrlPostVersion4: skyTokenUrl(url),
+      tokenUrlPostVersion6_1: skyIssuerTokenUrl(url),
       username: username,
       password: password
     }

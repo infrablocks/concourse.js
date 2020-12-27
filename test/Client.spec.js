@@ -9,14 +9,14 @@ import { onConstructionOf } from './testsupport/dsls/construction'
 import { forInstance } from './testsupport/dsls/methods'
 
 import Client from '../src/Client'
-import { bearerAuthHeader } from '../src/support/http/headers'
+import { bearerAuthorizationHeader } from '../src/support/http/headers'
 
 const buildValidClient = () => {
   const apiUrl = data.randomApiUrl()
-  const bearerToken = data.randomBearerToken()
+  const bearerToken = data.randomBearerTokenPre4()
 
   const httpClient = axios.create({
-    headers: bearerAuthHeader(bearerToken)
+    headers: bearerAuthorizationHeader(bearerToken)
   })
   const mock = new MockAdapter(httpClient)
 
@@ -73,7 +73,7 @@ describe('Client', () => {
         `${apiUrl}/info`,
         {
           headers: {
-            ...bearerAuthHeader(bearerToken)
+            ...bearerAuthorizationHeader(bearerToken)
           }
         })
         .reply(200, infoFromApi)
@@ -102,7 +102,7 @@ describe('Client', () => {
           `${apiUrl}/teams`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             }
           })
           .reply(200, teamsFromApi)
@@ -159,7 +159,7 @@ describe('Client', () => {
         const call = mock.history.put[0]
         expect(call.url).to.eql(`${apiUrl}/teams/${teamName}`)
         expect(call.headers)
-          .to.include(bearerAuthHeader(bearerToken))
+          .to.include(bearerAuthorizationHeader(bearerToken))
       })
 
     it('defaults to no users when none provided', async () => {
@@ -202,7 +202,7 @@ describe('Client', () => {
       const call = mock.history.put[0]
       expect(call.url).to.eql(`${apiUrl}/teams/${teamName}`)
       expect(call.headers)
-        .to.include(bearerAuthHeader(bearerToken))
+        .to.include(bearerAuthorizationHeader(bearerToken))
     })
 
     it('defaults to no groups when none provided', async () => {
@@ -245,7 +245,7 @@ describe('Client', () => {
       const call = mock.history.put[0]
       expect(call.url).to.eql(`${apiUrl}/teams/${teamName}`)
       expect(call.headers)
-        .to.include(bearerAuthHeader(bearerToken))
+        .to.include(bearerAuthorizationHeader(bearerToken))
     })
 
     it('throws an exception if the value provided for users is not an array',
@@ -348,7 +348,7 @@ describe('Client', () => {
           `${apiUrl}/workers`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             }
           })
           .reply(200, workersFromApi)
@@ -412,7 +412,7 @@ describe('Client', () => {
           `${apiUrl}/pipelines`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             }
           })
           .reply(200, pipelinesFromApi)
@@ -469,7 +469,7 @@ describe('Client', () => {
           `${apiUrl}/jobs`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             }
           })
           .reply(200, jobsFromApi)
@@ -506,7 +506,7 @@ describe('Client', () => {
           `${apiUrl}/builds`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             }
           })
           .reply(200, buildsFromApi)
@@ -541,7 +541,7 @@ describe('Client', () => {
           `${apiUrl}/builds`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             },
             params: {
               limit: 20,
@@ -673,7 +673,7 @@ describe('Client', () => {
           `${apiUrl}/builds/${buildId}`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             }
           })
           .reply(200, buildFromApi)
@@ -725,7 +725,7 @@ describe('Client', () => {
           `${apiUrl}/resources`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             }
           })
           .reply(200, resourcesFromApi)

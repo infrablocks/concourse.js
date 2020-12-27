@@ -5,17 +5,17 @@ import data from '../testsupport/data'
 import axios from 'axios'
 import faker from 'faker'
 import build from '../testsupport/builders'
-import { bearerAuthHeader } from '../../src/support/http/headers'
+import { bearerAuthorizationHeader } from '../../src/support/http/headers'
 import { expect } from 'chai'
 import { forInstance } from '../testsupport/dsls/methods'
 import MockAdapter from 'axios-mock-adapter'
 
 const buildValidTeamPipelineResourceClient = () => {
   const apiUrl = data.randomApiUrl()
-  const bearerToken = data.randomBearerToken()
+  const bearerToken = data.randomBearerTokenPre4()
 
   const httpClient = axios.create({
-    headers: bearerAuthHeader(bearerToken)
+    headers: bearerAuthorizationHeader(bearerToken)
   })
   const mock = new MockAdapter(httpClient)
 
@@ -182,7 +182,7 @@ describe('TeamPipelineResourceClient', () => {
             `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}` +
             `/resources/${resourceName}/pause`)
         expect(call.headers)
-          .to.include(bearerAuthHeader(bearerToken))
+          .to.include(bearerAuthorizationHeader(bearerToken))
       })
 
     it('throws the underlying http client exception on failure',
@@ -226,7 +226,7 @@ describe('TeamPipelineResourceClient', () => {
             `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/` +
           `resources/${resourceName}/unpause`)
         expect(call.headers)
-          .to.include(bearerAuthHeader(bearerToken))
+          .to.include(bearerAuthorizationHeader(bearerToken))
       })
 
     it('throws the underlying http client exception on failure',
@@ -269,7 +269,7 @@ describe('TeamPipelineResourceClient', () => {
           `/resources/${resourceName}/versions`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             }
           })
           .reply(200, versionsFromApi)
@@ -299,7 +299,7 @@ describe('TeamPipelineResourceClient', () => {
           `/resources/${resourceName}/versions`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             },
             params: {
               limit: 20,
@@ -458,7 +458,7 @@ describe('TeamPipelineResourceClient', () => {
           `/resources/${resourceName}/versions/${versionId}`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             }
           })
           .reply(200, versionFromApi)

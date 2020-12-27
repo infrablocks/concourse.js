@@ -10,188 +10,199 @@ import build from '../../testsupport/builders'
 import { createSessionInterceptor }
   from '../../../src/support/http/session'
 import {
-  infoUrl, skyIssuerTokenUrl, skyTokenUrl,
+  infoUrl,
+  skyTokenUrl,
+  skyIssuerTokenUrl,
   teamAuthTokenUrl,
   teamBuildsUrl,
   teamPipelinesUrl
 } from '../../../src/support/urls'
 import {
-  basicAuthHeader,
-  bearerAuthHeader,
+  basicAuthorizationHeader,
+  bearerAuthorizationHeader,
   csrfTokenHeader
 } from '../../../src/support/http/headers'
-import { currentUnixTime } from '../../../src/support/date'
 
 describe('session interceptor', () => {
-  it('fetches token on first request when none provided and concourse version is < 4',
-    async () => {
-      const concourseUrl = data.randomConcourseUrl()
-      const apiUrl = `${concourseUrl}/api/v1`
-      const teamName = data.randomTeamName()
-      const csrfToken = data.randomCsrfToken()
+  it('fetches token on first request when none provided and concourse ' +
+    'version is < 4',
+  async () => {
+    const concourseUrl = data.randomConcourseUrl()
+    const apiUrl = `${concourseUrl}/api/v1`
+    const teamName = data.randomTeamName()
+    const csrfToken = data.randomCsrfToken()
 
-      const credentials = {
-        username: data.randomUsername(),
-        password: data.randomPassword(),
-        tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
-        tokenUrlPreVersion6: skyTokenUrl(concourseUrl),
-        tokenUrlPostVersion6: skyIssuerTokenUrl(concourseUrl),
-        infoUrl: infoUrl(apiUrl),
-        token: undefined
-      }
-      const httpClient = axios.create()
-      const mock = new MockAdapter(httpClient)
+    const credentials = {
+      username: data.randomUsername(),
+      password: data.randomPassword(),
+      tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
+      tokenUrlPostVersion4: skyTokenUrl(concourseUrl),
+      tokenUrlPostVersion6_1: skyIssuerTokenUrl(concourseUrl),
+      infoUrl: infoUrl(apiUrl),
+      authenticationState: undefined
+    }
+    const httpClient = axios.create()
+    const mock = new MockAdapter(httpClient)
 
-      const bearerToken = data.randomBearerToken({ csrf: csrfToken })
-      const authToken = build.api.authTokenPreVersion4({ value: bearerToken })
+    const bearerToken = data.randomBearerTokenPre4({ csrf: csrfToken })
+    const tokenResponseBody = build.api.tokenResponseBodyPreVersion4({ value: bearerToken })
 
-      const interceptor = createSessionInterceptor({ credentials, httpClient })
+    const interceptor = createSessionInterceptor({ credentials, httpClient })
 
-      mock
-        .onGet(credentials.infoUrl)
-        .reply(200, build.api.info({
-          version: '3.14.1'
-        }))
+    mock
+      .onGet(credentials.infoUrl)
+      .reply(200, build.api.info({
+        version: '3.14.1'
+      }))
 
-      mock
-        .onGet(credentials.tokenUrlPreVersion4, {
-          headers: {
-            ...basicAuthHeader(credentials.username, credentials.password)
-          }
-        })
-        .reply(200, authToken)
-
-      const initialConfig = {
-        url: teamPipelinesUrl(apiUrl, teamName),
-        method: 'get'
-      }
-      const updatedConfig = await interceptor(initialConfig)
-      const expectedConfig = {
-        url: teamPipelinesUrl(apiUrl, teamName),
-        method: 'get',
+    mock
+      .onGet(credentials.tokenUrlPreVersion4, {
         headers: {
-          ...bearerAuthHeader(bearerToken),
-          ...csrfTokenHeader(csrfToken)
+          ...basicAuthorizationHeader(credentials.username, credentials.password)
         }
-      }
-
-      expect(updatedConfig).to.eql(expectedConfig)
-    })
-
-  it('fetches token on first request when none provided and concourse version is < 6',
-    async () => {
-      const concourseUrl = data.randomConcourseUrl()
-      const apiUrl = `${concourseUrl}/api/v1`
-      const teamName = data.randomTeamName()
-      const csrfToken = data.randomCsrfToken()
-
-      const credentials = {
-        username: data.randomUsername(),
-        password: data.randomPassword(),
-        tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
-        tokenUrlPreVersion6: skyTokenUrl(concourseUrl),
-        tokenUrlPostVersion6: skyIssuerTokenUrl(concourseUrl),
-        infoUrl: infoUrl(apiUrl),
-        token: undefined
-      }
-      const httpClient = axios.create()
-      const mock = new MockAdapter(httpClient)
-
-      const bearerToken = data.randomBearerToken({ csrf: csrfToken })
-      const authToken = build.api.authTokenPreVersion6({ accessToken: bearerToken })
-
-      const interceptor = createSessionInterceptor({ credentials, httpClient })
-
-      mock
-        .onGet(credentials.infoUrl)
-        .reply(200, build.api.info({
-          version: '4.0.0'
-        }))
-
-      const expectedData = formurlencoded({
-        grant_type: 'password',
-        username: credentials.username,
-        password: credentials.password,
-        scope: 'openid+profile+email+federated:id+groups'
       })
+      .reply(200, tokenResponseBody)
 
-      mock
-        .onPost(credentials.tokenUrlPreVersion6, expectedData)
-        .reply(200, authToken)
-
-      const initialConfig = {
-        url: teamPipelinesUrl(apiUrl, teamName),
-        method: 'get'
+    const initialConfig = {
+      url: teamPipelinesUrl(apiUrl, teamName),
+      method: 'get'
+    }
+    const updatedConfig = await interceptor(initialConfig)
+    const expectedConfig = {
+      url: teamPipelinesUrl(apiUrl, teamName),
+      method: 'get',
+      headers: {
+        ...bearerAuthorizationHeader(bearerToken),
+        ...csrfTokenHeader(csrfToken)
       }
-      const updatedConfig = await interceptor(initialConfig)
-      const expectedConfig = {
-        url: teamPipelinesUrl(apiUrl, teamName),
-        method: 'get',
-        headers: {
-          ...bearerAuthHeader(bearerToken),
-          ...csrfTokenHeader(csrfToken)
-        }
-      }
+    }
 
-      expect(updatedConfig).to.eql(expectedConfig)
+    expect(updatedConfig).to.eql(expectedConfig)
+  })
+
+  it('fetches token on first request when none provided and concourse ' +
+    'version is >= 4',
+  async () => {
+    const concourseUrl = data.randomConcourseUrl()
+    const apiUrl = `${concourseUrl}/api/v1`
+    const teamName = data.randomTeamName()
+    const csrfToken = data.randomCsrfToken()
+
+    const credentials = {
+      username: data.randomUsername(),
+      password: data.randomPassword(),
+      tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
+      tokenUrlPostVersion4: skyTokenUrl(concourseUrl),
+      tokenUrlPostVersion6_1: skyIssuerTokenUrl(concourseUrl),
+      infoUrl: infoUrl(apiUrl),
+      authenticationState: undefined
+    }
+    const httpClient = axios.create()
+    const mock = new MockAdapter(httpClient)
+
+    const bearerToken = data.randomBearerTokenPost4({
+      csrf: csrfToken
+    })
+    const tokenResponseBody = build.api.tokenResponseBodyPostVersion4({
+      accessToken: bearerToken
     })
 
-  it('fetches token on first request when none provided and concourse version is >= 6',
-    async () => {
-      const concourseUrl = data.randomConcourseUrl()
-      const apiUrl = `${concourseUrl}/api/v1`
-      const teamName = data.randomTeamName()
+    const interceptor = createSessionInterceptor({ credentials, httpClient })
 
-      const credentials = {
-        username: data.randomUsername(),
-        password: data.randomPassword(),
-        tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
-        tokenUrlPreVersion6: skyTokenUrl(concourseUrl),
-        tokenUrlPostVersion6: skyIssuerTokenUrl(concourseUrl),
-        infoUrl: infoUrl(apiUrl),
-        token: undefined
-      }
-      const httpClient = axios.create()
-      const mock = new MockAdapter(httpClient)
+    mock
+      .onGet(credentials.infoUrl)
+      .reply(200, build.api.info({
+        version: '4.0.0'
+      }))
 
-      const idToken = data.randomBearerToken({ csrf: undefined })
-      const accessToken = 'access-token-1234'
-      const authToken = build.api.authTokenPostVersion6({ idToken, accessToken })
-
-      const interceptor = createSessionInterceptor({ credentials, httpClient })
-
-      mock
-        .onGet(credentials.infoUrl)
-        .reply(200, build.api.info({
-          version: '6.0.0'
-        }))
-
-      const expectedData = formurlencoded({
-        grant_type: 'password',
-        username: credentials.username,
-        password: credentials.password,
-        scope: 'openid profile email federated:id groups'
-      })
-
-      mock
-        .onPost(credentials.tokenUrlPostVersion6, expectedData)
-        .reply(200, authToken)
-
-      const initialConfig = {
-        url: teamPipelinesUrl(apiUrl, teamName),
-        method: 'get'
-      }
-      const updatedConfig = await interceptor(initialConfig)
-      const expectedConfig = {
-        url: teamPipelinesUrl(apiUrl, teamName),
-        method: 'get',
-        headers: {
-          ...bearerAuthHeader(accessToken)
-        }
-      }
-
-      expect(updatedConfig).to.eql(expectedConfig)
+    const expectedData = formurlencoded({
+      grant_type: 'password',
+      username: credentials.username,
+      password: credentials.password,
+      scope: 'openid+profile+email+federated:id+groups'
     })
+
+    mock
+      .onPost(credentials.tokenUrlPostVersion4, expectedData)
+      .reply(200, tokenResponseBody)
+
+    const initialConfig = {
+      url: teamPipelinesUrl(apiUrl, teamName),
+      method: 'get'
+    }
+    const updatedConfig = await interceptor(initialConfig)
+    const expectedConfig = {
+      url: teamPipelinesUrl(apiUrl, teamName),
+      method: 'get',
+      headers: {
+        ...bearerAuthorizationHeader(bearerToken),
+        ...csrfTokenHeader(csrfToken)
+      }
+    }
+
+    expect(updatedConfig).to.eql(expectedConfig)
+  })
+
+  it('fetches token on first request when none provided and concourse ' +
+    'version is >= 6.1',
+  async () => {
+    const concourseUrl = data.randomConcourseUrl()
+    const apiUrl = `${concourseUrl}/api/v1`
+    const teamName = data.randomTeamName()
+
+    const credentials = {
+      username: data.randomUsername(),
+      password: data.randomPassword(),
+      tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
+      tokenUrlPostVersion4: skyTokenUrl(concourseUrl),
+      tokenUrlPostVersion6_1: skyIssuerTokenUrl(concourseUrl),
+      infoUrl: infoUrl(apiUrl),
+      authenticationState: undefined
+    }
+    const httpClient = axios.create()
+    const mock = new MockAdapter(httpClient)
+
+    const idToken = data.randomIdTokenPost6_1()
+    const bearerToken = data.randomBearerTokenPost6_1()
+    const tokenResponseBody = build.api.tokenResponseBodyPostVersion6_1({
+      idToken,
+      accessToken: bearerToken
+    })
+
+    const interceptor = createSessionInterceptor({ credentials, httpClient })
+
+    mock
+      .onGet(credentials.infoUrl)
+      .reply(200, build.api.info({
+        version: '6.1.0'
+      }))
+
+    const expectedData = formurlencoded({
+      grant_type: 'password',
+      username: credentials.username,
+      password: credentials.password,
+      scope: 'openid profile email federated:id groups'
+    })
+
+    mock
+      .onPost(credentials.tokenUrlPostVersion6_1, expectedData)
+      .reply(200, tokenResponseBody)
+
+    const initialConfig = {
+      url: teamPipelinesUrl(apiUrl, teamName),
+      method: 'get'
+    }
+    const updatedConfig = await interceptor(initialConfig)
+    const expectedConfig = {
+      url: teamPipelinesUrl(apiUrl, teamName),
+      method: 'get',
+      headers: {
+        ...bearerAuthorizationHeader(bearerToken)
+      }
+    }
+
+    expect(updatedConfig).to.eql(expectedConfig)
+  })
 
   it('does not fetch token if provided and still valid',
     async () => {
@@ -199,20 +210,24 @@ describe('session interceptor', () => {
       const apiUrl = `${concourseUrl}/api/v1`
       const teamName = data.randomTeamName()
       const csrfToken = data.randomCsrfToken()
-      const bearerToken = data.randomBearerToken()
+      const bearerToken = data.randomBearerTokenPost4({
+        csrf: csrfToken
+      })
+      const authenticationState = {
+        accessToken: bearerToken,
+        idToken: bearerToken,
+        tokenType: 'bearer',
+        serverVersion: '4.0.0'
+      }
 
       const credentials = {
         username: data.randomUsername(),
         password: data.randomPassword(),
         tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
-        tokenUrlPreVersion6: skyTokenUrl(concourseUrl),
-        tokenUrlPostVersion6: skyIssuerTokenUrl(concourseUrl),
+        tokenUrlPostVersion4: skyTokenUrl(concourseUrl),
+        tokenUrlPostVersion6_1: skyIssuerTokenUrl(concourseUrl),
         infoUrl: infoUrl(apiUrl),
-        token: {
-          token: bearerToken,
-          csrf: csrfToken,
-          expiry: currentUnixTime() + (60 * 60 * 24)
-        }
+        authenticationState
       }
       const httpClient = axios.create()
 
@@ -227,7 +242,7 @@ describe('session interceptor', () => {
         url: teamPipelinesUrl(apiUrl, teamName),
         method: 'get',
         headers: {
-          ...bearerAuthHeader(bearerToken),
+          ...bearerAuthorizationHeader(bearerToken),
           ...csrfTokenHeader(csrfToken)
         }
       }
@@ -246,32 +261,39 @@ describe('session interceptor', () => {
         username: data.randomUsername(),
         password: data.randomPassword(),
         tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
-        tokenUrlPreVersion6: skyTokenUrl(concourseUrl),
-        tokenUrlPostVersion6: skyIssuerTokenUrl(concourseUrl),
+        tokenUrlPostVersion4: skyTokenUrl(concourseUrl),
+        tokenUrlPostVersion6_1: skyIssuerTokenUrl(concourseUrl),
         infoUrl: infoUrl(apiUrl),
-        token: undefined
+        authenticationState: undefined
       }
       const httpClient = axios.create()
       const mock = new MockAdapter(httpClient)
 
-      const bearerToken = data.randomBearerToken({ csrf: csrfToken })
-      const authToken = build.api.authTokenPreVersion4({ value: bearerToken })
+      const bearerToken = data.randomBearerTokenPost4({
+        csrf: csrfToken
+      })
+      const tokenResponseBody = build.api.tokenResponseBodyPostVersion4({
+        accessToken: bearerToken
+      })
 
       const interceptor = createSessionInterceptor({ credentials, httpClient })
+
+      const expectedData = formurlencoded({
+        grant_type: 'password',
+        username: credentials.username,
+        password: credentials.password,
+        scope: 'openid+profile+email+federated:id+groups'
+      })
 
       mock
         .onGet(credentials.infoUrl)
         .reply(200, build.api.info({
-          version: '3.14.1'
+          version: '4.0.0'
         }))
 
       mock
-        .onGet(credentials.tokenUrlPreVersion4, {
-          headers: {
-            ...basicAuthHeader(credentials.username, credentials.password)
-          }
-        })
-        .reply(200, authToken)
+        .onPost(credentials.tokenUrlPostVersion4, expectedData)
+        .reply(200, tokenResponseBody)
 
       const firstCallInitialConfig = {
         url: teamPipelinesUrl(apiUrl, teamName),
@@ -282,7 +304,7 @@ describe('session interceptor', () => {
         url: teamPipelinesUrl(apiUrl, teamName),
         method: 'get',
         headers: {
-          ...bearerAuthHeader(bearerToken),
+          ...bearerAuthorizationHeader(bearerToken),
           ...csrfTokenHeader(csrfToken)
         }
       }
@@ -296,7 +318,7 @@ describe('session interceptor', () => {
         url: teamBuildsUrl(apiUrl, teamName),
         method: 'get',
         headers: {
-          ...bearerAuthHeader(bearerToken),
+          ...bearerAuthorizationHeader(bearerToken),
           ...csrfTokenHeader(csrfToken)
         }
       }
@@ -304,10 +326,10 @@ describe('session interceptor', () => {
       expect(firstCallUpdatedConfig).to.eql(firstCallExpectedConfig)
       expect(secondCallUpdatedConfig).to.eql(secondCallExpectedConfig)
 
-      const getRequests = mock.history.get
+      const postRequests = mock.history.post
       const tokenRequests = filter(
-        (request) => request.url === credentials.tokenUrlPreVersion4,
-        getRequests)
+        (request) => request.url === credentials.tokenUrlPostVersion4,
+        postRequests)
 
       expect(tokenRequests).to.have.length(1)
     })
@@ -317,20 +339,24 @@ describe('session interceptor', () => {
     const apiUrl = `${concourseUrl}/api/v1`
     const teamName = data.randomTeamName()
     const csrfToken = data.randomCsrfToken()
-    const bearerToken = data.randomBearerToken()
+    const bearerToken = data.randomBearerTokenPost4({
+      csrf: csrfToken
+    })
+    const authenticationState = {
+      accessToken: bearerToken,
+      idToken: bearerToken,
+      tokenType: 'bearer',
+      serverVersion: '4.0.0'
+    }
 
     const credentials = {
       username: data.randomUsername(),
       password: data.randomPassword(),
       tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
-      tokenUrlPreVersion6: skyTokenUrl(concourseUrl),
-      tokenUrlPostVersion6: skyIssuerTokenUrl(concourseUrl),
+      tokenUrlPostVersion4: skyTokenUrl(concourseUrl),
+      tokenUrlPostVersion6_1: skyIssuerTokenUrl(concourseUrl),
       infoUrl: infoUrl(apiUrl),
-      token: {
-        token: bearerToken,
-        csrf: csrfToken,
-        expiry: currentUnixTime() + (60 * 60 * 24)
-      }
+      authenticationState
     }
     const httpClient = axios.create()
 
@@ -349,7 +375,7 @@ describe('session interceptor', () => {
       method: 'get',
       headers: {
         'Accept': 'application/xml',
-        ...bearerAuthHeader(bearerToken),
+        ...bearerAuthorizationHeader(bearerToken),
         ...csrfTokenHeader(csrfToken)
       }
     }
@@ -362,43 +388,59 @@ describe('session interceptor', () => {
     const apiUrl = `${concourseUrl}/api/v1`
     const teamName = data.randomTeamName()
     const oldCsrfToken = data.randomCsrfToken()
-    const expiredBearerToken = data.randomBearerToken({
+    const expiredBearerToken = data.randomBearerTokenPost4({
       csrf: oldCsrfToken
     }, {
       expiresIn: '0 milliseconds'
     })
+    const tokenResponseBody = build.api.tokenResponseBodyPostVersion4({
+      accessToken: expiredBearerToken
+    })
+    const authenticationState = {
+      ...tokenResponseBody,
+      serverVersion: '4.0.0'
+    }
 
     const credentials = {
       username: data.randomUsername(),
       password: data.randomPassword(),
       tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
-      tokenUrlPreVersion6: skyTokenUrl(concourseUrl),
-      tokenUrlPostVersion6: skyIssuerTokenUrl(concourseUrl),
+      tokenUrlPostVersion4: skyTokenUrl(concourseUrl),
+      tokenUrlPostVersion6_1: skyIssuerTokenUrl(concourseUrl),
       infoUrl: infoUrl(apiUrl),
-      token: expiredBearerToken
+      authenticationState
     }
     const httpClient = axios.create()
     const mock = new MockAdapter(httpClient)
 
     const newCsrfToken = data.randomCsrfToken()
-    const newBearerToken = data.randomBearerToken({ csrf: newCsrfToken })
-    const newAuthToken = build.api.authTokenPreVersion4({ value: newBearerToken })
+    const newBearerToken = data.randomBearerTokenPost4({
+      csrf: newCsrfToken
+    })
+    const newTokenResponseBody = build.api.tokenResponseBodyPostVersion4({
+      accessToken: newBearerToken
+    })
 
-    const interceptor = createSessionInterceptor({ credentials, httpClient })
+    const interceptor = createSessionInterceptor({
+      credentials, httpClient
+    })
+
+    const expectedData = formurlencoded({
+      grant_type: 'password',
+      username: credentials.username,
+      password: credentials.password,
+      scope: 'openid+profile+email+federated:id+groups'
+    })
 
     mock
       .onGet(credentials.infoUrl)
       .reply(200, build.api.info({
-        version: '3.14.1'
+        version: '4.0.0'
       }))
 
     mock
-      .onGet(credentials.tokenUrlPreVersion4, {
-        headers: {
-          ...basicAuthHeader(credentials.username, credentials.password)
-        }
-      })
-      .reply(200, newAuthToken)
+      .onPost(credentials.tokenUrlPostVersion4, expectedData)
+      .reply(200, newTokenResponseBody)
 
     const initialConfig = {
       url: teamPipelinesUrl(apiUrl, teamName),
@@ -409,7 +451,7 @@ describe('session interceptor', () => {
       url: teamPipelinesUrl(apiUrl, teamName),
       method: 'get',
       headers: {
-        ...bearerAuthHeader(newBearerToken),
+        ...bearerAuthorizationHeader(newBearerToken),
         ...csrfTokenHeader(newCsrfToken)
       }
     }
@@ -427,32 +469,39 @@ describe('session interceptor', () => {
       username: data.randomUsername(),
       password: data.randomPassword(),
       tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
-      tokenUrlPreVersion6: skyTokenUrl(concourseUrl),
-      tokenUrlPostVersion6: skyIssuerTokenUrl(concourseUrl),
+      tokenUrlPostVersion4: skyTokenUrl(concourseUrl),
+      tokenUrlPostVersion6_1: skyIssuerTokenUrl(concourseUrl),
       infoUrl: infoUrl(apiUrl),
-      token: undefined
+      authenticationState: undefined
     }
     const httpClient = axios.create()
     const mock = new MockAdapter(httpClient)
 
-    const bearerToken = data.randomBearerToken({ csrf: csrfToken })
-    const authToken = build.api.authTokenPreVersion4({ value: bearerToken })
+    const bearerToken = data.randomBearerTokenPost4({
+      csrf: csrfToken
+    })
+    const tokenResponseBody = build.api.tokenResponseBodyPostVersion4({
+      accessToken: bearerToken
+    })
 
     const interceptor = createSessionInterceptor({ credentials, httpClient })
+
+    const expectedData = formurlencoded({
+      grant_type: 'password',
+      username: credentials.username,
+      password: credentials.password,
+      scope: 'openid+profile+email+federated:id+groups'
+    })
 
     mock
       .onGet(credentials.infoUrl)
       .reply(200, build.api.info({
-        version: '3.14.1'
+        version: '4.0.0'
       }))
 
     mock
-      .onGet(credentials.tokenUrlPreVersion4, {
-        headers: {
-          ...basicAuthHeader(credentials.username, credentials.password)
-        }
-      })
-      .reply(200, authToken)
+      .onPost(credentials.tokenUrlPostVersion4, expectedData)
+      .reply(200, tokenResponseBody)
 
     const initialConfig = {
       url: teamPipelinesUrl(apiUrl, teamName),
@@ -466,7 +515,7 @@ describe('session interceptor', () => {
       url: teamPipelinesUrl(apiUrl, teamName),
       method: 'get',
       headers: {
-        ...bearerAuthHeader(bearerToken),
+        ...bearerAuthorizationHeader(bearerToken),
         ...csrfTokenHeader(csrfToken)
       }
     }
@@ -474,10 +523,10 @@ describe('session interceptor', () => {
     expect(result1).to.eql(expectedConfig)
     expect(result2).to.eql(expectedConfig)
 
-    const getRequests = mock.history.get
+    const postRequests = mock.history.post
     const tokenRequests = filter(
-      (request) => request.url === credentials.tokenUrlPreVersion4,
-      getRequests)
+      (request) => request.url === credentials.tokenUrlPostVersion4,
+      postRequests)
 
     expect(tokenRequests).to.have.length(1)
   })

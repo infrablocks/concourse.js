@@ -9,14 +9,14 @@ import { onConstructionOf } from '../testsupport/dsls/construction'
 import { forInstance } from '../testsupport/dsls/methods'
 
 import TeamClient from '../../src/subclients/TeamClient'
-import { bearerAuthHeader } from '../../src/support/http/headers'
+import { bearerAuthorizationHeader } from '../../src/support/http/headers'
 
 const buildValidTeamClient = () => {
   const apiUrl = data.randomApiUrl()
-  const bearerToken = data.randomBearerToken()
+  const bearerToken = data.randomBearerTokenPre4()
 
   const httpClient = axios.create({
-    headers: bearerAuthHeader(bearerToken)
+    headers: bearerAuthorizationHeader(bearerToken)
   })
   const mock = new MockAdapter(httpClient)
 
@@ -119,7 +119,7 @@ describe('TeamClient', () => {
         .to.eql(`${apiUrl}/teams/${originalTeamName}/rename`)
       expect(call.data).to.eql(`{"name":"${newTeamName}"}`)
       expect(call.headers)
-        .to.include(bearerAuthHeader(bearerToken))
+        .to.include(bearerAuthorizationHeader(bearerToken))
     })
 
     it('throws the underlying http client exception on failure',
@@ -181,7 +181,7 @@ describe('TeamClient', () => {
       expect(call.url)
         .to.eql(`${apiUrl}/teams/${teamName}`)
       expect(call.headers)
-        .to.include(bearerAuthHeader(bearerToken))
+        .to.include(bearerAuthorizationHeader(bearerToken))
     })
 
     it('throws the underlying http client exception on failure',
@@ -220,7 +220,7 @@ describe('TeamClient', () => {
           `${apiUrl}/teams/${teamName}/builds`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             }
           })
           .reply(200, buildsFromApi)
@@ -247,7 +247,7 @@ describe('TeamClient', () => {
           `${apiUrl}/teams/${teamName}/builds`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             },
             params: {
               limit: 20,
@@ -379,7 +379,7 @@ describe('TeamClient', () => {
           `${apiUrl}/teams/${teamName}/containers`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             },
             params: {
               type,
@@ -567,7 +567,7 @@ describe('TeamClient', () => {
           `${apiUrl}/teams/${teamName}/volumes`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             }
           })
           .reply(200, volumesFromApi)
@@ -596,7 +596,7 @@ describe('TeamClient', () => {
         `${apiUrl}/teams/${teamName}/containers/${containerId}`,
         {
           headers: {
-            ...bearerAuthHeader(bearerToken)
+            ...bearerAuthorizationHeader(bearerToken)
           }
         })
         .reply(200, containerFromApi)
@@ -644,7 +644,7 @@ describe('TeamClient', () => {
           `${apiUrl}/teams/${teamName}/pipelines`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             }
           })
           .reply(200, pipelinesFromApi)
@@ -694,7 +694,7 @@ describe('TeamClient', () => {
           `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             }
           })
           .reply(200, pipelineFromApi)

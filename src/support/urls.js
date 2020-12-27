@@ -3,7 +3,6 @@ export const apiUrl = (concourseUrl) =>
 
 export const skyTokenUrl = (concourseUrl) =>
   `${concourseUrl}/sky/token`
-
 export const skyIssuerTokenUrl = (concourseUrl) =>
   `${concourseUrl}/sky/issuer/token`
 

@@ -1,10 +1,14 @@
 export const info =
   ({
     version = '3.14.1',
-    workerVersion = '2.1'
+    workerVersion = '2.1',
+    externalUrl = 'https://ci.example.com',
+    clusterName = 'CI Cluster'
   } = {}) => ({
     version,
-    workerVersion
+    workerVersion,
+    externalUrl,
+    clusterName
   })
 
 export const teamAuthentication =

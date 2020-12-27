@@ -4,17 +4,17 @@ import data from '../testsupport/data'
 import axios from 'axios'
 import faker from 'faker'
 import build from '../testsupport/builders'
-import { bearerAuthHeader } from '../../src/support/http/headers'
+import { bearerAuthorizationHeader } from '../../src/support/http/headers'
 import { expect } from 'chai'
 import MockAdapter from 'axios-mock-adapter'
 import { forInstance } from '../testsupport/dsls/methods'
 
 const buildValidTeamPipelineJobClient = () => {
   const apiUrl = data.randomApiUrl()
-  const bearerToken = data.randomBearerToken()
+  const bearerToken = data.randomBearerTokenPre4()
 
   const httpClient = axios.create({
-    headers: bearerAuthHeader(bearerToken)
+    headers: bearerAuthorizationHeader(bearerToken)
   })
   const mock = new MockAdapter(httpClient)
 
@@ -180,7 +180,7 @@ describe('TeamPipelineJobClient', () => {
             `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}` +
             `/jobs/${jobName}/pause`)
         expect(call.headers)
-          .to.include(bearerAuthHeader(bearerToken))
+          .to.include(bearerAuthorizationHeader(bearerToken))
       })
 
     it('throws the underlying http client exception on failure',
@@ -222,7 +222,7 @@ describe('TeamPipelineJobClient', () => {
             `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/` +
             `jobs/${jobName}/unpause`)
         expect(call.headers)
-          .to.include(bearerAuthHeader(bearerToken))
+          .to.include(bearerAuthorizationHeader(bearerToken))
       })
 
     it('throws the underlying http client exception on failure',
@@ -264,7 +264,7 @@ describe('TeamPipelineJobClient', () => {
           `/jobs/${jobName}/builds`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             }
           })
           .reply(200, buildsFromApi)
@@ -318,7 +318,7 @@ describe('TeamPipelineJobClient', () => {
           `/jobs/${jobName}/builds/${buildName}`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             }
           })
           .reply(200, buildFromApi)
@@ -349,7 +349,7 @@ describe('TeamPipelineJobClient', () => {
           `/jobs/${jobName}/inputs`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             }
           })
           .reply(200, inputsFromApi)

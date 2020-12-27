@@ -9,11 +9,13 @@ import { toUnixTime } from '../../src/support/date'
 import BuildStatus from '../../src/model/BuildStatus'
 
 const randomConcourseUrl = () => faker.internet.url()
+const randomClusterName = () => faker.random.words()
 const randomApiUrl = () => `${randomConcourseUrl()}/api/v1`
 const randomUsername = () => faker.internet.userName(
   faker.name.firstName(),
   faker.name.lastName())
 const randomPassword = () => faker.random.alphaNumeric(40)
+const randomEmail = () => faker.internet.email()
 
 const randomDigit = () => faker.random.number({ max: 9 })
 const randomVersion = () => `${randomDigit()}.${randomDigit()}.${randomDigit()}`
@@ -21,15 +23,72 @@ const randomVersion = () => `${randomDigit()}.${randomDigit()}.${randomDigit()}`
 const randomInfo = (overrides = {}) => ({
   version: randomVersion(),
   workerVersion: randomVersion(),
+  externalUrl: randomConcourseUrl(),
+  clusterName: randomClusterName(),
   ...overrides
 })
 
+const randomIssuer = () => faker.internet.url()
 const randomCsrfToken = () => randomLowerHex(64)
-const randomBearerToken = (overrides = {}, options = {}) => {
+const randomSubject = () => faker.random.alphaNumeric(30)
+const randomAccessTokenHash = () => faker.random.alphaNumeric(22)
+const randomBearerTokenPre4 = (overrides = {}, options = {}) => {
   const resolvedData = {
     csrf: randomCsrfToken(),
     teamName: randomTeamName(),
     isAdmin: true,
+    ...overrides
+  }
+  const resolvedOptions = {
+    algorithm: 'RS256',
+    expiresIn: '1 day',
+    ...options
+  }
+  const rsaPrivateKey = new NodeRSA({ b: 512 })
+    .exportKey('pkcs8-private-pem')
+
+  return jwt.sign(resolvedData, rsaPrivateKey, resolvedOptions)
+}
+const randomBearerTokenPost4 = (overrides = {}, options = {}) => {
+  const defaultUsername = randomUsername()
+  const resolvedData = {
+    csrf: randomCsrfToken(),
+    sub: randomSubject(),
+    email: randomEmail(),
+    teams: [randomTeamName()],
+    is_admin: true,
+    name: '',
+    user_id: defaultUsername,
+    user_name: defaultUsername,
+    ...overrides
+  }
+  const resolvedOptions = {
+    algorithm: 'RS256',
+    expiresIn: '1 day',
+    ...options
+  }
+  const rsaPrivateKey = new NodeRSA({ b: 512 })
+    .exportKey('pkcs8-private-pem')
+
+  return jwt.sign(resolvedData, rsaPrivateKey, resolvedOptions)
+}
+// eslint-disable-next-line camelcase
+const randomBearerTokenPost6_1 = () => faker.random.alphaNumeric(38)
+// eslint-disable-next-line camelcase
+const randomIdTokenPost6_1 = (overrides = {}, options = {}) => {
+  const defaultUsername = randomUsername()
+  const resolvedData = {
+    iss: randomIssuer(),
+    sub: randomSubject(),
+    aud: 'fly',
+    email: randomEmail(),
+    email_verified: true,
+    at_hash: randomAccessTokenHash(),
+    federated_claims: {
+      connector_id: 'local',
+      user_id: defaultUsername,
+      user_name: defaultUsername
+    },
     ...overrides
   }
   const resolvedOptions = {
@@ -369,13 +428,17 @@ export default {
 
   randomUsername,
   randomPassword,
+  randomEmail,
 
   randomInfo,
 
   randomBuildId,
 
   randomCsrfToken,
-  randomBearerToken,
+  randomBearerTokenPre4,
+  randomBearerTokenPost4,
+  randomBearerTokenPost6_1,
+  randomIdTokenPost6_1,
 
   randomTeam,
   randomTeamName,

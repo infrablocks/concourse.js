@@ -4,8 +4,8 @@ import AwaitLock from 'await-lock'
 import formurlencoded from 'form-urlencoded'
 
 import {
-  basicAuthHeader,
-  bearerAuthHeader,
+  basicAuthorizationHeader,
+  bearerAuthorizationHeader,
   contentTypeHeader,
   contentTypes,
   csrfTokenHeader
@@ -16,42 +16,57 @@ import { parseJson } from './transformers'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
 import * as semver from 'semver'
 
-const isExpired = (token) => {
-  const expiryInSeconds = token.expiry
+const flyClientId = 'fly'
+const flyClientSecret = 'Zmx5'
+
+const bearerAuthorizationHeaderFrom =
+  authenticationState =>
+    bearerAuthorizationHeader(
+      authenticationState.accessToken)
+
+const csrfTokenHeaderFrom =
+  authenticationState =>
+    semver.lt(authenticationState.serverVersion, '6.1.0')
+      ? csrfTokenHeader(jwt.decode(authenticationState.idToken).csrf)
+      : {}
+
+const isExpiredOrIncomplete = authenticationState => {
+  if (!authenticationState ||
+    !authenticationState.accessToken ||
+    !authenticationState.idToken ||
+    !authenticationState.serverVersion) {
+    return true
+  }
+
+  const decoded = jwt.decode(authenticationState.idToken)
+  const expiryInSeconds = decoded.exp
   const nowInSeconds = currentUnixTime()
   const tenMinutesInSeconds = 10 * 60 // allow for 10 minutes clock drift
 
   return nowInSeconds > (expiryInSeconds - tenMinutesInSeconds)
 }
 
-const getExpiryFromJwt = (token) => {
-  const decoded = jwt.decode(token)
-  return decoded.exp
+const fetchServerVersion = async (credentials, httpClient) => {
+  return (await httpClient.get(credentials.infoUrl)).data.version
 }
 
-const getCsrfFromJwt = (token) => {
-  const decoded = jwt.decode(token)
-  return decoded.csrf
-}
-
-const fetchTokenPreVersion4 = async (credentials, httpClient) => {
-  const response = await httpClient.get(credentials.tokenUrlPreVersion4, {
+const authenticatePreVersion4 = async (credentials, httpClient) => {
+  const tokenResponse = await httpClient.get(credentials.tokenUrlPreVersion4, {
     headers: {
-      ...basicAuthHeader(credentials.username, credentials.password)
+      ...basicAuthorizationHeader(credentials.username, credentials.password)
     }
   })
 
-  const token = response.data.value
-  const csrf = getCsrfFromJwt(token)
-  const expiry = getExpiryFromJwt(token)
+  const { value, type } = tokenResponse.data
+
   return {
-    token,
-    csrf,
-    expiry
+    idToken: value,
+    accessToken: value,
+    tokenType: type
   }
 }
 
-const fetchTokenPreVersion6 = async (credentials, httpClient) => {
+const authenticatePostVersion4 = async (credentials, httpClient) => {
   const data = formurlencoded({
     grant_type: 'password',
     username: credentials.username,
@@ -59,28 +74,28 @@ const fetchTokenPreVersion6 = async (credentials, httpClient) => {
     scope: 'openid+profile+email+federated:id+groups'
   })
 
-  const response = await httpClient.post(
-    credentials.tokenUrlPreVersion6,
+  const tokenResponse = await httpClient.post(
+    credentials.tokenUrlPostVersion4,
     data,
     {
       headers: {
-        ...basicAuthHeader('fly', 'Zmx5'),
+        ...basicAuthorizationHeader(flyClientId, flyClientSecret),
         ...contentTypeHeader(contentTypes.formUrlEncoded)
       },
-      transformResponse: [parseJson, camelcaseKeysDeep]
+      transformResponse: [ parseJson, camelcaseKeysDeep ]
     })
 
-  const token = response.data.accessToken
-  const csrf = getCsrfFromJwt(token)
-  const expiry = getExpiryFromJwt(token)
+  const { accessToken, tokenType } = tokenResponse.data
+
   return {
-    token,
-    csrf,
-    expiry
+    idToken: accessToken,
+    accessToken,
+    tokenType
   }
 }
 
-const fetchTokenPostVersion6 = async (credentials, httpClient) => {
+// eslint-disable-next-line camelcase
+const authenticatePostVersion6_1 = async (credentials, httpClient) => {
   const data = formurlencoded({
     grant_type: 'password',
     username: credentials.username,
@@ -88,69 +103,80 @@ const fetchTokenPostVersion6 = async (credentials, httpClient) => {
     scope: 'openid profile email federated:id groups'
   })
 
-  const response = await httpClient.post(
-    credentials.tokenUrlPostVersion6,
+  const tokenResponse = await httpClient.post(
+    credentials.tokenUrlPostVersion6_1,
     data,
     {
       headers: {
-        ...basicAuthHeader('fly', 'Zmx5'),
+        ...basicAuthorizationHeader(flyClientId, flyClientSecret),
         ...contentTypeHeader(contentTypes.formUrlEncoded)
       },
-      transformResponse: [parseJson, camelcaseKeysDeep]
+      transformResponse: [ parseJson, camelcaseKeysDeep ]
     })
 
-  const token = response.data.accessToken
-  const csrf = getCsrfFromJwt(response.data.idToken)
-  const expiry = getExpiryFromJwt(response.data.idToken)
+  const { idToken, accessToken, tokenType } = tokenResponse.data
+
   return {
-    token,
-    csrf,
-    expiry
+    idToken,
+    accessToken,
+    tokenType
   }
 }
 
-const fetchToken = async (credentials, httpClient) => {
-  const serverInfo = await httpClient.get(credentials.infoUrl)
-  const version = serverInfo.data.version
+const authenticate = async (credentials, httpClient) => {
+  const serverVersion = await fetchServerVersion(credentials, httpClient)
 
-  if (semver.lt(version, '4.0.0')) {
-    return fetchTokenPreVersion4(credentials, httpClient)
+  let newAuthenticationState
+  if (semver.lt(serverVersion, '4.0.0')) {
+    newAuthenticationState =
+      await authenticatePreVersion4(credentials, httpClient)
+  } else if (semver.lt(serverVersion, '6.1.0')) {
+    newAuthenticationState =
+      await authenticatePostVersion4(credentials, httpClient)
+  } else {
+    newAuthenticationState =
+      await authenticatePostVersion6_1(credentials, httpClient)
   }
 
-  if (semver.lt(version, '6.0.0')) {
-    return fetchTokenPreVersion6(credentials, httpClient)
+  return {
+    ...newAuthenticationState,
+    serverVersion
   }
-
-  return fetchTokenPostVersion6(credentials, httpClient)
 }
 
-const ensureValidToken = async (token, credentials, httpClient) => {
-  return (!token || !token.token || isExpired(token))
-    ? fetchToken(credentials, httpClient)
-    : token
-}
+const ensureAuthenticated =
+  async (authenticationState, credentials, httpClient) => {
+    return isExpiredOrIncomplete(authenticationState)
+      ? authenticate(credentials, httpClient)
+      : authenticationState
+  }
 
 export const createSessionInterceptor =
   ({ credentials, httpClient = axios.create() }) => {
+    let authenticationState = credentials.authenticationState
     let lock = new AwaitLock()
-    let token = credentials.token
 
     return async (config) => {
       await lock.acquireAsync()
       try {
-        token = await ensureValidToken(token, credentials, httpClient)
+        authenticationState =
+          await ensureAuthenticated(
+            authenticationState, credentials, httpClient)
       } finally {
         lock.release()
       }
 
-      const csrfHeader = token.csrf ? csrfTokenHeader(token.csrf) : {}
+      const bearerAuthHeader =
+        bearerAuthorizationHeaderFrom(authenticationState)
+      const csrfTokenHeader =
+        csrfTokenHeaderFrom(authenticationState)
 
       return {
         ...config,
         headers: {
           ...config.headers,
-          ...bearerAuthHeader(token.token),
-          ...csrfHeader
+          ...bearerAuthHeader,
+          ...csrfTokenHeader
         }
       }
     }

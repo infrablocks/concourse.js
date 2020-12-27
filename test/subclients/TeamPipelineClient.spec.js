@@ -7,17 +7,17 @@ import build from '../testsupport/builders'
 
 import { onConstructionOf } from '../testsupport/dsls/construction'
 
-import { bearerAuthHeader } from '../../src/support/http/headers'
+import { bearerAuthorizationHeader } from '../../src/support/http/headers'
 import TeamPipelineClient from '../../src/subclients/TeamPipelineClient'
 import { expect } from 'chai'
 import { forInstance } from '../testsupport/dsls/methods'
 
 const buildValidTeamPipelineClient = () => {
   const apiUrl = data.randomApiUrl()
-  const bearerToken = data.randomBearerToken()
+  const bearerToken = data.randomBearerTokenPre4()
 
   const httpClient = axios.create({
-    headers: bearerAuthHeader(bearerToken)
+    headers: bearerAuthorizationHeader(bearerToken)
   })
   const mock = new MockAdapter(httpClient)
 
@@ -146,7 +146,7 @@ describe('TeamPipelineClient', () => {
         expect(call.url)
           .to.eql(`${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/pause`)
         expect(call.headers)
-          .to.include(bearerAuthHeader(bearerToken))
+          .to.include(bearerAuthorizationHeader(bearerToken))
       })
 
     it('throws the underlying http client exception on failure',
@@ -185,7 +185,7 @@ describe('TeamPipelineClient', () => {
           .to.eql(
             `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/unpause`)
         expect(call.headers)
-          .to.include(bearerAuthHeader(bearerToken))
+          .to.include(bearerAuthorizationHeader(bearerToken))
       })
 
     it('throws the underlying http client exception on failure',
@@ -231,7 +231,7 @@ describe('TeamPipelineClient', () => {
           '/rename')
       expect(call.data).to.eql(`{"name":"${newPipelineName}"}`)
       expect(call.headers)
-        .to.include(bearerAuthHeader(bearerToken))
+        .to.include(bearerAuthorizationHeader(bearerToken))
     })
 
     it('throws the underlying http client exception on failure',
@@ -288,7 +288,7 @@ describe('TeamPipelineClient', () => {
           `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             }
           })
           .reply(204)
@@ -300,7 +300,7 @@ describe('TeamPipelineClient', () => {
         expect(call.url)
           .to.eql(`${apiUrl}/teams/${teamName}/pipelines/${pipelineName}`)
         expect(call.headers)
-          .to.include(bearerAuthHeader(bearerToken))
+          .to.include(bearerAuthorizationHeader(bearerToken))
       })
 
     it('throws the underlying http client exception on failure',
@@ -312,7 +312,7 @@ describe('TeamPipelineClient', () => {
           `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             }
           })
           .networkError()
@@ -344,7 +344,7 @@ describe('TeamPipelineClient', () => {
           `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/jobs`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             }
           })
           .reply(200, jobsFromApi)
@@ -396,7 +396,7 @@ describe('TeamPipelineClient', () => {
           `/jobs/${jobName}`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             }
           })
           .reply(200, jobFromApi)
@@ -445,7 +445,7 @@ describe('TeamPipelineClient', () => {
           `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/resources`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             }
           })
           .reply(200, resourcesFromApi)
@@ -497,7 +497,7 @@ describe('TeamPipelineClient', () => {
           `/resources/${resourceName}`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             }
           })
           .reply(200, resourceFromApi)
@@ -546,7 +546,7 @@ describe('TeamPipelineClient', () => {
           `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/resource-types`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             }
           })
           .reply(200, resourceTypesFromApi)
@@ -575,7 +575,7 @@ describe('TeamPipelineClient', () => {
           `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/builds`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             }
           })
           .reply(200, buildsFromApi)
@@ -602,7 +602,7 @@ describe('TeamPipelineClient', () => {
           `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/builds`,
           {
             headers: {
-              ...bearerAuthHeader(bearerToken)
+              ...bearerAuthorizationHeader(bearerToken)
             },
             params: {
               limit: 20,
