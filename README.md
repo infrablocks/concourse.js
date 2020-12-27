@@ -157,11 +157,13 @@ currently supported are detailed below.
   job build specified by `buildName`.
 * `async TeamPipelineJobClient#listInputs()` - Returns an array of team pipeline
   job inputs.
-* `async TeamPipelineJobClient#createJobBuild()` - Create a build for team pipeline job.
+* `async TeamPipelineJobClient#createJobBuild()` - Create a build for team 
+  pipeline job.
 
 ### `TeamPipelineResourceClient` Methods
   
-* `async TeamPipelineResourceClient#pause()` - Pauses the team pipeline resource.
+* `async TeamPipelineResourceClient#pause()` - Pauses the team pipeline 
+  resource.
 * `async TeamPipelineResourceClient#unpause()` - Unpauses the team pipeline 
   resource.  
 * `async TeamPipelineResourceClient#listVersions(options = {})` - Returns an 

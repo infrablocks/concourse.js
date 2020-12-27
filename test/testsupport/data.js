@@ -230,6 +230,7 @@ const randomTeam = (overrides = {}) => ({
   ...overrides
 })
 
+const randomPipelineConfig = () => randomLowerCaseWord()
 const randomPipeline = (overrides = {}) => ({
   id: randomPipelineId(),
   name: randomPipelineName(),
@@ -422,8 +423,6 @@ const randomVolume = (overrides = {}) => ({
   ...overrides
 })
 
-const randomPipelineConfig = () => randomLowerCaseWord()
-
 export default {
   randomConcourseUrl,
   randomApiUrl,
@@ -452,6 +451,7 @@ export default {
   randomBuild,
 
   randomPipelineName,
+  randomPipelineConfig,
   randomPipeline,
 
   randomJobName,
@@ -479,6 +479,5 @@ export default {
   randomContainer,
   randomContainerId,
 
-  randomVolume,
-  randomPipelineConfig
+  randomVolume
 }

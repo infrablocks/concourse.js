@@ -5,7 +5,8 @@ const csrfTokenHeaderName = 'X-Csrf-Token'
 const contentTypeHeaderName = 'Content-Type'
 
 export const contentTypes = {
-  formUrlEncoded: 'application/x-www-form-urlencoded'
+  formUrlEncoded: 'application/x-www-form-urlencoded',
+  yaml: 'application/x-yaml'
 }
 
 const basicAuthToken = (username, password) =>

@@ -14,11 +14,12 @@ import {
   teamPipelineResourcesUrl,
   teamPipelineResourceTypesUrl,
   teamPipelineResourceUrl,
-  teamPipelinesConfigUrl,
+  teamPipelineConfigUrl,
   teamPipelineUnpauseUrl,
   teamPipelineUrl
 } from '../support/urls'
 import { parseJson } from '../support/http/transformers'
+import { contentTypeHeader, contentTypes } from '../support/http/headers'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
 import TeamPipelineJobClient from './TeamPipelineJobClient'
 import TeamPipelineResourceClient from './TeamPipelineResourceClient'
@@ -196,11 +197,10 @@ class TeamPipelineClient {
 
     await this.httpClient
       .put(
-        teamPipelinesConfigUrl(this.apiUrl, this.teamName, this.pipelineName),
+        teamPipelineConfigUrl(this.apiUrl, this.teamName, this.pipelineName),
         validatedOptions.pipelineConfig,
-        { headers: {
-          'Content-Type': 'application/x-yaml'
-        }
+        {
+          headers: contentTypeHeader(contentTypes.yaml)
         })
   }
 }

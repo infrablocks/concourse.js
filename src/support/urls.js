@@ -48,7 +48,7 @@ export const teamPipelineUnpauseUrl = (apiUrl, teamName, pipelineName) =>
   `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/unpause`
 export const teamPipelineRenameUrl = (apiUrl, teamName, pipelineName) =>
   `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/rename`
-export const teamPipelinesConfigUrl = (apiUrl, teamName, pipelineName) =>
+export const teamPipelineConfigUrl = (apiUrl, teamName, pipelineName) =>
   `${apiUrl}/teams/${teamName}/pipelines/${pipelineName}/config`
 
 export const teamBuildsUrl = (apiUrl, teamName) =>

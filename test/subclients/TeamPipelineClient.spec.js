@@ -9,7 +9,10 @@ import build from '../testsupport/builders'
 
 import { onConstructionOf } from '../testsupport/dsls/construction'
 
-import { bearerAuthorizationHeader } from '../../src/support/http/headers'
+import {
+  bearerAuthorizationHeader,
+  contentTypeHeader, contentTypes
+} from '../../src/support/http/headers'
 import TeamPipelineClient from '../../src/subclients/TeamPipelineClient'
 import { expect } from 'chai'
 import { forInstance } from '../testsupport/dsls/methods'
@@ -280,7 +283,7 @@ describe('TeamPipelineClient', () => {
       })
   })
   describe('saveConfig', () => {
-    it('save the config', async () => {
+    it('saves the config', async () => {
       const { client, mock, apiUrl, bearerToken, teamName, pipelineName } =
         buildValidTeamPipelineClient()
       const pipelineConfig = data.randomPipelineConfig()
@@ -295,8 +298,8 @@ describe('TeamPipelineClient', () => {
       expect(call.url).to.eql(saveConfigUrl)
       expect(call.data).to.eql(pipelineConfig)
       expect(call.headers).to.include({
-        'Content-Type': 'application/x-yaml',
-        ...bearerAuthHeader(bearerToken)
+        ...contentTypeHeader(contentTypes.yaml),
+        ...bearerAuthorizationHeader(bearerToken)
       })
     })
 

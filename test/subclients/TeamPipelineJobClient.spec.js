@@ -356,7 +356,7 @@ describe('TeamPipelineJobClient', () => {
         expect(mock.history.post).to.have.length(1)
         const call = mock.history.post[0]
         expect(call.url).to.eql(createBuildUrl)
-        expect(call.headers).to.include(bearerAuthHeader(bearerToken))
+        expect(call.headers).to.include(bearerAuthorizationHeader(bearerToken))
         expect(actualBuild).to.eql(expectedBuild)
       })
   })
