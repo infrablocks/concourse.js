@@ -1,4 +1,4 @@
-import { contains, isEmpty } from 'ramda'
+import { includes, isEmpty } from 'ramda'
 
 export const toInput = client => inputData =>
   new Input({ ...inputData, client })
@@ -33,6 +33,6 @@ export default class Input {
   }
 
   requiresAtLeastJobToHavePassed (jobName) {
-    return contains(jobName, this.passed || [])
+    return includes(jobName, this.passed || [])
   }
 }

@@ -35,14 +35,14 @@
 | ListPipelineBuilds            | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/builds                                                           | Done     |
 | CreatePipelineBuild           | POST   | /api/v1/teams/:team_name/pipelines/:pipeline_name/builds                                                           | Now      |
 | GetConfig                     | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/config                                                           | Later    |
-| SaveConfig                    | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/config                                                           | Later    |
+| SaveConfig                    | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/config                                                           | Done     |
 | ExposePipeline                | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/expose                                                           | Later    |
 | HidePipeline                  | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/hide                                                             | Later    |
 | ListJobs                      | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/jobs                                                             | Done     |
 | GetJob                        | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name                                                   | Done     |
 | JobBadge                      | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/badge                                             | Later    |
 | ListJobBuilds                 | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/builds                                            | Done     |
-| CreateJobBuild                | POST   | /api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/builds                                            | Now      |
+| CreateJobBuild                | POST   | /api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/builds                                            | Done     |
 | GetJobBuild                   | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/builds/:build_name                                | Done     |
 | ListJobInputs                 | GET    | /api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/inputs                                            | Done     |
 | PauseJob                      | PUT    | /api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/pause                                             | Done     |
