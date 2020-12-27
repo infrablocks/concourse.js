@@ -301,8 +301,8 @@ const randomResourceVersionCause = (overrides = {}) => ({
 
 const randomJobId = () => faker.random.number()
 const randomJobName = () => randomLowerCaseWord()
-const randomJobInputs = ({ inputs = randomInput() } = {}) => [...inputs]
-const randomJobOutputs = ({ outputs = randomOutput() } = {}) => [...outputs]
+const randomJobInputs = ({ inputs = [randomInput()] } = {}) => inputs
+const randomJobOutputs = ({ outputs = [randomOutput()] } = {}) => outputs
 const randomJobGroups = () => [randomLowerCaseWord()]
 
 const randomBuild = (overrides = {}) => ({

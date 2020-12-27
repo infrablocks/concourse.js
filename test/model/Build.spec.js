@@ -1,3 +1,5 @@
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 import sinon from 'sinon'
 import { expect } from 'chai'
 import data from '../testsupport/data'

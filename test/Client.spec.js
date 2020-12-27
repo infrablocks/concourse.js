@@ -1,3 +1,5 @@
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 import { expect } from 'chai'
 import faker from 'faker'
 import axios from 'axios'

@@ -1,3 +1,5 @@
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 import sinon from 'sinon'
 import { expect } from 'chai'
 import { map, times } from 'ramda'
@@ -20,8 +22,8 @@ describe('Job', () => {
     expect(job.getName()).to.eql(jobData.name)
     expect(job.getPipelineName()).to.eql(jobData.pipelineName)
     expect(job.getTeamName()).to.eql(jobData.teamName)
-    expect(job.getInputs()).to.eql(map(toInput, jobData.inputs))
-    expect(job.getOutputs()).to.eql(map(toOutput, jobData.outputs))
+    expect(job.getInputs()).to.eql(map(toInput(undefined), jobData.inputs))
+    expect(job.getOutputs()).to.eql(map(toOutput(undefined), jobData.outputs))
     expect(job.getGroups()).to.eql(jobData.groups)
   })
 

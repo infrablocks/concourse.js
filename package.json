@@ -9,8 +9,8 @@
     "start": "babel -s inline -d lib -w src",
     "build": "babel -s inline -d lib src",
     "prepublishOnly": "npm run lint && npm run test && npm run build",
-    "test": "mocha --require babel-polyfill --require babel-core/register --recursive ./test",
-    "integration": "mocha --require babel-polyfill --require babel-core/register --recursive --timeout 5000 ./integration"
+    "test": "mocha --require @babel/register --recursive ./test",
+    "integration": "mocha --require @babel/register --recursive --timeout 5000 ./integration"
   },
   "repository": {
     "type": "git",
@@ -41,19 +41,22 @@
     "await-lock": "^2.1.0",
     "axios": "^0.21.1",
     "camelcase-keys-deep": "^0.1.0",
+    "core-js": "^3.8.1",
     "form-urlencoded": "^4.2.1",
     "joi": "^17.3.0",
     "js-base64": "^3.6.0",
     "jsonwebtoken": "^8.5.1",
     "ramda": "^0.27.1",
+    "regenerator-runtime": "^0.13.7",
     "semver": "^7.3.4"
   },
   "devDependencies": {
     "axios-mock-adapter": "^1.19.0",
-    "babel-cli": "^6.26.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
+    "@babel/cli": "^7.12.5",
+    "@babel/core": "^7.12.10",
+    "@babel/plugin-proposal-object-rest-spread": "^7.12.1",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/register": "^7.12.10",
     "chai": "^4.2.0",
     "faker": "^5.1.0",
     "mocha": "^8.2.1",

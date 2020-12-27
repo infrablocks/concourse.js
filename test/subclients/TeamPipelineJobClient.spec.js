@@ -1,3 +1,5 @@
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 import { onConstructionOf } from '../testsupport/dsls/construction'
 import TeamPipelineJobClient from '../../src/subclients/TeamPipelineJobClient'
 import data from '../testsupport/data'
