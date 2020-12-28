@@ -32,11 +32,11 @@ const teamName = 'main'
 const client = Client.instanceFor(url, username, password, teamName)
 ```
 
-Note, `teamName` only needs to be provided for a Concourse CI instance with a 
+Note, `teamName` only needs to be provided for a Concourse CI deployment with a 
 version less than `4.0.0`.
 
 The client does not yet have full coverage of all available API endpoints, 
-(currently at 53% coverage) however that is the eventual goal. The methods 
+(currently at 44% coverage) however that is the eventual goal. The methods 
 currently supported are detailed below.
 
 ### `Client` Methods 
