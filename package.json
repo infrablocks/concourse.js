@@ -34,6 +34,15 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
   },
+  "files": [
+    "LICENSE.txt",
+    "README.md",
+    "ROUTES.md",
+    "src",
+    "lib",
+    "test",
+    "integration"
+  ],
   "standard": {
     "globals": [
       "describe",
