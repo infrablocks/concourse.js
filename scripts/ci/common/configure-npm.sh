@@ -9,8 +9,8 @@ PROJECT_DIR="$( cd "$SCRIPT_DIR/../../.." && pwd )"
 
 cd "$PROJECT_DIR"
 
-./go version:bump[pre]
-./go release
+git crypt unlock
 
-git status
-git push
+source config/secrets/npm/credentials.sh
+echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+chmod 0600 ~/.npmrc
