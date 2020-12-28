@@ -12,7 +12,7 @@ cd "$PROJECT_DIR"
 git pull
 
 ./go version:bump[minor]
-./go release
+./go library:release
 
 git status
 git push

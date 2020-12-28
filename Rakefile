@@ -48,6 +48,15 @@ RakeGithub.define_repository_tasks(
   ]
 end
 
+namespace :pipeline do
+  task :prepare => [
+      :'circle_ci:project:follow',
+      :'circle_ci:env_vars:ensure',
+      :'circle_ci:ssh_keys:ensure',
+      :'github:deploy_keys:ensure'
+  ]
+end
+
 namespace :checks do
   task :all => [
       :"library:lintFix",
@@ -80,27 +89,15 @@ namespace :library do
   task :build => [:"dependencies:install"] do
     sh "npm run build"
   end
-end
 
-namespace :pipeline do
-  task :prepare => [
-      :'circle_ci:project:follow',
-      :'circle_ci:env_vars:ensure',
-      :'circle_ci:ssh_keys:ensure',
-      :'github:deploy_keys:ensure'
-  ]
-end
-
-namespace :version do
-  desc "Bump version for specified type (pre, major, minor, patch)"
-  task :bump, [:type] do |_, args|
-    bump_version_for(args.type)
+  task :release => [:"dependencies:install"] do
+    sh "npm publish"
   end
 end
 
-def bump_version_for(version_type)
-  sh "gem bump --version #{version_type} " +
-      "&& bundle install " +
-      "&& export LAST_MESSAGE=\"$(git log -1 --pretty=%B)\" " +
-      "&& git commit -a --amend -m \"${LAST_MESSAGE} [ci skip]\""
+namespace :version do
+  desc "Bump version for specified type (pre, minor)"
+  task :bump, [:type] => [:"dependencies:install"] do |_, args|
+    sh "npm run version:bump:#{args.type}"
+  end
 end
