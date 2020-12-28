@@ -11,7 +11,7 @@ import MockAdapter from 'axios-mock-adapter'
 
 const buildValidWorkerClient = () => {
   const apiUrl = data.randomApiUrl()
-  const bearerToken = data.randomBearerTokenPre4()
+  const bearerToken = data.randomBearerTokenCurrent()
 
   const httpClient = axios.create({
     headers: bearerAuthorizationHeader(bearerToken)

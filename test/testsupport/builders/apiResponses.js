@@ -1,9 +1,6 @@
 import jwt from 'jsonwebtoken'
 import { currentUnixTime } from '../../../src/support/date'
 
-const iso8601ExpiryString = token =>
-  new Date(jwt.decode(token).exp * 1000).toISOString()
-
 export const tokenResponseBodyPreVersion4 =
   ({
     type = 'Bearer',
@@ -25,7 +22,8 @@ export const tokenResponseBodyPreVersion4 =
     value
   })
 
-export const tokenResponseBodyPostVersion4 =
+// eslint-disable-next-line camelcase
+export const tokenResponseBodyPreVersion6_1 =
   ({
     accessToken = 'eyJhbGciOiJSUzI1NiIsImtpZCI6IiIsInR5cCI6IkpXVCJ9.eyJjc3Jm' +
      'IjoiYzQ5NTQwYTYwMjI0Yjk4MDAwMDgwYzNhZjlkZDI2MjE4OTNlYjgwMWMzZGEyYWMzOGJ' +
@@ -44,22 +42,20 @@ export const tokenResponseBodyPostVersion4 =
      'hl76Y4FhfgpHcFXqJWDwjsKR6abQqGRh9d446VmB3CP86OM03iiZf0qQV4pAxBwHgi7DbZR' +
      'lK1ak3Up4x9eB_VzCc',
     tokenType = 'Bearer',
-    expiry = null
+    expiry = '2021-09-08T22:37:55.973Z'
   } = {}) => {
-    const resolvedExpiry = expiry || iso8601ExpiryString(accessToken)
     return ({
       access_token: accessToken,
       token_type: tokenType,
-      expiry: resolvedExpiry
+      expiry
     })
   }
 
-// eslint-disable-next-line camelcase
-export const tokenResponseBodyPostVersion6_1 =
+export const tokenResponseBodyCurrent =
   ({
     accessToken = 'V19DzKfiMFWut5UIa4TfDjXSo9DBXOdfAAAAAA',
     tokenType = 'bearer',
-    expiresIn = null,
+    expiresIn = 86400,
     idToken = 'eyJhbGciOiJSUzI1NiIsImtpZCI6ImFjYjc5NjcxMmZlODM0MTQ4NjY3M2FkNW' +
      'YwZjkwYjRiM2Q2YTZhODAifQ.eyJpc3MiOiJodHRwczovL2NpLXNlcnZlci5yZG0tbWFuYWdl' +
      'bWVudC5yZWRlZW1ldW0uaW8vc2t5L2lzc3VlciIsInN1YiI6IkNnMWhaRzFwYm1semRISmhkR' +

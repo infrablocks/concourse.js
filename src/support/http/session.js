@@ -11,13 +11,20 @@ import {
   csrfTokenHeader
 } from './headers'
 
-import { currentUnixTime } from '../date'
+import { currentUnixTime, toUnixTime } from '../date'
 import { parseJson } from './transformers'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
 import * as semver from 'semver'
 
 const flyClientId = 'fly'
 const flyClientSecret = 'Zmx5'
+
+const expiryFromJWT = token =>
+  jwt.decode(token).exp
+const unixTimeFromISO8601String = iso8601String =>
+  Date.parse(iso8601String)
+const unixTimeFromResponseHeader = response =>
+  toUnixTime(new Date(response.headers.date))
 
 const bearerAuthorizationHeaderFrom =
   authenticationState =>
@@ -33,17 +40,18 @@ const csrfTokenHeaderFrom =
 const isExpiredOrIncomplete = authenticationState => {
   if (!authenticationState ||
     !authenticationState.accessToken ||
+    !authenticationState.tokenType ||
+    !authenticationState.expiresAt ||
     !authenticationState.idToken ||
     !authenticationState.serverVersion) {
     return true
   }
 
-  const decoded = jwt.decode(authenticationState.idToken)
-  const expiryInSeconds = decoded.exp
+  const expiresAtSeconds = authenticationState.expiresAt
   const nowInSeconds = currentUnixTime()
   const tenMinutesInSeconds = 10 * 60 // allow for 10 minutes clock drift
 
-  return nowInSeconds > (expiryInSeconds - tenMinutesInSeconds)
+  return nowInSeconds > (expiresAtSeconds - tenMinutesInSeconds)
 }
 
 const fetchServerVersion = async (credentials, httpClient) => {
@@ -58,11 +66,13 @@ const authenticatePreVersion4 = async (credentials, httpClient) => {
   })
 
   const { value, type } = tokenResponse.data
+  const expiresAt = expiryFromJWT(value)
 
   return {
-    idToken: value,
     accessToken: value,
-    tokenType: type
+    tokenType: type,
+    expiresAt: expiresAt,
+    idToken: value
   }
 }
 
@@ -75,7 +85,7 @@ const authenticatePostVersion4 = async (credentials, httpClient) => {
   })
 
   const tokenResponse = await httpClient.post(
-    credentials.tokenUrlPostVersion4,
+    credentials.tokenUrlPreVersion6_1,
     data,
     {
       headers: {
@@ -85,12 +95,14 @@ const authenticatePostVersion4 = async (credentials, httpClient) => {
       transformResponse: [parseJson, camelcaseKeysDeep]
     })
 
-  const { accessToken, tokenType } = tokenResponse.data
+  const { accessToken, expiry, tokenType } = tokenResponse.data
+  const expiresAt = unixTimeFromISO8601String(expiry)
 
   return {
-    idToken: accessToken,
     accessToken,
-    tokenType
+    tokenType,
+    expiresAt,
+    idToken: accessToken
   }
 }
 
@@ -104,7 +116,7 @@ const authenticatePostVersion6_1 = async (credentials, httpClient) => {
   })
 
   const tokenResponse = await httpClient.post(
-    credentials.tokenUrlPostVersion6_1,
+    credentials.tokenUrlCurrent,
     data,
     {
       headers: {
@@ -114,12 +126,14 @@ const authenticatePostVersion6_1 = async (credentials, httpClient) => {
       transformResponse: [parseJson, camelcaseKeysDeep]
     })
 
-  const { idToken, accessToken, tokenType } = tokenResponse.data
+  const { idToken, accessToken, tokenType, expiresIn } = tokenResponse.data
+  const expiresAt = unixTimeFromResponseHeader(tokenResponse) + expiresIn
 
   return {
-    idToken,
     accessToken,
-    tokenType
+    tokenType,
+    expiresAt,
+    idToken
   }
 }
 

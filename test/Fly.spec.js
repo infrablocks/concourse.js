@@ -216,7 +216,7 @@ describe('Fly', () => {
         const password = 'some-password'
         const authentication = 'Basic c29tZS11c2VybmFtZTpzb21lLXBhc3N3b3Jk'
 
-        const bearerToken = data.randomBearerTokenPre4()
+        const bearerToken = data.randomBearerTokenPreVersion4()
         const authToken = build.api.tokenResponseBodyPreVersion4({ value: bearerToken })
 
         const jobName = data.randomJobName()
@@ -305,7 +305,7 @@ describe('Fly', () => {
         const password = 'some-password'
         const authentication = 'Basic c29tZS11c2VybmFtZTpzb21lLXBhc3N3b3Jk'
 
-        const bearerToken = data.randomBearerTokenPre4()
+        const bearerToken = data.randomBearerTokenPreVersion4()
         const authToken = build.api.tokenResponseBodyPreVersion4({ value: bearerToken })
 
         const teamName = data.randomTeamName()
@@ -355,7 +355,7 @@ describe('Fly', () => {
         const password = 'some-password'
         const authentication = 'Basic c29tZS11c2VybmFtZTpzb21lLXBhc3N3b3Jk'
 
-        const bearerToken = data.randomBearerTokenPre4()
+        const bearerToken = data.randomBearerTokenPreVersion4()
         const authToken = build.api.tokenResponseBodyPreVersion4({ value: bearerToken })
 
         const teamName = data.randomTeamName()
@@ -405,7 +405,7 @@ describe('Fly', () => {
         const password = 'some-password'
         const authentication = 'Basic c29tZS11c2VybmFtZTpzb21lLXBhc3N3b3Jk'
 
-        const bearerToken = data.randomBearerTokenPre4()
+        const bearerToken = data.randomBearerTokenPreVersion4()
         const authToken = build.api.tokenResponseBodyPreVersion4({ value: bearerToken })
 
         const teamName = data.randomTeamName()
@@ -578,7 +578,7 @@ describe('Fly', () => {
         const password = 'some-password'
         const authentication = 'Basic c29tZS11c2VybmFtZTpzb21lLXBhc3N3b3Jk'
 
-        const bearerToken = data.randomBearerTokenPre4()
+        const bearerToken = data.randomBearerTokenPreVersion4()
         const authToken = build.api.tokenResponseBodyPreVersion4({ value: bearerToken })
 
         const teamName = data.randomTeamName()
@@ -631,7 +631,7 @@ describe('Fly', () => {
         const password = 'some-password'
         const authentication = 'Basic c29tZS11c2VybmFtZTpzb21lLXBhc3N3b3Jk'
 
-        const bearerToken = data.randomBearerTokenPre4()
+        const bearerToken = data.randomBearerTokenPreVersion4()
         const authToken = build.api.tokenResponseBodyPreVersion4({ value: bearerToken })
 
         const teamName = data.randomTeamName()
@@ -686,7 +686,7 @@ describe('Fly', () => {
         const password = 'some-password'
         const authentication = 'Basic c29tZS11c2VybmFtZTpzb21lLXBhc3N3b3Jk'
 
-        const bearerToken = data.randomBearerTokenPre4()
+        const bearerToken = data.randomBearerTokenPreVersion4()
         const authToken = build.api.tokenResponseBodyPreVersion4({ value: bearerToken })
 
         const teamName = data.randomTeamName()
@@ -737,7 +737,7 @@ describe('Fly', () => {
         const password = 'some-password'
         const authentication = 'Basic c29tZS11c2VybmFtZTpzb21lLXBhc3N3b3Jk'
 
-        const bearerToken = data.randomBearerTokenPre4()
+        const bearerToken = data.randomBearerTokenPreVersion4()
         const authToken = build.api.tokenResponseBodyPreVersion4({ value: bearerToken })
 
         const teamName = data.randomTeamName()
@@ -797,7 +797,7 @@ describe('Fly', () => {
         const password = 'some-password'
         const authentication = 'Basic c29tZS11c2VybmFtZTpzb21lLXBhc3N3b3Jk'
 
-        const bearerToken = data.randomBearerTokenPre4()
+        const bearerToken = data.randomBearerTokenPreVersion4()
         const authToken = build.api.tokenResponseBodyPreVersion4({ value: bearerToken })
 
         const teamName = data.randomTeamName()
@@ -856,7 +856,7 @@ describe('Fly', () => {
         const password = 'some-password'
         const authentication = 'Basic c29tZS11c2VybmFtZTpzb21lLXBhc3N3b3Jk'
 
-        const bearerToken = data.randomBearerTokenPre4()
+        const bearerToken = data.randomBearerTokenPreVersion4()
         const authToken = build.api.tokenResponseBodyPreVersion4({ value: bearerToken })
 
         const teamName = data.randomTeamName()
@@ -915,7 +915,7 @@ describe('Fly', () => {
         const password = 'some-password'
         const authentication = 'Basic c29tZS11c2VybmFtZTpzb21lLXBhc3N3b3Jk'
 
-        const bearerToken = data.randomBearerTokenPre4()
+        const bearerToken = data.randomBearerTokenPreVersion4()
         const authToken = build.api.tokenResponseBodyPreVersion4({ value: bearerToken })
 
         const teamName = data.randomTeamName()

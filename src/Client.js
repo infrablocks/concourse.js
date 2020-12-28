@@ -42,8 +42,8 @@ export default class Client {
     const credentials = {
       infoUrl: infoUrl(apiUrl),
       tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
-      tokenUrlPostVersion4: skyTokenUrl(url),
-      tokenUrlPostVersion6_1: skyIssuerTokenUrl(url),
+      tokenUrlPreVersion6_1: skyTokenUrl(url),
+      tokenUrlCurrent: skyIssuerTokenUrl(url),
       username: username,
       password: password
     }

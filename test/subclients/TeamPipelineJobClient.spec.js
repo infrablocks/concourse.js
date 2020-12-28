@@ -13,7 +13,7 @@ import { forInstance } from '../testsupport/dsls/methods'
 
 const buildValidTeamPipelineJobClient = () => {
   const apiUrl = data.randomApiUrl()
-  const bearerToken = data.randomBearerTokenPre4()
+  const bearerToken = data.randomBearerTokenCurrent()
 
   const httpClient = axios.create({
     headers: bearerAuthorizationHeader(bearerToken)

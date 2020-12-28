@@ -15,7 +15,7 @@ import { bearerAuthorizationHeader } from '../../src/support/http/headers'
 
 const buildValidTeamClient = () => {
   const apiUrl = data.randomApiUrl()
-  const bearerToken = data.randomBearerTokenPre4()
+  const bearerToken = data.randomBearerTokenCurrent()
 
   const httpClient = axios.create({
     headers: bearerAuthorizationHeader(bearerToken)

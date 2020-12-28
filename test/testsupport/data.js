@@ -32,7 +32,7 @@ const randomIssuer = () => faker.internet.url()
 const randomCsrfToken = () => randomLowerHex(64)
 const randomSubject = () => faker.random.alphaNumeric(30)
 const randomAccessTokenHash = () => faker.random.alphaNumeric(22)
-const randomBearerTokenPre4 = (overrides = {}, options = {}) => {
+const randomBearerTokenPreVersion4 = (overrides = {}, options = {}) => {
   const resolvedData = {
     csrf: randomCsrfToken(),
     teamName: randomTeamName(),
@@ -49,7 +49,8 @@ const randomBearerTokenPre4 = (overrides = {}, options = {}) => {
 
   return jwt.sign(resolvedData, rsaPrivateKey, resolvedOptions)
 }
-const randomBearerTokenPost4 = (overrides = {}, options = {}) => {
+// eslint-disable-next-line camelcase
+const randomBearerTokenPreVersion6_1 = (overrides = {}, options = {}) => {
   const defaultUsername = randomUsername()
   const resolvedData = {
     csrf: randomCsrfToken(),
@@ -72,10 +73,8 @@ const randomBearerTokenPost4 = (overrides = {}, options = {}) => {
 
   return jwt.sign(resolvedData, rsaPrivateKey, resolvedOptions)
 }
-// eslint-disable-next-line camelcase
-const randomBearerTokenPost6_1 = () => faker.random.alphaNumeric(38)
-// eslint-disable-next-line camelcase
-const randomIdTokenPost6_1 = (overrides = {}, options = {}) => {
+const randomBearerTokenCurrent = () => faker.random.alphaNumeric(38)
+const randomIdTokenCurrent = (overrides = {}, options = {}) => {
   const defaultUsername = randomUsername()
   const resolvedData = {
     iss: randomIssuer(),
@@ -436,10 +435,10 @@ export default {
   randomBuildId,
 
   randomCsrfToken,
-  randomBearerTokenPre4,
-  randomBearerTokenPost4,
-  randomBearerTokenPost6_1,
-  randomIdTokenPost6_1,
+  randomBearerTokenPreVersion4,
+  randomBearerTokenPreVersion6_1,
+  randomBearerTokenCurrent,
+  randomIdTokenCurrent,
 
   randomTeam,
   randomTeamName,
