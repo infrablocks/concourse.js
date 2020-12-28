@@ -9,6 +9,8 @@ PROJECT_DIR="$( cd "$SCRIPT_DIR/../../.." && pwd )"
 
 cd "$PROJECT_DIR"
 
+source config/secrets/npm/credentials.sh
+
 git pull
 
 ./go version:bump[minor]
