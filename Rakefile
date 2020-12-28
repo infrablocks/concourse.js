@@ -56,22 +56,28 @@ namespace :checks do
   ]
 end
 
+namespace :dependencies do
+  task :install do
+    sh "npm install"
+  end
+end
+
 namespace :test do
-  task :unit do
+  task :unit => [:"dependencies:install"] do
     sh "npm run test"
   end
 end
 
 namespace :library do
-  task :lint do
+  task :lint => [:"dependencies:install"] do
     sh "npm run lint"
   end
 
-  task :lintFix do
+  task :lintFix => [:"dependencies:install"] do
     sh "npm run lintFix"
   end
 
-  task :build do
+  task :build => [:"dependencies:install"] do
     sh "npm run build"
   end
 end
