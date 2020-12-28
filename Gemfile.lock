@@ -30,7 +30,7 @@ GEM
       concurrent-ruby (~> 1.0)
     minitest (5.14.2)
     multipart-post (2.1.1)
-    octokit (4.19.0)
+    octokit (4.20.0)
       faraday (>= 0.9)
       sawyer (~> 0.8.0, >= 0.5.3)
     partialruby (0.3.0)
