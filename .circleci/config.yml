@@ -26,7 +26,7 @@ jobs:
     steps:
     - checkout
     - run: ./scripts/ci/common/install-git-crypt.sh
-      - - run: ./scripts/ci/common/install-node-and-npm.sh
+    - run: ./scripts/ci/common/install-node-and-npm.sh
     - run: ./scripts/ci/common/install-gpg-key.sh
     - run: ./scripts/ci/common/configure-git.sh
     - run: ./scripts/ci/steps/release.sh
