@@ -6,6 +6,7 @@ jobs:
     - image: ruby:2.6.0
     steps:
     - checkout
+    - run: ./scripts/ci/common/install-node-and-npm.sh
     - run: ./scripts/ci/steps/test.sh
   prerelease:
     working_directory: ~/concourse.js
@@ -14,9 +15,9 @@ jobs:
     steps:
     - checkout
     - run: ./scripts/ci/common/install-git-crypt.sh
+    - run: ./scripts/ci/common/install-node-and-npm.sh
     - run: ./scripts/ci/common/install-gpg-key.sh
     - run: ./scripts/ci/common/configure-git.sh
-    - run: ./scripts/ci/common/configure-rubygems.sh
     - run: ./scripts/ci/steps/prerelease.sh
   release:
     working_directory: ~/concourse.js
@@ -25,9 +26,9 @@ jobs:
     steps:
     - checkout
     - run: ./scripts/ci/common/install-git-crypt.sh
+      - - run: ./scripts/ci/common/install-node-and-npm.sh
     - run: ./scripts/ci/common/install-gpg-key.sh
     - run: ./scripts/ci/common/configure-git.sh
-    - run: ./scripts/ci/common/configure-rubygems.sh
     - run: ./scripts/ci/steps/release.sh
 
 workflows:
