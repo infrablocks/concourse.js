@@ -96,7 +96,7 @@ namespace :library do
 end
 
 namespace :version do
-  desc "Bump version for specified type (pre, minor)"
+  desc "Bump version for specified type (pre, minor, next)"
   task :bump, [:type] => [:"dependencies:install"] do |_, args|
     sh "npm run version:bump:#{args.type}"
   end

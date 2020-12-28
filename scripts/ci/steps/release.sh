@@ -13,6 +13,7 @@ git pull
 
 ./go version:bump[minor]
 ./go library:release
+./go version:bump[next]
 
 git status
 git push

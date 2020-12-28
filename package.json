@@ -9,8 +9,9 @@
     "start": "babel -s inline -d lib -w src",
     "build": "babel -s inline -d lib src",
     "prepublishOnly": "npm run lint && npm run test && npm run build",
-    "version:bump:pre": "npm version preminor --preid=pre",
+    "version:bump:pre": "npm version prerelease --preid=pre",
     "version:bump:minor": "npm version minor",
+    "version:bump:next": "npm version preminor --preid=pre",
     "test": "mocha --require @babel/register --recursive ./test",
     "integration": "mocha --require @babel/register --recursive --timeout 5000 ./integration"
   },
