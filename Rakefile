@@ -26,11 +26,11 @@ namespace :keys do
 
   namespace :gpg do
     RakeGPG.define_generate_key_task(
-        output_directory: 'config/secrets/concourse',
-        name_prefix: 'ci-gpg',
+        output_directory: 'config/secrets/ci',
+        name_prefix: 'gpg',
         owner_name: 'InfraBlocks Maintainers',
         owner_email: 'maintainers@infrablocks.io',
-        owner_comment: 'CI Key')
+        owner_comment: 'concourse.js CI Key')
   end
 end
 
