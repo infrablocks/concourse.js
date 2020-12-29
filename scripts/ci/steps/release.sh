@@ -16,4 +16,4 @@ git pull
 ./go version:bump[next]
 
 git status
-git push
+git push --tags
