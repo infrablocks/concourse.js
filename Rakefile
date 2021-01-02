@@ -48,6 +48,7 @@ RakeCircleCI.define_project_tasks(
           File.read('config/secrets/ci/encryption.passphrase')
               .chomp
   }
+  t.checkout_keys = []
   t.ssh_keys = [
       {
           hostname: "github.com",
@@ -76,6 +77,7 @@ namespace :pipeline do
   task :prepare => [
       :'circle_ci:project:follow',
       :'circle_ci:env_vars:ensure',
+      :'circle_ci:checkout_keys:ensure',
       :'circle_ci:ssh_keys:ensure',
       :'github:deploy_keys:ensure'
   ]

@@ -44,7 +44,7 @@ GEM
       ruby_parser (~> 3)
     public_suffix (4.0.6)
     rake (13.0.3)
-    rake_circle_ci (0.7.0)
+    rake_circle_ci (0.9.0)
       colored2 (~> 3.1)
       excon (~> 0.72)
       rake_factory (~> 0.23)
@@ -95,11 +95,11 @@ DEPENDENCIES
   confidante (~> 0.21)
   git (~> 1.7)
   rake (~> 13.0)
-  rake_circle_ci (~> 0.7)
+  rake_circle_ci (~> 0.9)
   rake_github (~> 0.5)
   rake_gpg (~> 0.12)
   rake_ssh (~> 0.4)
   semantic (~> 1.6)
 
 BUNDLED WITH
-   2.2.3
+   2.2.4
