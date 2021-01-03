@@ -14,3 +14,4 @@ cd "$PROJECT_DIR"
 
 git status
 git push --all
+git push --tags
