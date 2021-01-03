@@ -116,7 +116,7 @@ namespace :library do
     sh "npm run build"
   end
 
-  task :release => [:"dependencies:install"] do
+  task :release => [:"dependencies:install", :"library:build"] do
     sh "npm publish"
   end
 end
