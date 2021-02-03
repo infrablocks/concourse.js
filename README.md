@@ -29,7 +29,7 @@ const username = 'concourse-client'
 const password = 'super-secret-password'
 const teamName = 'main'
 
-const client = Client.instanceFor(url, username, password, teamName)
+const client = Client.instanceFor({ url, username, password, teamName })
 ```
 
 Note, `teamName` only needs to be provided for a Concourse CI deployment with a 
