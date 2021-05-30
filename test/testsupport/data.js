@@ -17,7 +17,7 @@ const randomUsername = () => faker.internet.userName(
 const randomPassword = () => faker.random.alphaNumeric(40)
 const randomEmail = () => faker.internet.email()
 
-const randomDigit = () => faker.random.number({ max: 9 })
+const randomDigit = () => faker.datatype.number({ max: 9 })
 const randomVersion = () => `${randomDigit()}.${randomDigit()}.${randomDigit()}`
 
 const randomInfo = (overrides = {}) => ({
@@ -101,7 +101,7 @@ const randomIdTokenCurrent = (overrides = {}, options = {}) => {
   return jwt.sign(resolvedData, rsaPrivateKey, resolvedOptions)
 }
 
-const randomBuildId = () => faker.random.number()
+const randomBuildId = () => faker.datatype.number()
 const randomBuildName = () => randomLowerCaseWord()
 const randomBuildStatus = () =>
   faker.random.arrayElement(values(BuildStatus))
@@ -120,10 +120,10 @@ const randomStepName = () => randomLowerCaseWord()
 const randomWorkingDirectory = () =>
   `/tmp/${randomStepName()}/${randomContainerType()}`
 
-const randomTeamId = () => faker.random.number()
+const randomTeamId = () => faker.datatype.number()
 const randomTeamName = () => randomLowerCaseWord()
 
-const randomPipelineId = () => faker.random.number()
+const randomPipelineId = () => faker.datatype.number()
 const randomPipelineName = () => randomLowerCaseWord()
 const randomPipelineIsPaused = () => randomBoolean()
 const randomPipelineIsPublic = () => randomBoolean()
@@ -167,8 +167,8 @@ const randomPlatform = () => faker.random.arrayElement(
 
 const randomWorkerAddress = () => `${faker.internet.ip()}:45821`
 const randomWorkerBaggageclaimUrl = () => `http://${faker.internet.ip()}:45995`
-const randomWorkerActiveContainersCount = () => faker.random.number()
-const randomWorkerActiveVolumesCount = () => faker.random.number()
+const randomWorkerActiveContainersCount = () => faker.datatype.number()
+const randomWorkerActiveVolumesCount = () => faker.datatype.number()
 const randomWorkerTags = () => null
 const randomWorkerName = () => randomLowerHex(12)
 const randomWorkerStartTime = () => toUnixTime(faker.date.past())
@@ -262,7 +262,7 @@ const randomResource = (overrides = {}) => ({
   ...overrides
 })
 
-const randomResourceVersionId = () => faker.random.number()
+const randomResourceVersionId = () => faker.datatype.number()
 
 const randomResourceVersionMetadatumName = () => randomLowerCaseWord()
 const randomResourceVersionMetadatumValue = () => randomLowerCaseWord()
@@ -299,7 +299,7 @@ const randomResourceVersionCause = (overrides = {}) => ({
   ...overrides
 })
 
-const randomJobId = () => faker.random.number()
+const randomJobId = () => faker.datatype.number()
 const randomJobName = () => randomLowerCaseWord()
 const randomJobInputs = ({ inputs = [randomInput()] } = {}) => inputs
 const randomJobOutputs = ({ outputs = [randomOutput()] } = {}) => outputs

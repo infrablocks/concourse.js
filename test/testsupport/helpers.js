@@ -18,4 +18,4 @@ export const randomLowerHex = (length) => {
 }
 
 export const randomLowerCaseWord = () => faker.lorem.word()
-export const randomBoolean = () => faker.random.boolean()
+export const randomBoolean = () => faker.datatype.boolean()
