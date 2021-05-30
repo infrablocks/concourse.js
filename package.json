@@ -71,10 +71,11 @@
     "axios-mock-adapter": "^1.19",
     "chai": "^4.3",
     "faker": "^5.5",
+    "hosted-git-info": ">=2.8.9",
     "minimist": "^1.2",
     "mocha": "^8.4",
     "node-rsa": "^1.1",
-    "sinon": "^9.2",
+    "sinon": "^11.1",
     "standard": "^16.0"
   }
 }
