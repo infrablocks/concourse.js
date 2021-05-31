@@ -40,7 +40,7 @@ jobs:
       - slack/notify:
           event: pass
           channel: builds
-          template: success_tagged_deploy_1
+          template: basic_success_1
 
   release:
     working_directory: ~/concourse.js
@@ -61,7 +61,7 @@ jobs:
       - slack/notify:
           event: pass
           channel: builds
-          template: success_tagged_deploy_1
+          template: basic_success_1
 
 workflows:
   version: 2
