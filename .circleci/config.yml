@@ -1,59 +1,104 @@
 version: 2.1
+
+orbs:
+  slack: circleci/slack@4.4.2
+
 jobs:
   test:
     working_directory: ~/concourse.js
     docker:
-    - image: ruby:2.6.0
+      - image: ruby:2.6.0
     steps:
-    - checkout
-    - run: ./scripts/ci/common/install-node-and-npm.sh
-    - run: ./scripts/ci/steps/test.sh
+      - checkout
+      - run: ./scripts/ci/common/install-node-and-npm.sh
+      - run: ./scripts/ci/steps/test.sh
+      - slack/notify:
+          event: fail
+          channel: dev
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          channel: builds
+          template: basic_success_1
+
   prerelease:
     working_directory: ~/concourse.js
     docker:
-    - image: ruby:2.6.0
+      - image: ruby:2.6.0
     steps:
-    - checkout
-    - run: ./scripts/ci/common/install-git-crypt.sh
-    - run: ./scripts/ci/common/install-node-and-npm.sh
-    - run: ./scripts/ci/common/install-gpg-key.sh
-    - run: ./scripts/ci/common/configure-git.sh
-    - run: ./scripts/ci/common/configure-npm.sh
-    - run: ./scripts/ci/steps/prerelease.sh
+      - checkout
+      - run: ./scripts/ci/common/install-git-crypt.sh
+      - run: ./scripts/ci/common/install-node-and-npm.sh
+      - run: ./scripts/ci/common/install-gpg-key.sh
+      - run: ./scripts/ci/common/configure-git.sh
+      - run: ./scripts/ci/common/configure-npm.sh
+      - run: ./scripts/ci/steps/prerelease.sh
+      - slack/notify:
+          event: fail
+          channel: dev
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          channel: builds
+          template: success_tagged_deploy_1
+
   release:
     working_directory: ~/concourse.js
     docker:
-    - image: ruby:2.6.0
+      - image: ruby:2.6.0
     steps:
-    - checkout
-    - run: ./scripts/ci/common/install-git-crypt.sh
-    - run: ./scripts/ci/common/install-node-and-npm.sh
-    - run: ./scripts/ci/common/install-gpg-key.sh
-    - run: ./scripts/ci/common/configure-git.sh
-    - run: ./scripts/ci/common/configure-npm.sh
-    - run: ./scripts/ci/steps/release.sh
+      - checkout
+      - run: ./scripts/ci/common/install-git-crypt.sh
+      - run: ./scripts/ci/common/install-node-and-npm.sh
+      - run: ./scripts/ci/common/install-gpg-key.sh
+      - run: ./scripts/ci/common/configure-git.sh
+      - run: ./scripts/ci/common/configure-npm.sh
+      - run: ./scripts/ci/steps/release.sh
+      - slack/notify:
+          event: fail
+          channel: dev
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          channel: builds
+          template: success_tagged_deploy_1
 
 workflows:
   version: 2
   pipeline:
     jobs:
-    - test
-    - prerelease:
-        requires:
-        - test
-        filters:
-          branches:
-            only: master
-    - hold:
-        type: approval
-        requires:
-        - prerelease
-        filters:
-          branches:
-            only: master
-    - release:
-        requires:
-        - hold
-        filters:
-          branches:
-            only: master
+      - test
+        context:
+          - slack
+      - prerelease:
+          context:
+            - slack
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
+      - slack/on-hold:
+          context:
+            - slack
+          requires:
+            - prerelease
+          filters:
+            branches:
+              only: master
+      - hold:
+          type: approval
+          requires:
+            - prerelease
+            - slack/on-hold
+          filters:
+            branches:
+              only: master
+      - release:
+          context:
+            - slack
+          requires:
+            - hold
+          filters:
+            branches:
+              only: master
