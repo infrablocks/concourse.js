@@ -67,9 +67,9 @@ workflows:
   version: 2
   pipeline:
     jobs:
-      - test
-        context:
-          - slack
+      - test:
+          context:
+            - slack
       - prerelease:
           context:
             - slack
