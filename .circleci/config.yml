@@ -15,11 +15,11 @@ jobs:
       - slack/notify:
           event: fail
           channel: dev
-          template: basic_fail_1
+          template: SLACK_FAILURE_NOTIFICATION
       - slack/notify:
           event: pass
           channel: builds
-          template: basic_success_1
+          template: SLACK_SUCCESS_NOTIFICATION
 
   prerelease:
     working_directory: ~/concourse.js
@@ -36,11 +36,11 @@ jobs:
       - slack/notify:
           event: fail
           channel: dev
-          template: basic_fail_1
+          template: SLACK_FAILURE_NOTIFICATION
       - slack/notify:
           event: pass
           channel: builds
-          template: basic_success_1
+          template: SLACK_SUCCESS_NOTIFICATION
 
   release:
     working_directory: ~/concourse.js
@@ -57,11 +57,11 @@ jobs:
       - slack/notify:
           event: fail
           channel: dev
-          template: basic_fail_1
+          template: SLACK_FAILURE_NOTIFICATION
       - slack/notify:
           event: pass
           channel: builds
-          template: basic_success_1
+          template: SLACK_SUCCESS_NOTIFICATION
 
 workflows:
   version: 2
@@ -86,6 +86,8 @@ workflows:
           filters:
             branches:
               only: master
+          channel: dev
+          template: SLACK_ON_HOLD_NOTIFICATION
       - hold:
           type: approval
           requires:
