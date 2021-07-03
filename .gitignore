@@ -1,6 +1,7 @@
 /node_modules/
 /lib/
 /.idea/
+/.bundle
 *.iml
 *.ipr
 *.iws
