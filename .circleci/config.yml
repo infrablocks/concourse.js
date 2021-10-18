@@ -7,7 +7,7 @@ jobs:
   test:
     working_directory: ~/concourse.js
     docker:
-      - image: ruby:2.6.0
+      - image: ruby:2.7.2
     steps:
       - checkout
       - run: ./scripts/ci/common/install-node-and-npm.sh
@@ -24,7 +24,7 @@ jobs:
   prerelease:
     working_directory: ~/concourse.js
     docker:
-      - image: ruby:2.6.0
+      - image: ruby:2.7.2
     steps:
       - checkout
       - run: ./scripts/ci/common/install-git-crypt.sh
@@ -45,7 +45,7 @@ jobs:
   release:
     working_directory: ~/concourse.js
     docker:
-      - image: ruby:2.6.0
+      - image: ruby:2.7.2
     steps:
       - checkout
       - run: ./scripts/ci/common/install-git-crypt.sh
