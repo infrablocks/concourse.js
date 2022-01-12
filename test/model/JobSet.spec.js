@@ -1,10 +1,8 @@
-import 'core-js/stable'
-import 'regenerator-runtime/runtime'
 import { expect } from 'chai'
 
-import data from '../testsupport/data'
-import Job from '../../src/model/Job'
-import JobSet from '../../src/model/JobSet'
+import data from '../testsupport/data.js'
+import Job from '../../src/model/Job.js'
+import JobSet from '../../src/model/JobSet.js'
 
 describe('JobSet', () => {
   it('determines the set of jobs having each resource as input', () => {

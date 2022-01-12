@@ -10,9 +10,9 @@ import {
   propEq,
   uniq
 } from 'ramda'
-import { toInput } from './Input'
-import { toOutput } from './Output'
-import Build from './Build'
+import { toInput } from './Input.js'
+import { toOutput } from './Output.js'
+import Build from './Build.js'
 
 export const toJob = client => jobData => new Job({ ...jobData, client })
 

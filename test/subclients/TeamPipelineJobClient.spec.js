@@ -1,15 +1,13 @@
-import 'core-js/stable'
-import 'regenerator-runtime/runtime'
-import { onConstructionOf } from '../testsupport/dsls/construction'
-import TeamPipelineJobClient from '../../src/subclients/TeamPipelineJobClient'
-import data from '../testsupport/data'
+import { onConstructionOf } from '../testsupport/dsls/construction.js'
+import TeamPipelineJobClient from '../../src/subclients/TeamPipelineJobClient.js'
+import data from '../testsupport/data.js'
 import axios from 'axios'
 import faker from 'faker'
-import build from '../testsupport/builders'
-import { bearerAuthorizationHeader } from '../../src/support/http/headers'
+import build from '../testsupport/builders.js'
+import { bearerAuthorizationHeader } from '../../src/support/http/headers.js'
 import { expect } from 'chai'
 import MockAdapter from 'axios-mock-adapter'
-import { forInstance } from '../testsupport/dsls/methods'
+import { forInstance } from '../testsupport/dsls/methods.js'
 
 const buildValidTeamPipelineJobClient = () => {
   const apiUrl = data.randomApiUrl()

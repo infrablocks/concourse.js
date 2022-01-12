@@ -2,19 +2,20 @@
   "name": "@infrablocks/concourse",
   "version": "0.26.0-pre.8",
   "description": "A JavaScript SDK for the Concourse CI API.",
-  "main": "lib/index.js",
+  "main": "src/index.js",
   "scripts": {
     "lint": "standard --env mocha",
     "lintFix": "standard --env mocha --fix",
-    "start": "babel -s inline -d lib -w src",
-    "build": "babel -s inline -d lib src",
+    "start": "?",
+    "build": "??",
     "prepublishOnly": "npm run lint && npm run test && npm run build",
     "version:bump:pre": "npm version prerelease --preid=pre",
     "version:bump:minor": "npm version minor",
     "version:bump:next": "npm version preminor --preid=pre",
-    "test": "mocha --require @babel/register --recursive ./test",
-    "integration": "mocha --require @babel/register --recursive --timeout 5000 ./integration"
+    "test": "mocha --recursive ./test",
+    "integration": "mocha --recursive --timeout 5000 ./integration"
   },
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/infrablocks/concourse.js.git"
@@ -53,21 +54,14 @@
     "await-lock": "^2.1",
     "axios": "^0.21.4",
     "camelcase-keys-deep": "^0.1",
-    "core-js": "^3.18.3",
     "form-urlencoded": "^6.0",
     "joi": "^17.4.2",
     "js-base64": "^3.7.2",
     "jsonwebtoken": "^8.5",
     "ramda": "^0.27",
-    "regenerator-runtime": "^0.13.9",
     "semver": "^7.3"
   },
   "devDependencies": {
-    "@babel/cli": "^7.15.7",
-    "@babel/core": "^7.15.8",
-    "@babel/plugin-proposal-object-rest-spread": "^7.15.6",
-    "@babel/preset-env": "^7.15.8",
-    "@babel/register": "^7.15.3",
     "axios-mock-adapter": "^1.20.0",
     "chai": "^4.3",
     "faker": "^5.5",

@@ -1,15 +1,13 @@
-import 'core-js/stable'
-import 'regenerator-runtime/runtime'
-import { onConstructionOf } from '../testsupport/dsls/construction'
+import { onConstructionOf } from '../testsupport/dsls/construction.js'
 import TeamPipelineResourceClient
-  from '../../src/subclients/TeamPipelineResourceClient'
-import data from '../testsupport/data'
+  from '../../src/subclients/TeamPipelineResourceClient.js'
+import data from '../testsupport/data.js'
 import axios from 'axios'
 import faker from 'faker'
-import build from '../testsupport/builders'
-import { bearerAuthorizationHeader } from '../../src/support/http/headers'
+import build from '../testsupport/builders.js'
+import { bearerAuthorizationHeader } from '../../src/support/http/headers.js'
 import { expect } from 'chai'
-import { forInstance } from '../testsupport/dsls/methods'
+import { forInstance } from '../testsupport/dsls/methods.js'
 import MockAdapter from 'axios-mock-adapter'
 
 const buildValidTeamPipelineResourceClient = () => {

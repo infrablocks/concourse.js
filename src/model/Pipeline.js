@@ -1,6 +1,6 @@
 import { filter, map } from 'ramda'
-import { toJob } from './Job'
-import JobSet from './JobSet'
+import { toJob } from './Job.js'
+import JobSet from './JobSet.js'
 
 export default class Pipeline {
   static async load ({ teamName, pipelineName, client }) {

@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { currentUnixTime } from '../../../src/support/date'
+import { currentUnixTime } from '../../../src/support/date.js'
 
 export const tokenResponseBodyPreVersion4 =
   ({

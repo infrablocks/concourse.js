@@ -1,7 +1,7 @@
 import axios from 'axios'
 import jwt from 'jsonwebtoken'
-import AwaitLock from 'await-lock'
-import formurlencoded from 'form-urlencoded'
+import al from 'await-lock'
+import formUrlencoded from 'form-urlencoded'
 
 import {
   basicAuthorizationHeader,
@@ -9,12 +9,14 @@ import {
   contentTypeHeader,
   contentTypes,
   csrfTokenHeader
-} from './headers'
+} from './headers.js'
 
-import { currentUnixTime, toUnixTime } from '../date'
-import { parseJson } from './transformers'
+import { currentUnixTime, toUnixTime } from '../date.js'
+import { parseJson } from './transformers.js'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
-import * as semver from 'semver'
+import semver from 'semver'
+
+const AwaitLock = al.default
 
 const flyClientId = 'fly'
 const flyClientSecret = 'Zmx5'
@@ -77,7 +79,7 @@ const authenticatePreVersion4 = async (credentials, httpClient) => {
 }
 
 const authenticatePostVersion4 = async (credentials, httpClient) => {
-  const data = formurlencoded({
+  const data = formUrlencoded({
     grant_type: 'password',
     username: credentials.username,
     password: credentials.password,
@@ -108,7 +110,7 @@ const authenticatePostVersion4 = async (credentials, httpClient) => {
 
 // eslint-disable-next-line camelcase
 const authenticatePostVersion6_1 = async (credentials, httpClient) => {
-  const data = formurlencoded({
+  const data = formUrlencoded({
     grant_type: 'password',
     username: credentials.username,
     password: credentials.password,

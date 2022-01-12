@@ -3,10 +3,10 @@ import jwt from 'jsonwebtoken'
 import NodeRSA from 'node-rsa'
 import { values } from 'ramda'
 
-import { randomBoolean, randomLowerCaseWord, randomLowerHex } from './helpers'
+import { randomBoolean, randomLowerCaseWord, randomLowerHex } from './helpers.js'
 
-import { toUnixTime } from '../../src/support/date'
-import BuildStatus from '../../src/model/BuildStatus'
+import { toUnixTime } from '../../src/support/date.js'
+import BuildStatus from '../../src/model/BuildStatus.js'
 
 const randomConcourseUrl = () => faker.internet.url()
 const randomClusterName = () => faker.random.words()

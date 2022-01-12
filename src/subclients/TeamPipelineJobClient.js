@@ -4,15 +4,15 @@ import {
   string,
   uri,
   validateOptions
-} from '../support/validation'
+} from '../support/validation.js'
 import {
   teamPipelineJobBuildsUrl,
   teamPipelineJobBuildUrl,
   teamPipelineJobInputsUrl,
   teamPipelineJobPauseUrl,
   teamPipelineJobUnpauseUrl
-} from '../support/urls'
-import { parseJson } from '../support/http/transformers'
+} from '../support/urls.js'
+import { parseJson } from '../support/http/transformers.js'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
 
 class TeamPipelineJobClient {

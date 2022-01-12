@@ -4,9 +4,9 @@ import {
   schemaFor,
   uri,
   validateOptions
-} from '../support/validation'
-import { buildResourcesUrl } from '../support/urls'
-import { parseJson } from '../support/http/transformers'
+} from '../support/validation.js'
+import { buildResourcesUrl } from '../support/urls.js'
+import { parseJson } from '../support/http/transformers.js'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
 
 export default class BuildClient {

@@ -5,18 +5,18 @@ import {
   string,
   uri,
   validateOptions
-} from '../support/validation'
+} from '../support/validation.js'
 import { isNil, reject } from 'ramda'
 import {
   teamPipelineResourcePauseUrl,
   teamPipelineResourceUnpauseUrl,
   teamPipelineResourceVersionsUrl,
   teamPipelineResourceVersionUrl
-} from '../support/urls'
-import { parseJson } from '../support/http/transformers'
+} from '../support/urls.js'
+import { parseJson } from '../support/http/transformers.js'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
 import TeamPipelineResourceVersionClient
-  from './TeamPipelineResourceVersionClient'
+  from './TeamPipelineResourceVersionClient.js'
 
 class TeamPipelineResourceClient {
   constructor (options) {

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { createSessionInterceptor } from './session'
+import { createSessionInterceptor } from './session.js'
 
 export const createHttpClient = ({ credentials, timeout = 5000 }) => {
   const sessionInterceptor = createSessionInterceptor({ credentials })

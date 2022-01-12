@@ -1,16 +1,14 @@
-import 'core-js/stable'
-import 'regenerator-runtime/runtime'
 import sinon from 'sinon'
 import { expect } from 'chai'
 import { map, times } from 'ramda'
 
-import data from '../testsupport/data'
-import Job from '../../src/model/Job'
-import Input, { toInput } from '../../src/model/Input'
-import Output, { toOutput } from '../../src/model/Output'
-import JobSet from '../../src/model/JobSet'
-import Build from '../../src/model/Build'
-import BuildStatus from '../../src/model/BuildStatus'
+import data from '../testsupport/data.js'
+import Job from '../../src/model/Job.js'
+import Input, { toInput } from '../../src/model/Input.js'
+import Output, { toOutput } from '../../src/model/Output.js'
+import JobSet from '../../src/model/JobSet.js'
+import Build from '../../src/model/Build.js'
+import BuildStatus from '../../src/model/BuildStatus.js'
 
 describe('Job', () => {
   it('exposes its attributes', () => {

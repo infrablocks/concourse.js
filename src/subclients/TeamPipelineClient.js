@@ -4,7 +4,7 @@ import {
   string,
   uri,
   validateOptions
-} from '../support/validation'
+} from '../support/validation.js'
 import {
   teamPipelineBuildsUrl,
   teamPipelineJobsUrl,
@@ -17,12 +17,12 @@ import {
   teamPipelineConfigUrl,
   teamPipelineUnpauseUrl,
   teamPipelineUrl
-} from '../support/urls'
-import { parseJson } from '../support/http/transformers'
-import { contentTypeHeader, contentTypes } from '../support/http/headers'
+} from '../support/urls.js'
+import { parseJson } from '../support/http/transformers.js'
+import { contentTypeHeader, contentTypes } from '../support/http/headers.js'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
-import TeamPipelineJobClient from './TeamPipelineJobClient'
-import TeamPipelineResourceClient from './TeamPipelineResourceClient'
+import TeamPipelineJobClient from './TeamPipelineJobClient.js'
+import TeamPipelineResourceClient from './TeamPipelineResourceClient.js'
 import { isNil, reject } from 'ramda'
 
 class TeamPipelineClient {

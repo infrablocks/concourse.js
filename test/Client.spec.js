@@ -1,17 +1,15 @@
-import 'core-js/stable'
-import 'regenerator-runtime/runtime'
 import { expect } from 'chai'
 import faker from 'faker'
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 
-import build from './testsupport/builders'
-import data from './testsupport/data'
-import { onConstructionOf } from './testsupport/dsls/construction'
-import { forInstance } from './testsupport/dsls/methods'
+import build from './testsupport/builders.js'
+import data from './testsupport/data.js'
+import { onConstructionOf } from './testsupport/dsls/construction.js'
+import { forInstance } from './testsupport/dsls/methods.js'
 
-import Client from '../src/Client'
-import { bearerAuthorizationHeader } from '../src/support/http/headers'
+import Client from '../src/Client.js'
+import { bearerAuthorizationHeader } from '../src/support/http/headers.js'
 
 const buildValidClient = () => {
   const apiUrl = data.randomApiUrl()

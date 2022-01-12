@@ -1,16 +1,14 @@
-import 'core-js/stable'
-import 'regenerator-runtime/runtime'
 import { expect } from 'chai'
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 import formurlencoded from 'form-urlencoded'
 import { filter } from 'ramda'
 
-import data from '../../testsupport/data'
-import build from '../../testsupport/builders'
+import data from '../../testsupport/data.js'
+import build from '../../testsupport/builders.js'
 
 import { createSessionInterceptor }
-  from '../../../src/support/http/session'
+  from '../../../src/support/http/session.js'
 import {
   infoUrl,
   skyTokenUrl,
@@ -18,13 +16,13 @@ import {
   teamAuthTokenUrl,
   teamBuildsUrl,
   teamPipelinesUrl
-} from '../../../src/support/urls'
+} from '../../../src/support/urls.js'
 import {
   basicAuthorizationHeader,
   bearerAuthorizationHeader,
   csrfTokenHeader
-} from '../../../src/support/http/headers'
-import { currentUnixTime } from '../../../src/support/date'
+} from '../../../src/support/http/headers.js'
+import { currentUnixTime } from '../../../src/support/date.js'
 
 const oneHourInSeconds = 60 * 60
 

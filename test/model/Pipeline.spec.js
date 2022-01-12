@@ -1,11 +1,9 @@
-import 'core-js/stable'
-import 'regenerator-runtime/runtime'
 import sinon from 'sinon'
 import { expect } from 'chai'
 
-import data from '../testsupport/data'
-import Pipeline from '../../src/model/Pipeline'
-import Job from '../../src/model/Job'
+import data from '../testsupport/data.js'
+import Pipeline from '../../src/model/Pipeline.js'
+import Job from '../../src/model/Job.js'
 
 describe('Pipeline', () => {
   it('exposes its attributes', async () => {

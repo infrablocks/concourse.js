@@ -1,14 +1,14 @@
 import camelcaseKeysDeep from 'camelcase-keys-deep'
 import { reject, isNil } from 'ramda'
 
-import TeamClient from './subclients/TeamClient'
+import TeamClient from './subclients/TeamClient.js'
 import {
   func,
   integer,
   uri,
   schemaFor,
   validateOptions, array, string
-} from './support/validation'
+} from './support/validation.js'
 import {
   apiUrl as apiUrlFor,
   allBuildsUrl,
@@ -23,11 +23,11 @@ import {
   skyTokenUrl,
   skyIssuerTokenUrl,
   teamUrl
-} from './support/urls'
-import { createHttpClient } from './support/http/factory'
-import { parseJson } from './support/http/transformers'
-import BuildClient from './subclients/BuildClient'
-import WorkerClient from './subclients/WorkerClient'
+} from './support/urls.js'
+import { createHttpClient } from './support/http/factory.js'
+import { parseJson } from './support/http/transformers.js'
+import BuildClient from './subclients/BuildClient.js'
+import WorkerClient from './subclients/WorkerClient.js'
 
 export default class Client {
   static instanceFor

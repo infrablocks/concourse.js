@@ -1,9 +1,7 @@
-import 'core-js/stable'
-import 'regenerator-runtime/runtime'
 import sinon from 'sinon'
 import { expect } from 'chai'
-import data from '../testsupport/data'
-import Build from '../../src/model/Build'
+import data from '../testsupport/data.js'
+import Build from '../../src/model/Build.js'
 
 describe('Build', () => {
   it('exposes its attributes', async () => {

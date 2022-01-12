@@ -9,7 +9,7 @@ import {
   uri,
   required,
   validateOptions
-} from '../support/validation'
+} from '../support/validation.js'
 import {
   teamBuildsUrl,
   teamContainersUrl,
@@ -17,9 +17,9 @@ import {
   teamPipelinesUrl,
   teamPipelineUrl, teamRenameUrl, teamUrl,
   teamVolumesUrl
-} from '../support/urls'
-import { parseJson } from '../support/http/transformers'
-import TeamPipelineClient from './TeamPipelineClient'
+} from '../support/urls.js'
+import { parseJson } from '../support/http/transformers.js'
+import TeamPipelineClient from './TeamPipelineClient.js'
 
 export default class TeamClient {
   constructor (options) {

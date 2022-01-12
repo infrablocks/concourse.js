@@ -1,9 +1,7 @@
-import 'core-js/stable'
-import 'regenerator-runtime/runtime'
 import { expect } from 'chai'
 
-import data from '../testsupport/data'
-import Output from '../../src/model/Output'
+import data from '../testsupport/data.js'
+import Output from '../../src/model/Output.js'
 
 describe('Output', () => {
   it('exposes its attributes', () => {

@@ -1,14 +1,12 @@
-import 'core-js/stable'
-import 'regenerator-runtime/runtime'
 import { expect } from 'chai'
 import faker from 'faker'
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 
-import build from './testsupport/builders'
-import data from './testsupport/data'
+import build from './testsupport/builders.js'
+import data from './testsupport/data.js'
 
-import Fly from '../src/Fly'
+import Fly from '../src/Fly.js'
 
 const newConcourse =
   ({

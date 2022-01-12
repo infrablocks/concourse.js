@@ -4,8 +4,8 @@ import {
   schemaFor,
   uri,
   validateOptions
-} from '../support/validation'
-import { workerPruneUrl } from '../support/urls'
+} from '../support/validation.js'
+import { workerPruneUrl } from '../support/urls.js'
 
 export default class WorkerClient {
   constructor (options) {
