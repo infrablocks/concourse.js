@@ -2,12 +2,16 @@
   "name": "@infrablocks/concourse",
   "version": "0.26.0-pre.8",
   "description": "A JavaScript SDK for the Concourse CI API.",
-  "main": "src/index.js",
+  "main": "./commonjs/index.js",
+  "exports": {
+    "import": "./src/index.js",
+    "require": "./commonjs/index.js"
+  },
   "scripts": {
     "lint": "standard --env mocha",
     "lintFix": "standard --env mocha --fix",
-    "start": "babel src -s inline -d commonjs -w",
-    "build": "babel src -s inline -d commonjs",
+    "start": "./scripts/build/addCommonJsPackageScope.sh && babel src -s inline -d commonjs --watch",
+    "build": "./scripts/build/addCommonJsPackageScope.sh && babel src -s inline -d commonjs",
     "prepublishOnly": "npm run lint && npm run test && npm run build",
     "version:bump:pre": "npm version prerelease --preid=pre",
     "version:bump:minor": "npm version minor",
