@@ -6,7 +6,7 @@ set -o pipefail
 
 # inspired by:
 # https://github.com/nodejs/docker-node/blob/85ca3893867505ffbffbdf476722d3897fb3da98/14/buster/Dockerfile
-NODE_VERSION 14.18.3
+NODE_VERSION="14.18.3"
 
 ARCH=
 dpkgArch="$(dpkg --print-architecture)"
