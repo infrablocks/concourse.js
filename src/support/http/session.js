@@ -1,6 +1,6 @@
 import axios from 'axios'
 import jwt from 'jsonwebtoken'
-import al from 'await-lock'
+import Al from 'await-lock'
 import formUrlencoded from 'form-urlencoded'
 
 import {
@@ -16,7 +16,14 @@ import { parseJson } from './transformers.js'
 import camelcaseKeysDeep from 'camelcase-keys-deep'
 import semver from 'semver'
 
-const AwaitLock = al.default
+const AwaitLock = () => {
+  if (Al.default) {
+    // eslint-disable-next-line new-cap
+    return new Al.default()
+  } else {
+    return new Al()
+  }
+}
 
 const flyClientId = 'fly'
 const flyClientSecret = 'Zmx5'
@@ -170,7 +177,7 @@ const ensureAuthenticated =
 export const createSessionInterceptor =
   ({ credentials, httpClient = axios.create() }) => {
     let authenticationState = credentials.authenticationState
-    const lock = new AwaitLock()
+    const lock = AwaitLock()
 
     return async (config) => {
       await lock.acquireAsync()
