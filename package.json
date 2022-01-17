@@ -62,7 +62,7 @@
     "joi": "^17.4.2",
     "js-base64": "^3.7.2",
     "jsonwebtoken": "^8.5",
-    "ramda": "^0.27",
+    "ramda": "^0.28",
     "semver": "^7.3"
   },
   "devDependencies": {
