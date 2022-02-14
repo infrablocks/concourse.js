@@ -7,7 +7,7 @@ jobs:
   test:
     working_directory: ~/concourse.js
     docker:
-      - image: ruby:2.7.2
+      - image: ruby:2.7.5
     steps:
       - checkout
       - run: ./scripts/ci/common/install-node-and-npm.sh
@@ -24,7 +24,7 @@ jobs:
   prerelease:
     working_directory: ~/concourse.js
     docker:
-      - image: ruby:2.7.2
+      - image: ruby:2.7.5
     steps:
       - checkout
       - run: ./scripts/ci/common/install-git-crypt.sh
@@ -45,7 +45,7 @@ jobs:
   release:
     working_directory: ~/concourse.js
     docker:
-      - image: ruby:2.7.2
+      - image: ruby:2.7.5
     steps:
       - checkout
       - run: ./scripts/ci/common/install-git-crypt.sh
@@ -63,6 +63,17 @@ jobs:
           channel: builds
           template: SLACK_SUCCESS_NOTIFICATION
 
+  merge_pull_request:
+    working_directory: ~/source
+    docker:
+      - image: ruby:2.7.5
+    steps:
+      - checkout
+      - run: ./scripts/ci/common/install-git-crypt.sh
+      - run: ./scripts/ci/common/install-gpg-key.sh
+      - run: ./scripts/ci/common/configure-git.sh
+      - run: ./scripts/ci/steps/merge-pull-request.sh
+
 workflows:
   version: 2
   pipeline:
@@ -75,6 +86,12 @@ workflows:
               only:
                 - main
                 - /^dependabot.*/
+      - merge_pull_request:
+          requires:
+            - test
+          filters:
+            branches:
+              only: /^dependabot.*/
       - prerelease:
           context:
             - slack
