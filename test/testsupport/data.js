@@ -1,4 +1,4 @@
-import faker from 'faker'
+import faker from '@faker-js/faker'
 import jwt from 'jsonwebtoken'
 import NodeRSA from 'node-rsa'
 import { values } from 'ramda'

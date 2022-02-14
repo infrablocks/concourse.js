@@ -3,7 +3,7 @@ import TeamPipelineResourceVersionClient
   from '../../src/subclients/TeamPipelineResourceVersionClient.js'
 import data from '../testsupport/data.js'
 import axios from 'axios'
-import faker from 'faker'
+import faker from '@faker-js/faker'
 import build from '../testsupport/builders.js'
 import { bearerAuthorizationHeader } from '../../src/support/http/headers.js'
 import { expect } from 'chai'
