@@ -1,7 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (7.0.1)
+    activesupport (7.0.2.3)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
@@ -17,8 +17,8 @@ GEM
     evalhook (0.6.0)
       partialruby (~> 0.3)
       sexp_processor (~> 4.0)
-    excon (0.87.0)
-    faraday (1.9.3)
+    excon (0.91.0)
+    faraday (1.10.0)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
       faraday-excon (~> 1.1)
@@ -46,8 +46,8 @@ GEM
       rchardet (~> 1.8)
     hamster (3.0.0)
       concurrent-ruby (~> 1.0)
-    hiera (3.7.0)
-    i18n (1.9.1)
+    hiera (3.8.0)
+    i18n (1.10.0)
       concurrent-ruby (~> 1.0)
     lino (3.0.0)
       hamster (~> 3.0)
@@ -90,13 +90,13 @@ GEM
       sexp_processor (~> 4.6)
     ruby_gpg2 (0.8.0)
       lino (>= 1.5)
-    ruby_parser (3.17.0)
-      sexp_processor (~> 4.15, >= 4.15.1)
+    ruby_parser (3.18.1)
+      sexp_processor (~> 4.16)
     sawyer (0.8.2)
       addressable (>= 2.3.5)
       faraday (> 0.8, < 2.0)
     semantic (1.6.1)
-    sexp_processor (4.15.3)
+    sexp_processor (4.16.0)
     shikashi (0.6.0)
       evalhook (>= 0.6.0)
       getsource (>= 0.1.0)
@@ -110,14 +110,14 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  confidante (~> 0.21)
-  git (~> 1.10)
-  rake (~> 13.0)
-  rake_circle_ci (~> 0.9)
-  rake_github (~> 0.9)
-  rake_gpg (~> 0.12)
-  rake_ssh (~> 0.4)
-  semantic (~> 1.6)
+  confidante
+  git
+  rake
+  rake_circle_ci
+  rake_github
+  rake_gpg
+  rake_ssh
+  semantic
 
 BUNDLED WITH
-   2.2.21
+   2.3.9
