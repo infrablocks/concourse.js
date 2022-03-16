@@ -1,5 +1,5 @@
 import axios from 'axios'
-import faker from '@faker-js/faker'
+import { faker } from '@faker-js/faker'
 import MockAdapter from 'axios-mock-adapter'
 
 import data from '../testsupport/data.js'
