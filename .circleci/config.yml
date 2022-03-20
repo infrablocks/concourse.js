@@ -73,6 +73,14 @@ jobs:
       - run: ./scripts/ci/common/install-gpg-key.sh
       - run: ./scripts/ci/common/configure-git.sh
       - run: ./scripts/ci/steps/merge-pull-request.sh
+      - slack/notify:
+          event: fail
+          channel: dev
+          template: SLACK_FAILURE_NOTIFICATION
+      - slack/notify:
+          event: pass
+          channel: builds
+          template: SLACK_SUCCESS_NOTIFICATION
 
 workflows:
   version: 2
@@ -87,6 +95,8 @@ workflows:
                 - main
                 - /^dependabot.*/
       - merge_pull_request:
+          context:
+            - slack
           requires:
             - test
           filters:

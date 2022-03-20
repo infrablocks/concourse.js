@@ -17,7 +17,7 @@ GEM
     evalhook (0.6.0)
       partialruby (~> 0.3)
       sexp_processor (~> 4.0)
-    excon (0.92.0)
+    excon (0.92.1)
     faraday (1.10.0)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
