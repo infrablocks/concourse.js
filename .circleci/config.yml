@@ -41,7 +41,7 @@ commands:
           event: pass
           channel: builds
           template: SLACK_SUCCESS_NOTIFICATION
-  configure_for_test:
+  configure_for_build:
     steps:
       - run: ./scripts/ci/common/install-node-and-npm.sh
   configure_for_release:
@@ -57,6 +57,7 @@ jobs:
     <<: *defaults
     steps:
       - checkout
+      - configure_for_build
       - run: ./scripts/ci/steps/build.sh
       - notify
 
@@ -64,7 +65,7 @@ jobs:
     <<: *defaults
     steps:
       - checkout
-      - configure_for_test
+      - configure_for_build
       - run: ./scripts/ci/steps/test.sh
       - notify
 
