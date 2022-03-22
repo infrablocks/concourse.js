@@ -12,7 +12,9 @@ and this project adheres to
 
 ### Added
 
-* concourse.js is now a native ES module and as such can be `import`ed without any transpilation in ES module-friendly projects. Consumers using require are unaffected and can continue using `require`.
+* concourse.js is now a native ES module and as such can be `import`ed without
+  any transpilation in ES module-friendly projects. Consumers using require are
+  unaffected and can continue using `require`.
 
 ### Fixed
 
@@ -20,4 +22,5 @@ and this project adheres to
 
 ### Security
 
-* Dependency `follow-redirects` has been updated to prevent [CVE-2022-0155](https://nvd.nist.gov/vuln/detail/CVE-2022-0155)
+* Dependency `follow-redirects` has been updated to
+  prevent [CVE-2022-0155](https://nvd.nist.gov/vuln/detail/CVE-2022-0155)

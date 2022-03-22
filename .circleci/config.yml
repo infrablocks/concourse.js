@@ -53,6 +53,13 @@ commands:
       - run: ./scripts/ci/common/configure-npm.sh
 
 jobs:
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - run: ./scripts/ci/steps/build.sh
+      - notify
+
   test:
     <<: *defaults
     steps:
@@ -89,9 +96,14 @@ workflows:
   version: 2
   pipeline:
     jobs:
+      - build:
+          <<: *slack_context
+          <<: *only_main_and_dependabot
       - test:
           <<: *slack_context
           <<: *only_main_and_dependabot
+          requires:
+            - build
       - merge_pull_request:
           <<: *slack_context
           <<: *only_dependabot
