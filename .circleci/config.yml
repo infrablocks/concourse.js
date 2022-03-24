@@ -120,7 +120,7 @@ workflows:
           <<: *only_main
           requires:
             - prerelease
-          channel: dev
+          channel: release
           template: SLACK_ON_HOLD_NOTIFICATION
       - hold:
           <<: *only_main
