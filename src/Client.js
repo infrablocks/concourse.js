@@ -44,8 +44,8 @@ export default class Client {
       tokenUrlPreVersion4: teamAuthTokenUrl(apiUrl, teamName),
       tokenUrlPreVersion6_1: skyTokenUrl(url),
       tokenUrlCurrent: skyIssuerTokenUrl(url),
-      username: username,
-      password: password
+      username,
+      password
     }
     const httpClient = createHttpClient({ credentials, timeout })
 

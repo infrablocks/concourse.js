@@ -914,7 +914,7 @@ describe('session interceptor', () => {
           accessToken: bearerToken,
           tokenType: 'bearer',
           expiresAt: currentUnixTime() + oneHourInSeconds,
-          idToken: idToken,
+          idToken,
           serverVersion: '6.1.0'
         }
 
@@ -1047,7 +1047,7 @@ describe('session interceptor', () => {
         accessToken: bearerToken,
         tokenType: 'bearer',
         expiresAt: currentUnixTime() + oneHourInSeconds,
-        idToken: idToken,
+        idToken,
         serverVersion: '6.1.0'
       }
 

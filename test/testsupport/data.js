@@ -44,7 +44,7 @@ const randomBearerTokenPreVersion4 = (overrides = {}, options = {}) => {
     expiresIn: '1 day',
     ...options
   }
-  const rsaPrivateKey = new NodeRSA({ b: 512 })
+  const rsaPrivateKey = new NodeRSA({ b: 2048 })
     .exportKey('pkcs8-private-pem')
 
   return jwt.sign(resolvedData, rsaPrivateKey, resolvedOptions)
@@ -68,7 +68,7 @@ const randomBearerTokenPreVersion6_1 = (overrides = {}, options = {}) => {
     expiresIn: '1 day',
     ...options
   }
-  const rsaPrivateKey = new NodeRSA({ b: 512 })
+  const rsaPrivateKey = new NodeRSA({ b: 2048 })
     .exportKey('pkcs8-private-pem')
 
   return jwt.sign(resolvedData, rsaPrivateKey, resolvedOptions)
@@ -95,7 +95,7 @@ const randomIdTokenCurrent = (overrides = {}, options = {}) => {
     expiresIn: '1 day',
     ...options
   }
-  const rsaPrivateKey = new NodeRSA({ b: 512 })
+  const rsaPrivateKey = new NodeRSA({ b: 2048 })
     .exportKey('pkcs8-private-pem')
 
   return jwt.sign(resolvedData, rsaPrivateKey, resolvedOptions)
@@ -104,7 +104,7 @@ const randomIdTokenCurrent = (overrides = {}, options = {}) => {
 const randomBuildId = () => faker.datatype.number()
 const randomBuildName = () => randomLowerCaseWord()
 const randomBuildStatus = () =>
-  faker.random.arrayElement(values(BuildStatus))
+  faker.helpers.arrayElement(values(BuildStatus))
 const randomBuildApiUrl = () => faker.internet.url()
 const randomBuildStartTime = () => toUnixTime(faker.date.past())
 const randomBuildEndTime = () => toUnixTime(faker.date.recent())
@@ -112,7 +112,7 @@ const randomBuildEndTime = () => toUnixTime(faker.date.recent())
 const randomContainerId = () =>
   `${randomLowerHex(8)}-${randomLowerHex(4)}-${randomLowerHex(4)}-` +
   `${randomLowerHex(4)}-${randomLowerHex(12)}`
-const randomContainerType = () => faker.random.arrayElement(
+const randomContainerType = () => faker.helpers.arrayElement(
   ['check', 'put', 'get'])
 
 const randomStepName = () => randomLowerCaseWord()
@@ -134,7 +134,7 @@ const randomInputTrigger = () => randomBoolean()
 const randomOutputName = () => randomLowerCaseWord()
 
 const randomResourceTypeName = () => randomLowerCaseWord()
-const randomResourceTypeType = () => faker.random.arrayElement(
+const randomResourceTypeType = () => faker.helpers.arrayElement(
   ['git', 'docker-image', 'slack-notification'])
 const randomResourceTypeSource = (overrides = {}) => ({
   repository: `${randomLowerCaseWord()}/${randomLowerCaseWord()}`,
@@ -162,7 +162,7 @@ const randomResourceType = (overrides = {}) => ({
 const randomResourceName = () => randomLowerCaseWord()
 const randomResourceLastCheckedTime = () => toUnixTime(faker.date.past())
 
-const randomPlatform = () => faker.random.arrayElement(
+const randomPlatform = () => faker.helpers.arrayElement(
   ['linux', 'darwin'])
 
 const randomWorkerAddress = () => `${faker.internet.ip()}:45821`
@@ -172,7 +172,7 @@ const randomWorkerActiveVolumesCount = () => faker.datatype.number()
 const randomWorkerTags = () => null
 const randomWorkerName = () => randomLowerHex(12)
 const randomWorkerStartTime = () => toUnixTime(faker.date.past())
-const randomWorkerState = () => faker.random.arrayElement(
+const randomWorkerState = () => faker.helpers.arrayElement(
   ['running', 'stalled'])
 const randomWorkerVersion = () => '2.1'
 
@@ -205,14 +205,14 @@ const randomWorker = (overrides = {}) => ({
   ...overrides
 })
 
-const randomTeamAuthenticationUser = () => faker.random.arrayElement(
+const randomTeamAuthenticationUser = () => faker.helpers.arrayElement(
   [
     'local:administrator',
     'github:some-user-1',
     'github:some-user-2',
     'local:other'
   ])
-const randomTeamAuthenticationGroup = () => faker.random.arrayElement(
+const randomTeamAuthenticationGroup = () => faker.helpers.arrayElement(
   [
     'github:some-org-1',
     'github:some-org-2'
@@ -405,7 +405,7 @@ const randomContainer = (overrides = {}) => ({
 const randomVolumeId = () =>
   `${randomLowerHex(8)}-${randomLowerHex(4)}-${randomLowerHex(4)}-` +
   `${randomLowerHex(4)}-${randomLowerHex(12)}`
-const randomVolumePath = () => faker.random.arrayElement(
+const randomVolumePath = () => faker.helpers.arrayElement(
   [`/tmp/${randomResourceName()}/get`, '/scratch'])
 const randomVolume = (overrides = {}) => ({
   id: randomVolumeId(),
@@ -436,6 +436,7 @@ export default {
 
   randomCsrfToken,
   randomBearerTokenPreVersion4,
+  // eslint-disable-next-line camelcase
   randomBearerTokenPreVersion6_1,
   randomBearerTokenCurrent,
   randomIdTokenCurrent,

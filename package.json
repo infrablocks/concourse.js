@@ -16,8 +16,8 @@
     "version:bump:pre": "npm version prerelease --preid=pre",
     "version:bump:minor": "npm version minor",
     "version:bump:next": "npm version preminor --preid=pre",
-    "test": "mocha --recursive ./test",
-    "integration": "mocha --recursive --timeout 5000 ./integration"
+    "test": "mocha --recursive ./test --timeout 20000",
+    "integration": "mocha --recursive --timeout 20000 ./integration"
   },
   "type": "module",
   "repository": {
@@ -56,28 +56,28 @@
   },
   "dependencies": {
     "await-lock": "^2.1",
-    "axios": "^1.1.2",
+    "axios": "^1.1",
     "camelcase-keys-deep": "^0.1",
     "form-urlencoded": "^6.0",
-    "joi": "^17.6.0",
-    "js-base64": "^3.7.2",
-    "jsonwebtoken": "^8.5",
+    "joi": "^17.6",
+    "js-base64": "^3.7",
+    "jsonwebtoken": "^9.0",
     "ramda": "^0.28",
     "semver": "^7.3"
   },
   "devDependencies": {
-    "@babel/cli": "^7.16.8",
-    "@babel/core": "^7.16.7",
-    "@babel/preset-env": "^7.16.11",
-    "axios-mock-adapter": "^1.20.0",
+    "@babel/cli": "^7.16",
+    "@babel/core": "^7.16",
+    "@babel/preset-env": "^7.16",
+    "axios-mock-adapter": "^1.20",
     "chai": "^4.3",
-    "@faker-js/faker": "^6.0.0",
+    "@faker-js/faker": "^7.6",
     "hosted-git-info": "^6.1",
     "lodash": "^4.17",
     "minimist": "^1.2",
-    "mocha": "^10.0.0",
+    "mocha": "^10.0",
     "node-rsa": "^1.1",
-    "sinon": "^15.0.0",
-    "standard": "^16.0.4"
+    "sinon": "^15.0",
+    "standard": "^17.0"
   }
 }

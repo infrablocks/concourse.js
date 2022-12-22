@@ -80,7 +80,7 @@ const authenticatePreVersion4 = async (credentials, httpClient) => {
   return {
     accessToken: value,
     tokenType: type,
-    expiresAt: expiresAt,
+    expiresAt,
     idToken: value
   }
 }
