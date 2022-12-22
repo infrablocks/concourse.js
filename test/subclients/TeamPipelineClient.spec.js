@@ -19,6 +19,8 @@ const buildValidTeamPipelineClient = () => {
   const apiUrl = data.randomApiUrl()
   const bearerToken = data.randomBearerTokenCurrent()
 
+  console.log(apiUrl)
+
   const httpClient = axios.create({
     headers: bearerAuthorizationHeader(bearerToken)
   })
