@@ -6,7 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to
 [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## Unreleased
+
+## [0.27.0] 2022-12-22
+
+### Changed
+
+* All NPM dependencies have been updated.
+* All Rubygems have been updated.
 
 ## [0.26.0] 2022-01-17
 
