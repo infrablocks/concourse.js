@@ -16,8 +16,8 @@
     "version:bump:pre": "npm version prerelease --preid=pre",
     "version:bump:minor": "npm version minor",
     "version:bump:next": "npm version preminor --preid=pre",
-    "test": "mocha --recursive ./test --timeout 20000",
-    "integration": "mocha --recursive --timeout 20000 ./integration"
+    "test": "mocha --recursive --delay 200 --timeout 30000 ./test",
+    "integration": "mocha --recursive --delay 200 --timeout 30000 ./integration"
   },
   "type": "module",
   "repository": {
