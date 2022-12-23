@@ -9,12 +9,16 @@ GEM
     addressable (2.8.1)
       public_suffix (>= 2.0.2, < 6.0)
     ast (2.4.2)
+    aws-eventstream (1.2.0)
+    aws-sigv4 (1.5.2)
+      aws-eventstream (~> 1, >= 1.0.2)
     colored2 (3.1.2)
     concurrent-ruby (1.1.10)
-    confidante (0.27.0)
+    confidante (0.28.0)
       activesupport (>= 4)
-      hiera (~> 3.3, >= 3.3.1)
+      hiera (~> 3.3)
       shikashi (~> 0.6)
+      vault (~> 0.17)
     evalhook (0.6.0)
       partialruby (~> 0.3)
       sexp_processor (~> 4.0)
@@ -117,6 +121,8 @@ GEM
     tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.3.0)
+    vault (0.17.0)
+      aws-sigv4
 
 PLATFORMS
   ruby
