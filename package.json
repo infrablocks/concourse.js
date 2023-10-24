@@ -55,29 +55,29 @@
     ]
   },
   "dependencies": {
-    "await-lock": "^2.1",
-    "axios": "^1.1",
-    "camelcase-keys-deep": "^0.1",
-    "form-urlencoded": "^6.0",
-    "joi": "^17.6",
-    "js-base64": "^3.7",
-    "jsonwebtoken": "^9.0",
+    "await-lock": "^2.2.2",
+    "axios": "^1.5.1",
+    "camelcase-keys-deep": "^0.1.0",
+    "form-urlencoded": "^6.1.4",
+    "joi": "^17.11.0",
+    "js-base64": "^3.7.5",
+    "jsonwebtoken": "^9.0.2",
     "ramda": "^0.28",
-    "semver": "^7.3"
+    "semver": "^7.5.4"
   },
   "devDependencies": {
-    "@babel/cli": "^7.16",
-    "@babel/core": "^7.16",
-    "@babel/preset-env": "^7.16",
-    "axios-mock-adapter": "^1.20",
-    "chai": "^4.3",
-    "@faker-js/faker": "^7.6",
-    "hosted-git-info": "^6.1",
-    "lodash": "^4.17",
-    "minimist": "^1.2",
-    "mocha": "^10.0",
-    "node-rsa": "^1.1",
-    "sinon": "^15.0",
-    "standard": "^17.0"
+    "@babel/cli": "^7.23.0",
+    "@babel/core": "^7.23.2",
+    "@babel/preset-env": "^7.23.2",
+    "@faker-js/faker": "^7.6.0",
+    "axios-mock-adapter": "^1.22.0",
+    "chai": "^4.3.10",
+    "hosted-git-info": "^7.0.1",
+    "lodash": "^4.17.21",
+    "minimist": "^1.2.8",
+    "mocha": "^10.2.0",
+    "node-rsa": "^1.1.1",
+    "sinon": "^17.0.0",
+    "standard": "^17.1.0"
   }
 }

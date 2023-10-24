@@ -15,6 +15,7 @@
 /node_modules/
 /commonjs/*
 !/commonjs/package.json
+.direnv/
 
 ## Documentation cache and generated files:
 /.yardoc/
