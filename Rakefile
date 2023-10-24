@@ -1,21 +1,55 @@
 # frozen_string_literal: true
 
-require 'yaml'
 require 'rake_circle_ci'
+require 'rake_git'
+require 'rake_git_crypt'
 require 'rake_github'
-require 'rake_ssh'
 require 'rake_gpg'
-require 'securerandom'
+require 'rake_ssh'
 require 'rubocop/rake_task'
+require 'securerandom'
+require 'yaml'
 
 task default: :'checks:all'
 
+RakeGitCrypt.define_standard_tasks(
+  namespace: :git_crypt,
+
+  provision_secrets_task_name: :'secrets:provision',
+  destroy_secrets_task_name: :'secrets:destroy',
+
+  install_commit_task_name: :'git:commit',
+  uninstall_commit_task_name: :'git:commit',
+
+  gpg_user_key_paths: %w[
+    config/gpg
+    config/secrets/ci/gpg.public
+  ]
+)
+
+namespace :git do
+  RakeGit.define_commit_task(
+    argument_names: [:message]
+  ) do |t, args|
+    t.message = args.message
+  end
+end
+
 namespace :encryption do
+  namespace :directory do
+    desc 'Ensure CI secrets directory exists.'
+    task :ensure do
+      FileUtils.mkdir_p('config/secrets/ci')
+    end
+  end
+
   namespace :passphrase do
     desc 'Generate encryption passphrase for CI GPG key'
-    task :generate do
-      File.write('config/secrets/ci/encryption.passphrase',
-                 SecureRandom.base64(36))
+    task generate: ['directory:ensure'] do
+      File.write(
+        'config/secrets/ci/encryption.passphrase',
+        SecureRandom.base64(36)
+      )
     end
   end
 end
@@ -37,6 +71,36 @@ namespace :keys do
       owner_comment: 'concourse.js CI Key'
     )
   end
+end
+
+namespace :secrets do
+  namespace :directory do
+    desc 'Ensure secrets directory exists and is set up correctly'
+    task :ensure do
+      FileUtils.mkdir_p('config/secrets')
+      unless File.exist?('config/secrets/.unlocked')
+        File.write('config/secrets/.unlocked', 'true')
+      end
+    end
+  end
+
+  desc 'Generate all generatable secrets.'
+  task generate: %w[
+    encryption:passphrase:generate
+    keys:deploy:generate
+    keys:gpg:generate
+  ]
+
+  desc 'Provision all secrets.'
+  task provision: [:generate]
+
+  desc 'Delete all secrets.'
+  task :destroy do
+    rm_rf 'config/secrets'
+  end
+
+  desc 'Rotate all secrets.'
+  task rotate: [:'git_crypt:reinstall']
 end
 
 RuboCop::RakeTask.new
@@ -92,7 +156,6 @@ end
 namespace :pipeline do
   desc 'Prepare CircleCI Pipeline'
   task prepare: %i[
-    circle_ci:project:follow
     circle_ci:env_vars:ensure
     circle_ci:checkout_keys:ensure
     circle_ci:ssh_keys:ensure
