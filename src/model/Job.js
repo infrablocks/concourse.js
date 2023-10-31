@@ -83,7 +83,7 @@ export default class Job {
   }
 
   getInputForResource (resourceName) {
-    return find(propEq('resource', resourceName), this.inputs)
+    return find(propEq(resourceName, 'resource'), this.inputs)
   }
 
   getOutputs () {
@@ -91,7 +91,7 @@ export default class Job {
   }
 
   getOutputForResource (resourceName) {
-    return find(propEq('resource', resourceName), this.outputs)
+    return find(propEq(resourceName, 'resource'), this.outputs)
   }
 
   getGroups () {
