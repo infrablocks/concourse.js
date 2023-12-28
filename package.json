@@ -71,7 +71,7 @@
     "@babel/preset-env": "^7.23.2",
     "@faker-js/faker": "^8.2.0",
     "axios-mock-adapter": "^1.22.0",
-    "chai": "^4.3.10",
+    "chai": "^5.0.0",
     "hosted-git-info": "^7.0.1",
     "lodash": "^4.17.21",
     "minimist": "^1.2.8",
