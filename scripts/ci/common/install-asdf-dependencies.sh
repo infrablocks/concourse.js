@@ -9,12 +9,4 @@ PROJECT_DIR="$( cd "$SCRIPT_DIR/../../.." && pwd )"
 
 cd "$PROJECT_DIR"
 
-git pull
-
-./go version:bump[minor]
-./go library:release
-./go version:bump[next]
-
-git status
-git push --all
-git push --tags
+asdf install
