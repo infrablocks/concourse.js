@@ -14,5 +14,4 @@ function ensure-asdf-plugin() {
 }
 
 ensure-asdf-plugin "ruby" "https://github.com/asdf-vm/asdf-ruby.git"
-ensure-asdf-plugin "java" "https://github.com/halcyon/asdf-java.git"
-ensure-asdf-plugin "golang" "https://github.com/asdf-community/asdf-golang.git"
+ensure-asdf-plugin "nodejs" "https://github.com/asdf-vm/asdf-nodejs.git"
