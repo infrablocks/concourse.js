@@ -55,7 +55,7 @@
     ]
   },
   "dependencies": {
-    "await-lock": "^2.2.2",
+    "await-lock": "^3.0.0",
     "axios": "^1.5.1",
     "camelcase-keys-deep": "^0.1.0",
     "form-urlencoded": "^6.1.4",
